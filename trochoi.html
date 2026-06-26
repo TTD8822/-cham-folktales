@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trò Chơi – Cham Folktales AI</title>
+<link rel="stylesheet" href="style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ===== PARTICLES ===== */
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.particle {
+    position: absolute; width: 3px; height: 3px;
+    background: rgba(244,200,107,0.3); border-radius: 50%;
+    animation: float linear infinite;
+}
+@keyframes float {
+    from { transform: translateY(100vh); opacity: 0; }
+    10% { opacity: 1; } 90% { opacity: 1; }
+    to { transform: translateY(-10vh); opacity: 0; }
+}
+
+.game-wrap { position: relative; z-index: 1; padding: 40px 0 60px; max-width: 760px; margin: 0 auto; }
+
+/* ===== BACK BTN ===== */
+.back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 32px; padding: 10px 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; color: #cbd5e1; text-decoration: none;
+    font-size: 14px; transition: 0.2s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.11); color: white; }
+
+/* ===== HERO ===== */
+.game-hero { text-align: center; margin-bottom: 36px; }
+.game-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px; font-weight: 800; color: #f4c86b;
+    margin-bottom: 10px;
+}
+.game-hero p { color: #94a3b8; font-size: 16px; }
+
+/* ===== MÀN HÌNH CHỌN ===== */
+.screen { display: none; animation: fadeIn 0.4s ease; }
+.screen.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== CHỌN CHỦ ĐỀ ===== */
+.topic-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 8px; }
+.topic-card {
+    background: linear-gradient(135deg, #162949, #1a2b4d);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px; padding: 28px 20px;
+    text-align: center; cursor: pointer;
+    transition: 0.25s;
+}
+.topic-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(244,200,107,0.5);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+.topic-card .t-emoji { font-size: 48px; margin-bottom: 14px; display: block; }
+.topic-card h3 { color: #f4c86b; font-size: 18px; margin-bottom: 8px; }
+.topic-card p { color: #64748b; font-size: 13px; }
+.topic-card .t-count {
+    display: inline-block; margin-top: 10px;
+    background: rgba(244,200,107,0.1);
+    border: 1px solid rgba(244,200,107,0.2);
+    color: #f4c86b; font-size: 12px; padding: 3px 12px; border-radius: 20px;
+}
+
+/* ===== QUIZ ===== */
+.quiz-box {
+    background: linear-gradient(180deg, #1a2b4d, #0f1b32);
+    border: 1px solid rgba(244,200,107,0.18);
+    border-radius: 24px; padding: 32px; overflow: hidden;
+}
+
+/* Progress */
+.quiz-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.progress-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #f4c86b, #e8a33d); border-radius: 10px; transition: width 0.5s ease; }
+.q-counter { color: #64748b; font-size: 13px; white-space: nowrap; }
+.q-score-live { color: #f4c86b; font-size: 14px; font-weight: 600; white-space: nowrap; }
+
+/* Câu hỏi */
+.q-number {
+    display: inline-block;
+    background: rgba(244,200,107,0.12);
+    border: 1px solid rgba(244,200,107,0.25);
+    color: #f4c86b; font-size: 12px; font-weight: 600;
+    padding: 4px 14px; border-radius: 20px; margin-bottom: 14px;
+}
+.q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: white; line-height: 1.5;
+    margin-bottom: 28px; min-height: 66px;
+}
+.q-hint { color: #64748b; font-size: 13px; font-style: italic; margin-bottom: 22px; }
+
+/* Options */
+.options-grid { display: grid; gap: 12px; }
+.opt-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 16px 20px;
+    color: #cbd5e1; font-size: 15px; text-align: left;
+    cursor: pointer; transition: 0.2s; font-family: inherit;
+    display: flex; align-items: center; gap: 12px;
+}
+.opt-btn:hover:not(:disabled) {
+    background: rgba(244,200,107,0.1);
+    border-color: rgba(244,200,107,0.4);
+    color: #f4c86b; transform: translateX(4px);
+}
+.opt-btn.correct { background: rgba(34,197,94,0.15); border-color: #22c55e; color: #86efac; }
+.opt-btn.wrong { background: rgba(239,68,68,0.13); border-color: #ef4444; color: #fca5a5; }
+.opt-btn:disabled { cursor: default; }
+.opt-letter {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+    transition: 0.2s;
+}
+.opt-btn.correct .opt-letter { background: #22c55e; color: white; }
+.opt-btn.wrong .opt-letter { background: #ef4444; color: white; }
+
+/* Explain */
+.explain-box {
+    margin-top: 20px; padding: 16px 18px;
+    background: rgba(244,200,107,0.07);
+    border: 1px solid rgba(244,200,107,0.2);
+    border-radius: 14px; color: #cbd5e1; font-size: 14px;
+    line-height: 1.7; display: none;
+}
+.explain-box.show { display: block; animation: fadeIn 0.3s ease; }
+.explain-label { color: #f4c86b; font-weight: 600; margin-bottom: 6px; font-size: 13px; }
+
+/* Next btn */
+.next-btn {
+    display: none; margin-top: 20px; width: 100%;
+    padding: 14px; background: linear-gradient(135deg, #f4c86b, #e8a33d);
+    border: none; border-radius: 14px; color: #0f1b32;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    font-family: inherit; transition: 0.2s;
+}
+.next-btn.show { display: block; animation: fadeIn 0.3s ease; }
+.next-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(244,200,107,0.35); }
+
+/* Timer */
+.timer-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.timer-bar-wrap { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; }
+.timer-bar { height: 100%; background: #f4c86b; border-radius: 10px; transition: width 0.1s linear; }
+.timer-num { color: #f4c86b; font-size: 14px; font-weight: 700; width: 28px; text-align: right; }
+
+/* ===== KẾT QUẢ ===== */
+.result-box {
+    background: linear-gradient(180deg, #1a2b4d, #0f1b32);
+    border: 1px solid rgba(244,200,107,0.2);
+    border-radius: 24px; padding: 40px 32px;
+    text-align: center;
+}
+.result-emoji { font-size: 72px; margin-bottom: 16px; display: block;
+    animation: bounce 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes bounce { from { transform: scale(0); } to { transform: scale(1); } }
+.result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; color: #f4c86b; margin-bottom: 8px;
+}
+.result-sub { color: #94a3b8; font-size: 16px; margin-bottom: 28px; }
+.result-score-big {
+    font-size: 72px; font-weight: 800; color: #f4c86b;
+    line-height: 1; margin-bottom: 4px;
+    font-family: 'Playfair Display', serif;
+}
+.result-score-max { color: #64748b; font-size: 18px; margin-bottom: 28px; }
+
+.result-stats { display: flex; gap: 12px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+.r-stat {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; padding: 16px 22px; min-width: 110px;
+}
+.r-stat-val { font-size: 24px; font-weight: 700; color: white; margin-bottom: 4px; }
+.r-stat-label { font-size: 12px; color: #64748b; }
+.r-correct .r-stat-val { color: #22c55e; }
+.r-wrong .r-stat-val { color: #ef4444; }
+.r-time .r-stat-val { color: #60a5fa; }
+
+.result-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.res-btn {
+    padding: 12px 24px; border-radius: 12px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    font-family: inherit; transition: 0.2s; border: none;
+}
+.res-btn-main { background: linear-gradient(135deg, #f4c86b, #e8a33d); color: #0f1b32; }
+.res-btn-main:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(244,200,107,0.35); }
+.res-btn-sec { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1) !important; color: #cbd5e1; }
+.res-btn-sec:hover { background: rgba(255,255,255,0.11); }
+
+/* Stars */
+.stars-wrap { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; }
+.star { font-size: 36px; opacity: 0; transform: scale(0); transition: 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+.star.lit { opacity: 1; transform: scale(1); }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="container" style="position:relative;z-index:1;">
+<div class="game-wrap">
+
+    <a href="index.html" class="back-btn">← Trang chủ</a>
+
+    <div class="game-hero">
+        <h1>🎮 Trò Chơi Chăm</h1>
+        <p>Thử thách hiểu biết về văn hóa và truyện dân gian Chăm</p>
+    </div>
+
+    <!-- MÀN CHỌN CHỦ ĐỀ -->
+    <div class="screen active" id="screenTopic">
+        <div class="topic-grid">
+            <div class="topic-card" onclick="startQuiz('truyenco')">
+                <span class="t-emoji">📖</span>
+                <h3>Truyện Cổ Chăm</h3>
+                <p>Câu hỏi về nội dung các truyện dân gian Chăm nổi tiếng</p>
+                <div class="t-count">10 câu hỏi</div>
+            </div>
+            <div class="topic-card" onclick="startQuiz('vanhoa')">
+                <span class="t-emoji">🏛️</span>
+                <h3>Văn Hóa & Lịch Sử</h3>
+                <p>Kiến thức về phong tục, lễ hội, di sản của người Chăm</p>
+                <div class="t-count">10 câu hỏi</div>
+            </div>
+            <div class="topic-card" onclick="startQuiz('nhanvat')">
+                <span class="t-emoji">👑</span>
+                <h3>Nhân Vật Huyền Thoại</h3>
+                <p>Các vị thần, anh hùng và nhân vật nổi bật trong truyện Chăm</p>
+                <div class="t-count">10 câu hỏi</div>
+            </div>
+            <div class="topic-card" onclick="startQuiz('mixed')">
+                <span class="t-emoji">🎲</span>
+                <h3>Tổng Hợp Ngẫu Nhiên</h3>
+                <p>Kết hợp tất cả chủ đề, câu hỏi được xáo trộn ngẫu nhiên</p>
+                <div class="t-count">15 câu hỏi</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÀN QUIZ -->
+    <div class="screen" id="screenQuiz">
+        <div class="quiz-box">
+            <div class="quiz-progress">
+                <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+                <span class="q-counter" id="qCounter">1 / 10</span>
+                <span class="q-score-live" id="scoreLive">🏆 0</span>
+            </div>
+            <div class="timer-wrap">
+                <div class="timer-bar-wrap"><div class="timer-bar" id="timerBar" style="width:100%"></div></div>
+                <div class="timer-num" id="timerNum">20</div>
+            </div>
+            <div class="q-number" id="qNum">Câu 1</div>
+            <div class="q-text" id="qText"></div>
+            <div class="q-hint" id="qHint"></div>
+            <div class="options-grid" id="optionsGrid"></div>
+            <div class="explain-box" id="explainBox">
+                <div class="explain-label">💡 Giải thích</div>
+                <div id="explainText"></div>
+            </div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Câu tiếp theo →</button>
+        </div>
+    </div>
+
+    <!-- MÀN KẾT QUẢ -->
+    <div class="screen" id="screenResult">
+        <div class="result-box">
+            <span class="result-emoji" id="resultEmoji">🏆</span>
+            <div class="stars-wrap" id="starsWrap">
+                <div class="star" id="s1">⭐</div>
+                <div class="star" id="s2">⭐</div>
+                <div class="star" id="s3">⭐</div>
+            </div>
+            <div class="result-title" id="resultTitle">Xuất sắc!</div>
+            <div class="result-sub" id="resultSub">Bạn thực sự am hiểu văn hóa Chăm</div>
+            <div class="result-score-big" id="resultScoreBig">0</div>
+            <div class="result-score-max" id="resultScoreMax">/ 100 điểm</div>
+            <div class="result-stats">
+                <div class="r-stat r-correct">
+                    <div class="r-stat-val" id="rCorrect">0</div>
+                    <div class="r-stat-label">Đúng</div>
+                </div>
+                <div class="r-stat r-wrong">
+                    <div class="r-stat-val" id="rWrong">0</div>
+                    <div class="r-stat-label">Sai</div>
+                </div>
+                <div class="r-stat r-time">
+                    <div class="r-stat-val" id="rTime">0s</div>
+                    <div class="r-stat-label">Thời gian</div>
+                </div>
+            </div>
+            <div class="result-btns">
+                <button class="res-btn res-btn-main" onclick="restartSame()">🔄 Chơi lại</button>
+                <button class="res-btn res-btn-sec" onclick="goToTopics()">📋 Chủ đề khác</button>
+                <a href="index.html" class="res-btn res-btn-sec" style="text-decoration:none;">🏠 Trang chủ</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script>
+// ===== NGÂN HÀNG CÂU HỎI =====
+const questionBank = {
+    truyenco: [
+        {
+            q: "Trong truyện 'Nha Rúi và Tầm Đang', cha của Tầm Đang đặt ra bao nhiêu thử thách cho Nha Rúi?",
+            options: ["Hai thử thách", "Ba thử thách", "Bốn thử thách", "Năm thử thách"],
+            correct: 1,
+            explain: "Cha của Tầm Đang đặt ra đúng ba thử thách: mang về túi vàng, thuần hóa ngựa hoang, và chiến thắng thi bắn cung.",
+            hint: "🏹 Đây là con số rất phổ biến trong truyện cổ tích"
+        },
+        {
+            q: "Trong 'Hũ Bạc và Người Cha', hũ bạc thật sự mà lão Palây muốn dạy con là gì?",
+            options: ["Một hũ vàng chôn dưới đất", "Mảnh đất – thứ sinh ra của cải khi lao động", "Nghề dệt vải truyền thống", "Bí quyết buôn bán"],
+            correct: 1,
+            explain: "Hũ bạc chính là mảnh đất – người cha muốn dạy rằng chỉ có lao động cần cù mới tạo ra của cải thật sự.",
+            hint: "🌾 Nghĩ xem người nông dân quý nhất thứ gì"
+        },
+        {
+            q: "Cậu bé Tala trong 'Cậu Bé Ranh Mãnh' dùng gì để đáp lại câu đố bẫy của địa chủ?",
+            options: ["Sức mạnh đánh lại địa chủ", "Câu trả lời khôn ngoan: 'Câu trả lời nằm trong tay ông'", "Cầu cứu dân làng", "Bỏ trốn khỏi làng"],
+            correct: 1,
+            explain: "Tala dùng trí tuệ, nói rằng 'câu trả lời nằm trong tay ông', buộc địa chủ phải thả tay và con chim bay đi, không thể gian lận.",
+            hint: "🧠 Cậu bé dùng chính bẫy của kẻ gian để chống lại hắn"
+        },
+        {
+            q: "Trong 'Bò và Chó Sói', sói dùng kế gì để dụ bò vào bẫy?",
+            options: ["Giả vờ bị thương cần giúp đỡ", "Mời bò vào rừng sống 'tự do' không cần làm việc", "Đe dọa sẽ cắn bò nếu không đi theo", "Nói bò chủ đang bán bò đi"],
+            correct: 1,
+            explain: "Sói dùng lời ngon tiếng ngọt về 'tự do' trong rừng để dụ bò rời xa chủ, nhưng bò đã nhìn thấu âm mưu.",
+            hint: "🌳 Sói hứa hẹn điều gì đó nghe có vẻ hấp dẫn..."
+        },
+        {
+            q: "Trong 'Chàng Ếch và Con Út Vua', điều gì phá vỡ lời nguyền biến chàng thành ếch?",
+            options: ["Chàng nhảy qua ngọn lửa thiêng", "Người con gái chân thật đồng ý kết hôn với chàng trong hình hài ếch", "Vua đọc thần chú giải lời nguyền", "Chàng tìm được phù thủy đã nguyền rủa mình"],
+            correct: 1,
+            explain: "Lời nguyền chỉ phá được khi có người con gái chân thật đồng ý lấy chàng dù chàng đang là ếch – tình yêu chân thật mới có sức mạnh.",
+            hint: "💕 Đây là truyện cổ tích, tình yêu thường đóng vai trò quan trọng"
+        },
+        {
+            q: "Trong 'Đàn Thú Đi Săn', ai đã tận dụng cuộc cãi vã của ba con thú lớn?",
+            options: ["Con nai họ vừa săn được", "Bầy kiến tha thịt đi từng chút", "Con cáo tinh ranh lấy hết phần", "Người thợ săn trong làng"],
+            correct: 1,
+            explain: "Trong khi hổ, gấu, sói cãi nhau về cách chia phần, bầy kiến đã nhẫn nại tha thịt đi gần hết – bài học về sự đoàn kết.",
+            hint: "🐜 Nghĩ đến những sinh vật bé nhỏ nhưng cần cù"
+        },
+        {
+            q: "Chàng trai Inra trong 'Anh Trai và Mụ Quỷ Già' dùng thứ gì để làm mụ quỷ mù tạm thời?",
+            options: ["Nước ớt rắc vào mắt mụ", "Muối rắc vào đôi mắt mụ khi mụ ngủ", "Tro bếp thổi vào mặt mụ", "Ánh đuốc chiếu thẳng vào mắt mụ"],
+            correct: 1,
+            explain: "Inra chuẩn bị sẵn một túi muối và khi mụ quỷ ngủ say, chàng rắc muối vào mắt mụ để trốn thoát.",
+            hint: "🧂 Đây là thứ chàng mang theo từ đầu khi vào rừng"
+        },
+        {
+            q: "Con ếch trong ngụ ngôn 'Con Ếch Muốn Lớn Bằng Con Trâu' đã làm gì để cố lớn như trâu?",
+            options: ["Ăn thật nhiều cỏ như trâu mỗi ngày", "Phình bụng lên cho đến khi bụng nổ tung", "Nhờ thần linh biến hình", "Tập thể dục suốt một năm"],
+            correct: 1,
+            explain: "Ếch cứ phình bụng ra mãi, hỏi con cóc xem đã to bằng trâu chưa, nhưng cuối cùng phình quá mức làm bụng nổ tung.",
+            hint: "🐸 Ếch dùng cơ thể mình để cố gắng thay đổi..."
+        },
+        {
+            q: "Trong 'Nàng Bàn Tay', điều gì khiến hoàng tử quyết định cưới nàng?",
+            options: ["Nàng là con gái tù trưởng giàu có", "Tấm vải nàng dệt đẹp đến mức chàng không rời mắt, và chàng trân trọng trái tim làm việc của nàng", "Thần linh ra lệnh cho chàng", "Nàng cứu chàng khỏi nguy hiểm"],
+            correct: 1,
+            explain: "Chàng bị thu hút bởi tấm vải đẹp, và khi biết sự thật, chàng chọn cưới nàng vì trân trọng con người qua trái tim và đôi tay lao động.",
+            hint: "🧵 Nghề thủ công đã kết nối hai người"
+        },
+        {
+            q: "Trong 'Chàng Panrang và Chàng Parik', tên của hai người anh hùng được gắn với điều gì ngày nay?",
+            options: ["Hai con sông lớn ở miền Trung", "Hai vùng đất – Panrang (Phan Rang) và Parik", "Hai ngôi tháp Chăm nổi tiếng", "Hai lễ hội truyền thống Chăm"],
+            correct: 1,
+            explain: "Tên của Panrang và Parik được đặt cho hai vùng đất để đời đời ghi nhớ tình bạn thiêng liêng và lòng dũng cảm của họ.",
+            hint: "🗺️ Tên địa danh thường gắn với nhân vật lịch sử"
+        }
+    ],
+    vanhoa: [
+        {
+            q: "Lễ hội Katê của người Chăm thường được tổ chức vào tháng nào theo lịch Chăm?",
+            options: ["Tháng 1 Chăm lịch", "Tháng 7 Chăm lịch (khoảng tháng 9-10 dương lịch)", "Tháng 12 Chăm lịch", "Tháng 4 Chăm lịch"],
+            correct: 1,
+            explain: "Lễ hội Katê diễn ra vào tháng 7 theo lịch Chăm, thường rơi vào tháng 9 hoặc 10 dương lịch, là lễ hội lớn nhất của người Chăm Bàlamôn.",
+            hint: "🍂 Đây là lễ hội mùa thu của người Chăm"
+        },
+        {
+            q: "Tháp Po Klong Garai nổi tiếng vì điều gì đặc biệt trong kỹ thuật xây dựng?",
+            options: ["Xây bằng đá cẩm thạch nhập từ Ấn Độ", "Gạch xây không dùng vữa nhưng vẫn kết dính chắc chắn ngàn năm", "Có hệ thống điều hòa không khí tự nhiên", "Mỗi viên gạch được khắc chữ Phạn"],
+            correct: 1,
+            explain: "Bí ẩn lớn nhất của kiến trúc Chăm là các khối gạch được xây mà không cần vữa nhưng vẫn liên kết chặt chẽ, đứng vững ngàn năm.",
+            hint: "🧱 Đây là bí ẩn chưa được giải đáp hoàn toàn của kiến trúc Chăm"
+        },
+        {
+            q: "Làng Gốm Bàu Trúc nổi tiếng ở đâu và được biết đến với điều gì?",
+            options: ["Ở Hội An, nổi tiếng với gốm tráng men", "Ở Ninh Thuận, là làng gốm cổ nhất Đông Nam Á làm bằng tay hoàn toàn", "Ở Bình Thuận, chuyên làm đồ thờ cúng", "Ở Khánh Hòa, nổi tiếng với màu sắc rực rỡ"],
+            correct: 1,
+            explain: "Làng Bàu Trúc ở Ninh Thuận được công nhận là một trong những làng gốm cổ nhất Đông Nam Á, nghệ nhân làm gốm hoàn toàn bằng tay.",
+            hint: "🏺 Nghĩ đến vùng đất Chăm truyền thống nhất"
+        },
+        {
+            q: "Vị nữ thần được người Chăm tôn thờ như Mẹ vĩ đại, biểu tượng của sự sinh sôi và che chở là ai?",
+            options: ["Nữ thần Saraswati", "Thiên Y A Na (Po Inư Nưgar)", "Nữ thần Lakshmi", "Công chúa Champa"],
+            correct: 1,
+            explain: "Thiên Y A Na, còn gọi là Po Inư Nưgar, là vị nữ thần mẹ quan trọng nhất của người Chăm, được thờ phụng rộng rãi ở miền Trung Việt Nam.",
+            hint: "🌸 Đây là nhân vật trung tâm trong một truyền thuyết nổi tiếng"
+        },
+        {
+            q: "Chữ viết truyền thống của người Chăm có nguồn gốc từ đâu?",
+            options: ["Chữ Hán của người Trung Quốc", "Hệ chữ viết bắt nguồn từ chữ Phạn (Sanskrit) của Ấn Độ", "Chữ Khmer của Campuchia", "Tự sáng tạo hoàn toàn độc lập"],
+            correct: 1,
+            explain: "Chữ Chăm cổ (Akhar Thrah) có nguồn gốc từ hệ chữ viết Brahmi của Ấn Độ, phản ánh ảnh hưởng mạnh mẽ của văn hóa Ấn Độ đối với Chăm Pa.",
+            hint: "📜 Người Chăm có quan hệ lịch sử sâu sắc với một nền văn minh lớn"
+        },
+        {
+            q: "Người Chăm Bàlamôn theo tín ngưỡng nào?",
+            options: ["Hồi giáo", "Phật giáo", "Hinduism (Ấn Độ giáo) với ảnh hưởng bản địa", "Thiên Chúa giáo"],
+            correct: 2,
+            explain: "Người Chăm Bàlamôn theo Hinduism (thờ thần Shiva, Vishnu) nhưng đã bản địa hóa, kết hợp với tín ngưỡng thờ tổ tiên và thần núi sông.",
+            hint: "🙏 Đây là tôn giáo đến từ tiểu lục địa phía tây"
+        },
+        {
+            q: "Nhạc cụ đặc trưng nhất của âm nhạc Chăm trong các lễ hội là gì?",
+            options: ["Đàn tranh và sáo trúc", "Trống Ghi năng (Ginang) và kèn Saranai", "Đàn bầu và trống cơm", "Cồng chiêng Tây Nguyên"],
+            correct: 1,
+            explain: "Trống Ghi năng (Ginang) và kèn Saranai là bộ đôi nhạc cụ không thể thiếu trong các lễ hội và nghi lễ truyền thống của người Chăm.",
+            hint: "🥁 Nghĩ đến các âm thanh đặc trưng trong lễ Katê"
+        },
+        {
+            q: "Nghề dệt thổ cẩm của phụ nữ Chăm có đặc điểm nổi bật nào?",
+            options: ["Dệt bằng khung cửi hiện đại nhập khẩu", "Dệt từ sợi tơ lụa tự nhiên với hoa văn hình học đặc trưng và màu sắc rực rỡ", "Chỉ dệt một màu trắng truyền thống", "Kỹ thuật giống dệt của người Kinh"],
+            correct: 1,
+            explain: "Thổ cẩm Chăm nổi bật với hoa văn hình học truyền thống, màu sắc rực rỡ (đỏ, vàng, đen), và được dệt thủ công bằng khung cửi cổ truyền.",
+            hint: "🎨 Nghĩ đến màu sắc và họa tiết đặc trưng nhất"
+        },
+        {
+            q: "Vương quốc Chăm Pa tồn tại khoảng bao nhiêu năm?",
+            options: ["Khoảng 500 năm (từ thế kỷ 7-12)", "Khoảng 1.700 năm (từ thế kỷ 2 đến năm 1832)", "Khoảng 200 năm (từ thế kỷ 10-12)", "Khoảng 1000 năm (từ thế kỷ 3 đến 13)"],
+            correct: 1,
+            explain: "Chăm Pa tồn tại từ khoảng thế kỷ 2 sau Công Nguyên đến năm 1832, là một trong những vương quốc tồn tại lâu nhất trong lịch sử Đông Nam Á.",
+            hint: "📅 Đây là một vương quốc rất trường tồn trong lịch sử"
+        },
+        {
+            q: "Lễ Rija Nưgar của người Chăm có mục đích gì?",
+            options: ["Cầu cho mưa thuận gió hòa và xua đuổi bệnh tật, tai ương", "Kỷ niệm ngày thành lập vương quốc Chăm Pa", "Lễ cưới truyền thống cho đôi uyên ương", "Lễ tốt nghiệp cho các nghệ nhân dệt vải"],
+            correct: 0,
+            explain: "Lễ Rija Nưgar là nghi lễ tẩy uế, cầu xin thần linh phù hộ, xua đuổi bệnh tật và tai ương cho cả cộng đồng, thường tổ chức vào đầu năm.",
+            hint: "🙏 Đây là một nghi lễ cộng đồng quan trọng"
+        }
+    ],
+    nhanvat: [
+        {
+            q: "Po Klong Garai xuất thân như thế nào trước khi trở thành vua?",
+            options: ["Con trai một vị tướng quyền quý", "Một người chăn trâu nghèo khổ được thần Shiva chọn", "Hoàng tử bị lưu đày từ Ấn Độ", "Con nuôi của tù trưởng vùng núi"],
+            correct: 1,
+            explain: "Po Klong Garai sinh ra nghèo khổ, phải chăn trâu thuê. Trong giấc mơ, thần Shiva trao cho ông thanh kiếm vàng và chọn ông dẫn dắt dân Chăm.",
+            hint: "👑 Nhiều vị anh hùng bắt đầu từ thân phận thấp hèn"
+        },
+        {
+            q: "Thiên Y A Na được sinh ra như thế nào theo truyền thuyết?",
+            options: ["Do vua cầu xin thần linh ban con gái", "Là cô bé mồ côi nghèo khổ được thần linh chọn, toả ra ánh sáng kỳ diệu", "Bay xuống từ bầu trời trên đám mây vàng", "Từ trong một bông hoa sen nở ra"],
+            correct: 1,
+            explain: "Thiên Y A Na là cô bé mồ côi sống trong nghèo khó, nhưng từ khi còn nhỏ đã toả ra ánh sáng kỳ diệu và có khả năng làm cây cối sinh sôi.",
+            hint: "🌸 Nàng bắt đầu cuộc đời trong hoàn cảnh khó khăn"
+        },
+        {
+            q: "Trong truyền thuyết, Thái Tử Bắc Hải gặp Thiên Y A Na bằng cách nào?",
+            options: ["Chàng bơi lên từ đại dương", "Chàng ẩn trong một khúc gỗ kỳ lạ phát sáng trôi xuống từ thượng nguồn", "Chàng hiện ra từ trong một ngôi sao băng", "Chàng đến làng trên lưng rồng biển"],
+            correct: 1,
+            explain: "Thái Tử Bắc Hải ẩn thân trong khúc gỗ kỳ lạ tỏa hương thơm và ánh vàng. Khi Thiên Y A Na đặt tay lên, chàng hiện ra từ trong lòng gỗ.",
+            hint: "🌊 Chàng đến từ phương Bắc bằng một vật thể nổi trên nước"
+        },
+        {
+            q: "Nàng Bàn Tay trong truyện cổ Chăm có điểm đặc biệt gì về ngoại hình?",
+            options: ["Nàng có đôi mắt phát sáng trong đêm tối", "Nàng chỉ là một bàn tay, không có thân xác đầy đủ", "Nàng vô hình với người thường", "Nàng có mái tóc dài chấm đất màu vàng"],
+            correct: 1,
+            explain: "Mẹ của nàng sinh ra không phải một đứa trẻ bình thường mà chỉ là một bàn tay biết cử động, bò, và làm mọi việc.",
+            hint: "🤚 Tên nhân vật đã gợi ý về ngoại hình của nàng"
+        },
+        {
+            q: "Panrang và Parik trong truyền thuyết Chăm là gì với nhau?",
+            options: ["Anh em sinh đôi hoàng gia", "Hai người bạn thân từ thuở nhỏ, xuất thân khác nhau nhưng cùng chí hướng", "Thầy và trò trong võ thuật", "Hai kẻ thù trở thành đồng minh"],
+            correct: 1,
+            explain: "Panrang xuất thân dòng dõi tướng lĩnh, Parik con nhà dân thường – hai người bạn thân từ nhỏ, bổ sung cho nhau: một người mạnh mẽ, một người mưu trí.",
+            hint: "👬 Họ hợp tác vì tình bạn, không phải vì quan hệ huyết thống"
+        },
+        {
+            q: "Chàng Inra trong 'Anh Trai và Mụ Quỷ Già' vào rừng với mục đích gì?",
+            options: ["Đi tìm kho báu trong hang quỷ", "Tìm thuốc để chữa bệnh cho mẹ đang ốm nặng", "Đi săn thú để nuôi gia đình", "Thi gan với quỷ để chứng tỏ bản thân"],
+            correct: 1,
+            explain: "Chàng Inra vào rừng nguy hiểm vì lòng hiếu thảo – muốn tìm thuốc chữa bệnh cho mẹ, dù biết rõ nguy hiểm rình rập.",
+            hint: "💊 Động lực của chàng xuất phát từ tình cảm gia đình"
+        },
+        {
+            q: "Con ếch trong 'Chàng Ếch và Con Út Vua' thực chất là ai?",
+            options: ["Thần linh thử lòng công chúa", "Hoàng tử vương quốc dưới nước bị phù thủy biến thành ếch", "Người nông dân bị trù ếm vì trộm đồ vua", "Con vật thiêng của thần rừng"],
+            correct: 1,
+            explain: "Chàng là hoàng tử của vương quốc dưới nước, bị phù thủy độc ác nguyền rủa. Lời nguyền chỉ phá được bởi tình yêu chân thật.",
+            hint: "🐸 Đây là motif phổ biến trong truyện cổ tích – hoàng tử hóa thân"
+        },
+        {
+            q: "Điều gì khiến cô út của vua ném cầu xuống ao sen nơi có chú ếch?",
+            options: ["Nàng bị các chị đẩy làm rớt cầu xuống ao", "Nàng cảm nhận được điều gì đó đặc biệt trong đôi mắt của chú ếch", "Nàng cố tình muốn chọc tức cha", "Thần linh mách bảo nàng trong giấc mơ"],
+            correct: 1,
+            explain: "Không phải ngẫu nhiên – cô út cảm nhận được ánh sáng của trái tim trong sáng và nỗi buồn sâu thẳm trong đôi mắt của chú ếch.",
+            hint: "👁️ Nàng nhìn thấy điều mà người khác không nhìn thấy"
+        },
+        {
+            q: "Sau khi Po Klong Garai mất, di sản lớn nhất ông để lại là gì?",
+            options: ["Một kho báu bằng vàng dưới lòng đất", "Hệ thống tháp Chăm và kênh dẫn nước tưới tiêu", "Bộ luật pháp hoàn chỉnh cho người Chăm", "Đội quân bất khả chiến bại"],
+            correct: 1,
+            explain: "Po Klong Garai được nhớ đến nhiều nhất qua các công trình kiến trúc – tháp Chăm hùng vĩ và hệ thống kênh dẫn nước phục vụ nông nghiệp.",
+            hint: "🏛️ Ông là người xây dựng, không chỉ là người chiến đấu"
+        },
+        {
+            q: "Trong 'Cậu Bé Ranh Mãnh', Tala đã bảo vệ điều gì trước tên địa chủ tham lam?",
+            options: ["Ngôi nhà của cha mình", "Mảnh vườn nhỏ của gia đình", "Con trâu cày duy nhất", "Tiệm tạp hóa nhỏ trong làng"],
+            correct: 1,
+            explain: "Tên địa chủ muốn chiếm mảnh vườn nhỏ của Tala bằng câu đố bẫy, nhưng cậu bé dùng trí thông minh để bảo vệ tài sản của mình.",
+            hint: "🌱 Đây là tài sản nhỏ nhưng quan trọng với cậu bé mồ côi"
+        }
+    ]
+};
+
+// Mixed = kết hợp
+function getMixedQuestions() {
+    const all = [...questionBank.truyenco, ...questionBank.vanhoa, ...questionBank.nhanvat];
+    return shuffle(all).slice(0, 15);
+}
+
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// ===== TRẠNG THÁI GAME =====
+let questions = [], curQ = 0, score = 0, correct = 0, wrong = 0;
+let timerInterval = null, timeLeft = 20, startTime = 0, totalTime = 0;
+let currentTopic = '';
+
+function startQuiz(topic) {
+    currentTopic = topic;
+    if (topic === 'mixed') {
+        questions = getMixedQuestions();
+    } else {
+        questions = shuffle(questionBank[topic]).slice(0, 10);
+    }
+    curQ = 0; score = 0; correct = 0; wrong = 0; totalTime = 0;
+    startTime = Date.now();
+    showScreen('screenQuiz');
+    renderQuestion();
+}
+
+function renderQuestion() {
+    const q = questions[curQ];
+    const total = questions.length;
+    document.getElementById('qCounter').textContent = `${curQ + 1} / ${total}`;
+    document.getElementById('qNum').textContent = `Câu ${curQ + 1}`;
+    document.getElementById('progressBar').style.width = ((curQ / total) * 100) + '%';
+    document.getElementById('scoreLive').textContent = `🏆 ${score}`;
+    document.getElementById('qText').textContent = q.q;
+    document.getElementById('qHint').textContent = q.hint || '';
+    document.getElementById('explainBox').classList.remove('show');
+    document.getElementById('nextBtn').classList.remove('show');
+
+    const letters = ['A', 'B', 'C', 'D'];
+    const grid = document.getElementById('optionsGrid');
+    grid.innerHTML = '';
+    q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
+        btn.onclick = () => answer(i, btn, q);
+        grid.appendChild(btn);
+    });
+
+    // Timer
+    clearInterval(timerInterval);
+    timeLeft = 20;
+    updateTimerUI();
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerUI();
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timeOutAnswer(q);
+        }
+    }, 1000);
+}
+
+function updateTimerUI() {
+    document.getElementById('timerNum').textContent = timeLeft;
+    document.getElementById('timerBar').style.width = (timeLeft / 20 * 100) + '%';
+    document.getElementById('timerBar').style.background = timeLeft <= 5 ? '#ef4444' : '#f4c86b';
+}
+
+function answer(idx, btn, q) {
+    clearInterval(timerInterval);
+    const btns = document.querySelectorAll('.opt-btn');
+    btns.forEach(b => b.disabled = true);
+
+    if (idx === q.correct) {
+        btn.classList.add('correct');
+        const bonus = Math.max(10, timeLeft * 2 + 10);
+        score += bonus;
+        correct++;
+    } else {
+        btn.classList.add('wrong');
+        btns[q.correct].classList.add('correct');
+        wrong++;
+    }
+
+    document.getElementById('explainText').textContent = q.explain;
+    document.getElementById('explainBox').classList.add('show');
+    document.getElementById('nextBtn').classList.add('show');
+    document.getElementById('nextBtn').textContent = curQ < questions.length - 1 ? 'Câu tiếp theo →' : 'Xem kết quả 🏆';
+}
+
+function timeOutAnswer(q) {
+    const btns = document.querySelectorAll('.opt-btn');
+    btns.forEach(b => b.disabled = true);
+    btns[q.correct].classList.add('correct');
+    wrong++;
+    document.getElementById('explainText').textContent = '⏰ Hết thời gian! ' + q.explain;
+    document.getElementById('explainBox').classList.add('show');
+    document.getElementById('nextBtn').classList.add('show');
+    document.getElementById('nextBtn').textContent = curQ < questions.length - 1 ? 'Câu tiếp theo →' : 'Xem kết quả 🏆';
+}
+
+function nextQuestion() {
+    curQ++;
+    if (curQ >= questions.length) {
+        showResult();
+    } else {
+        renderQuestion();
+    }
+}
+
+function showResult() {
+    totalTime = Math.round((Date.now() - startTime) / 1000);
+    const pct = Math.round((correct / questions.length) * 100);
+    let emoji, title, sub;
+    if (pct === 100) { emoji = '🏆'; title = 'Hoàn hảo!'; sub = 'Bạn am hiểu văn hóa Chăm xuất sắc!'; }
+    else if (pct >= 80) { emoji = '🌟'; title = 'Xuất sắc!'; sub = 'Bạn có kiến thức rất tốt về văn hóa Chăm'; }
+    else if (pct >= 60) { emoji = '👍'; title = 'Khá giỏi!'; sub = 'Cần tìm hiểu thêm một chút nữa thôi'; }
+    else if (pct >= 40) { emoji = '📚'; title = 'Cần cố gắng!'; sub = 'Hãy đọc thêm truyện Chăm để biết nhiều hơn'; }
+    else { emoji = '💪'; title = 'Hãy thử lại!'; sub = 'Khám phá thêm văn hóa Chăm để cải thiện nhé'; }
+
+    document.getElementById('resultEmoji').textContent = emoji;
+    document.getElementById('resultTitle').textContent = title;
+    document.getElementById('resultSub').textContent = sub;
+    document.getElementById('resultScoreBig').textContent = score;
+    document.getElementById('resultScoreMax').textContent = `/ ${questions.length * 50} điểm`;
+    document.getElementById('rCorrect').textContent = correct;
+    document.getElementById('rWrong').textContent = wrong;
+    document.getElementById('rTime').textContent = totalTime + 's';
+
+    // Stars
+    const numStars = pct >= 80 ? 3 : pct >= 50 ? 2 : 1;
+    ['s1','s2','s3'].forEach((id, i) => {
+        document.getElementById(id).classList.remove('lit');
+        if (i < numStars) {
+            setTimeout(() => document.getElementById(id).classList.add('lit'), 400 + i * 300);
+        }
+    });
+
+    showScreen('screenResult');
+}
+
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToTopics() { showScreen('screenTopic'); }
+function restartSame() { startQuiz(currentTopic); }
+
+// Particles
+const container = document.getElementById('particles');
+for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (12 + Math.random() * 20) + 's';
+    p.style.animationDelay = (-Math.random() * 20) + 's';
+    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+    container.appendChild(p);
+}
+</script>
+</body>
+</html>

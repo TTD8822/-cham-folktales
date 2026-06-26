@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nghe Truyện AI – Cham Folktales AI</title>
+<link rel="stylesheet" href="style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.particle {
+    position: absolute; width: 3px; height: 3px;
+    background: rgba(244,200,107,0.3); border-radius: 50%;
+    animation: float linear infinite;
+}
+@keyframes float {
+    from { transform: translateY(100vh); opacity: 0; }
+    10% { opacity: 1; } 90% { opacity: 1; }
+    to { transform: translateY(-10vh); opacity: 0; }
+}
+
+.nt-wrap { position: relative; z-index: 1; padding: 40px 0 60px; }
+
+.back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 32px; padding: 10px 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; color: #cbd5e1; text-decoration: none;
+    font-size: 14px; transition: 0.2s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.11); color: white; }
+
+/* ===== HERO ===== */
+.nt-hero { text-align: center; margin-bottom: 36px; }
+.nt-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px; font-weight: 800; color: #f4c86b; margin-bottom: 10px;
+}
+.nt-hero p { color: #94a3b8; font-size: 16px; }
+
+/* ===== API KEY SETUP ===== */
+.api-setup {
+    background: linear-gradient(135deg, #1a2b4d, #162949);
+    border: 1px solid rgba(244,200,107,0.2);
+    border-radius: 20px; padding: 28px; margin-bottom: 28px;
+    position: relative; overflow: hidden;
+}
+.api-setup::before {
+    content: '';
+    position: absolute; top: -50%; right: -10%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(244,200,107,0.06), transparent 70%);
+    pointer-events: none;
+}
+.api-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.api-icon {
+    width: 42px; height: 42px; border-radius: 12px;
+    background: linear-gradient(135deg, #f4c86b, #e8a33d);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+}
+.api-header h3 { color: #f4c86b; font-size: 18px; margin-bottom: 2px; }
+.api-header p { color: #64748b; font-size: 12px; }
+.api-input-row { display: flex; gap: 10px; }
+.api-input {
+    flex: 1; padding: 12px 16px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; color: white; font-size: 14px;
+    outline: none; transition: 0.2s; font-family: inherit;
+}
+.api-input::placeholder { color: #475569; }
+.api-input:focus {
+    border-color: rgba(244,200,107,0.4);
+    box-shadow: 0 0 0 3px rgba(244,200,107,0.07);
+}
+.api-save-btn {
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #f4c86b, #e8a33d);
+    border: none; border-radius: 12px; color: #0f1b32;
+    font-weight: 700; font-size: 14px; cursor: pointer;
+    transition: 0.2s; font-family: inherit; white-space: nowrap;
+}
+.api-save-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(244,200,107,0.3); }
+.api-status { margin-top: 10px; font-size: 13px; color: #64748b; }
+.api-status.ok { color: #22c55e; }
+.api-status.err { color: #ef4444; }
+.api-tip {
+    margin-top: 12px; padding: 10px 14px;
+    background: rgba(244,200,107,0.06);
+    border: 1px solid rgba(244,200,107,0.15);
+    border-radius: 10px; font-size: 12px; color: #94a3b8; line-height: 1.6;
+}
+.api-tip a { color: #f4c86b; text-decoration: none; }
+.api-tip a:hover { text-decoration: underline; }
+
+/* ===== VOICE SELECT ===== */
+.voice-section { margin-bottom: 24px; }
+.voice-section h3 { color: #f4c86b; font-size: 16px; margin-bottom: 12px; }
+.voice-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.voice-btn {
+    padding: 9px 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50px; color: #94a3b8; font-size: 13px;
+    cursor: pointer; transition: 0.2s; font-family: inherit;
+}
+.voice-btn.active, .voice-btn:hover {
+    background: rgba(244,200,107,0.13);
+    border-color: rgba(244,200,107,0.4);
+    color: #f4c86b;
+}
+
+/* ===== MAIN LAYOUT ===== */
+.nt-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 22px; align-items: start; }
+
+/* ===== DANH SÁCH TRUYỆN ===== */
+.story-list { display: flex; flex-direction: column; gap: 10px; }
+.story-item {
+    background: #162949;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 14px 16px;
+    cursor: pointer; transition: 0.22s;
+    display: flex; align-items: center; gap: 14px;
+}
+.story-item:hover, .story-item.active {
+    border-color: rgba(244,200,107,0.45);
+    background: rgba(244,200,107,0.06);
+}
+.story-item.active { border-color: #f4c86b; }
+.si-emoji { font-size: 28px; flex-shrink: 0; }
+.si-info { flex: 1; min-width: 0; }
+.si-title { color: white; font-size: 14px; font-weight: 600; line-height: 1.35; margin-bottom: 3px; }
+.si-meta { color: #64748b; font-size: 12px; display: flex; gap: 8px; }
+.si-tag {
+    display: inline-block;
+    background: rgba(124,58,237,0.6);
+    color: white; font-size: 10px; padding: 2px 8px; border-radius: 20px;
+}
+.si-play {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(244,200,107,0.1);
+    border: 1px solid rgba(244,200,107,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: #f4c86b; flex-shrink: 0;
+    transition: 0.2s;
+}
+.story-item:hover .si-play, .story-item.active .si-play {
+    background: linear-gradient(135deg, #f4c86b, #e8a33d);
+    color: #0f1b32;
+}
+
+/* ===== PLAYER ===== */
+.player-panel {
+    background: linear-gradient(180deg, #1a2b4d, #0f1b32);
+    border: 1px solid rgba(244,200,107,0.18);
+    border-radius: 22px; padding: 28px;
+    position: sticky; top: 20px;
+}
+
+.player-cover {
+    width: 100%; aspect-ratio: 1;
+    border-radius: 18px; margin-bottom: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #1a2f5a, #2d1b4e);
+}
+.player-cover::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 40% 40%, rgba(244,200,107,0.08), transparent 65%);
+}
+.cover-emoji { position: relative; z-index: 1; transition: transform 0.5s ease;
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,0.6)); }
+.player-panel.playing .cover-emoji {
+    animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+
+/* Vinyl ring khi đang phát */
+.vinyl-ring {
+    position: absolute; inset: 10px; border-radius: 50%;
+    border: 2px solid rgba(244,200,107,0.2);
+    animation: spin 8s linear infinite;
+    opacity: 0; transition: opacity 0.4s;
+}
+.player-panel.playing .vinyl-ring { opacity: 1; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.now-playing-label {
+    display: none; text-align: center; margin-bottom: 8px;
+    color: #f4c86b; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; font-weight: 600;
+    animation: blink 1.5s infinite;
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+.player-panel.playing .now-playing-label { display: block; }
+
+.player-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: white; text-align: center;
+    margin-bottom: 6px; line-height: 1.35;
+}
+.player-sub {
+    color: #64748b; font-size: 13px; text-align: center; margin-bottom: 22px;
+}
+
+/* Waveform visual */
+.waveform {
+    display: flex; align-items: center; justify-content: center;
+    gap: 4px; height: 36px; margin-bottom: 22px; opacity: 0.4;
+    transition: opacity 0.3s;
+}
+.player-panel.playing .waveform { opacity: 1; }
+.wave-bar {
+    width: 4px; border-radius: 10px;
+    background: linear-gradient(180deg, #f4c86b, #e8a33d);
+    animation: wave 1.2s ease-in-out infinite;
+}
+.wave-bar:nth-child(1) { animation-delay: 0.0s; }
+.wave-bar:nth-child(2) { animation-delay: 0.1s; }
+.wave-bar:nth-child(3) { animation-delay: 0.2s; }
+.wave-bar:nth-child(4) { animation-delay: 0.3s; }
+.wave-bar:nth-child(5) { animation-delay: 0.4s; }
+.wave-bar:nth-child(6) { animation-delay: 0.3s; }
+.wave-bar:nth-child(7) { animation-delay: 0.2s; }
+.wave-bar:nth-child(8) { animation-delay: 0.1s; }
+.wave-bar:nth-child(9) { animation-delay: 0.0s; }
+@keyframes wave {
+    0%,100% { height: 8px; }
+    50% { height: 32px; }
+}
+.player-panel:not(.playing) .wave-bar { animation-play-state: paused; height: 12px; }
+
+/* Progress */
+.prog-wrap { margin-bottom: 20px; }
+.prog-bar-outer {
+    width: 100%; height: 5px; background: rgba(255,255,255,0.08);
+    border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 8px;
+}
+.prog-bar-inner { height: 100%; background: linear-gradient(90deg, #f4c86b, #e8a33d); border-radius: 10px; transition: width 0.3s linear; }
+.prog-times { display: flex; justify-content: space-between; font-size: 12px; color: #64748b; }
+
+/* Controls */
+.controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 20px; }
+.ctrl-btn {
+    background: none; border: none; color: #64748b;
+    font-size: 22px; cursor: pointer; transition: 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 50%;
+}
+.ctrl-btn:hover { color: #f4c86b; background: rgba(244,200,107,0.08); }
+.play-btn {
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, #f4c86b, #e8a33d);
+    border: none; border-radius: 50%;
+    font-size: 24px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #0f1b32; transition: 0.2s;
+    box-shadow: 0 4px 18px rgba(244,200,107,0.35);
+}
+.play-btn:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(244,200,107,0.45); }
+
+/* Volume */
+.vol-row { display: flex; align-items: center; gap: 10px; }
+.vol-icon { color: #64748b; font-size: 16px; flex-shrink: 0; }
+.vol-slider {
+    flex: 1; -webkit-appearance: none; height: 4px;
+    background: rgba(255,255,255,0.1); border-radius: 10px; outline: none;
+    cursor: pointer;
+}
+.vol-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 14px; height: 14px;
+    border-radius: 50%; background: #f4c86b; cursor: pointer;
+}
+.vol-pct { color: #64748b; font-size: 12px; width: 36px; text-align: right; }
+
+/* Status bar */
+.player-status {
+    margin-top: 16px; padding: 10px 14px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px; font-size: 13px; color: #64748b;
+    text-align: center; min-height: 40px;
+    display: flex; align-items: center; justify-content: center;
+}
+.player-status.loading { color: #f4c86b; }
+.player-status.error { color: #ef4444; }
+.player-status.ready { color: #22c55e; }
+
+/* Spinner */
+.spinner {
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid rgba(244,200,107,0.3);
+    border-top-color: #f4c86b;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 6px;
+}
+
+/* Speed */
+.speed-row { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
+.speed-label { color: #64748b; font-size: 12px; }
+.speed-btn {
+    padding: 4px 12px; font-size: 12px; border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #94a3b8; cursor: pointer; font-family: inherit; transition: 0.2s;
+}
+.speed-btn.active, .speed-btn:hover {
+    background: rgba(244,200,107,0.13);
+    border-color: rgba(244,200,107,0.3);
+    color: #f4c86b;
+}
+
+@media (max-width: 700px) {
+    .nt-layout { grid-template-columns: 1fr; }
+    .player-panel { position: static; }
+    .player-cover { aspect-ratio: 2/1; }
+}
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="container" style="position:relative;z-index:1;">
+<div class="nt-wrap">
+
+    <a href="index.html" class="back-btn">← Trang chủ</a>
+
+    <div class="nt-hero">
+        <h1>🎧 Nghe Truyện AI</h1>
+        <p>Truyện dân gian Chăm được kể bằng giọng đọc AI chân thực</p>
+    </div>
+
+    <!-- API KEY SETUP -->
+    <div class="api-setup">
+        <div class="api-header">
+            <div class="api-icon">🔑</div>
+            <div>
+                <h3>Cài đặt ElevenLabs API Key</h3>
+                <p>Cần API key để tạo giọng đọc AI chất lượng cao</p>
+            </div>
+        </div>
+        <div class="api-input-row">
+            <input type="password" class="api-input" id="apiKeyInput" placeholder="sk_... (dán API key của bạn vào đây)">
+            <button class="api-save-btn" onclick="saveApiKey()">💾 Lưu Key</button>
+        </div>
+        <div class="api-status" id="apiStatus">🔒 Chưa có API key – Key được lưu cục bộ, không gửi đi đâu</div>
+        <div class="api-tip">
+            💡 Lấy API key miễn phí tại <a href="https://elevenlabs.io" target="_blank">elevenlabs.io</a> → Đăng ký → Profile → API Keys.
+            Gói miễn phí có 10.000 ký tự/tháng. Key của bạn chỉ lưu trong trình duyệt, không chia sẻ với ai.
+        </div>
+    </div>
+
+    <!-- CHỌN GIỌNG -->
+    <div class="voice-section">
+        <h3>🎙️ Chọn giọng đọc</h3>
+        <div class="voice-row">
+            <button class="voice-btn active" data-voice="21m00Tcm4TlvDq8ikWAM" onclick="selectVoice(this)">👩 Rachel (Nữ, nhẹ nhàng)</button>
+            <button class="voice-btn" data-voice="AZnzlk1XvdvUeBnXmlld" onclick="selectVoice(this)">👨 Domi (Nam, trầm)</button>
+            <button class="voice-btn" data-voice="EXAVITQu4vr4xnSDxMaL" onclick="selectVoice(this)">👩 Bella (Nữ, ấm)</button>
+            <button class="voice-btn" data-voice="ErXwobaYiN019PkySvjV" onclick="selectVoice(this)">👨 Antoni (Nam, rõ)</button>
+        </div>
+    </div>
+
+    <!-- LAYOUT CHÍNH -->
+    <div class="nt-layout">
+
+        <!-- DANH SÁCH -->
+        <div class="story-list" id="storyList"></div>
+
+        <!-- PLAYER -->
+        <div class="player-panel" id="playerPanel">
+            <div class="player-cover">
+                <div class="vinyl-ring"></div>
+                <span class="cover-emoji" id="coverEmoji">🎵</span>
+            </div>
+            <div class="now-playing-label">▶ ĐANG PHÁT</div>
+            <div class="player-title" id="playerTitle">Chọn một truyện để nghe</div>
+            <div class="player-sub" id="playerSub">Bấm vào tên truyện bên trái</div>
+
+            <div class="waveform">
+                <div class="wave-bar" style="height:10px"></div>
+                <div class="wave-bar" style="height:18px"></div>
+                <div class="wave-bar" style="height:24px"></div>
+                <div class="wave-bar" style="height:30px"></div>
+                <div class="wave-bar" style="height:36px"></div>
+                <div class="wave-bar" style="height:30px"></div>
+                <div class="wave-bar" style="height:24px"></div>
+                <div class="wave-bar" style="height:18px"></div>
+                <div class="wave-bar" style="height:10px"></div>
+            </div>
+
+            <div class="prog-wrap">
+                <div class="prog-bar-outer" onclick="seekAudio(event)">
+                    <div class="prog-bar-inner" id="progressBar" style="width:0%"></div>
+                </div>
+                <div class="prog-times">
+                    <span id="timeElapsed">0:00</span>
+                    <span id="timeDuration">0:00</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="ctrl-btn" onclick="prevStory()" title="Truyện trước">⏮</button>
+                <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+                <button class="ctrl-btn" onclick="nextStory()" title="Truyện tiếp">⏭</button>
+            </div>
+
+            <div class="vol-row">
+                <span class="vol-icon">🔈</span>
+                <input type="range" class="vol-slider" id="volSlider" min="0" max="100" value="80" oninput="setVolume(this.value)">
+                <span class="vol-pct" id="volPct">80%</span>
+                <span class="vol-icon">🔊</span>
+            </div>
+
+            <div class="speed-row">
+                <span class="speed-label">Tốc độ:</span>
+                <button class="speed-btn" onclick="setSpeed(0.75, this)">0.75×</button>
+                <button class="speed-btn active" onclick="setSpeed(1, this)">1×</button>
+                <button class="speed-btn" onclick="setSpeed(1.25, this)">1.25×</button>
+                <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5×</button>
+            </div>
+
+            <div class="player-status" id="playerStatus">Chọn truyện và nhấn phát để bắt đầu</div>
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+<script>
+// ===== DỮ LIỆU TRUYỆN =====
+const stories = [
+    {
+        emoji: '🌸', tag: 'Truyền thuyết', time: '15 phút',
+        title: 'Truyền Thuyết Nữ Thiên Y A Na',
+        text: `Ngày xưa, tại vùng đất Chăm Pa tươi đẹp, có một cô bé mồ côi sống trong nghèo khó. Cô bé được người ta gọi là Thiên Y A Na – người con của Trời. Từ khi còn nhỏ, nàng đã toả ra ánh sáng kỳ diệu mỗi khi đặt tay lên cây cối, làm hoa trái đâm chồi nảy lộc. Một ngày, một khúc gỗ kỳ lạ trôi xuống từ thượng nguồn. Khúc gỗ ấy phát ra hương thơm ngào ngạt và ánh vàng rực rỡ. Từ trong lòng gỗ, một vị thần hiện ra, đó chính là Thái Tử Bắc Hải. Hai người yêu nhau và sống hạnh phúc bên nhau. Nhưng Thái Tử phải trở về biển Bắc vì cha gọi. Thiên Y A Na đau lòng nhưng không ngăn cản chồng làm tròn chữ hiếu. Sau nhiều năm chờ đợi, nàng nuôi dưỡng hai con khôn lớn, dạy dỗ dân làng trồng lúa, dệt vải, và sống hòa hợp với thiên nhiên. Cuối đời, nàng hoá thân thành vị thần bảo hộ, phù hộ cho người Chăm đời đời.`
+    },
+    {
+        emoji: '💕', tag: 'Cổ tích', time: '12 phút',
+        title: 'Nha Rúi và Tầm Đang',
+        text: `Ở một làng Chăm nhỏ bên chân núi, có đôi trai gái yêu nhau tha thiết. Chàng tên là Nha Rúi – con nhà nghèo nhưng hiền lành, chịu khó. Nàng tên là Tầm Đang – con gái của một vị tù trưởng giàu có. Cha của Tầm Đang phản đối mối tình này và đặt ra ba thử thách: mang về một túi vàng, thuần hoá con ngựa hoang hung dữ nhất núi, và chiến thắng trong cuộc thi bắn cung của làng. Nha Rúi không nản lòng. Chàng lên núi làm thuê suốt ba mùa để có túi vàng. Chàng kiên nhẫn tiếp cận con ngựa hoang bằng lòng tốt và sự nhẫn nại. Trong cuộc thi bắn cung, mũi tên cắm thẳng vào trung tâm đích. Nhưng cha của Tầm Đang vẫn muốn gả nàng đi nơi khác. Đêm trước ngày xuất giá, một cơn mưa lớn đổ xuống. Nha Rúi phi ngựa đến, đưa tay ra. Hai người cùng vượt núi, tìm đến một vùng đất mới để xây dựng cuộc sống hạnh phúc.`
+    },
+    {
+        emoji: '🏺', tag: 'Dân gian', time: '10 phút',
+        title: 'Hũ Bạc và Người Cha',
+        text: `Ngày xưa có một lão nông người Chăm tên Palây, cả đời cần cù làm lụng. Ông có hai người con trai – người anh chăm chỉ, người em lười biếng. Khi già yếu, ông gọi cả hai con và nói: Cha đã chôn một hũ bạc ngoài ruộng. Sau khi cha mất, hai con tự tìm lấy. Người anh bắt đầu cuốc xới ruộng vườn cẩn thận, mỗi tấc đất đều không bỏ sót. Người em thì háo hức đào bới khắp nơi tìm bạc thật sự, nhưng chỉ toàn thấy đất và rễ cây. Sau một mùa cuốc xới, ruộng của người anh tươi tốt, lúa bội thu. Người anh hiểu ra: hũ bạc của cha chính là mảnh đất – thứ sẽ sinh ra bạc nếu ta chịu khó cày cấy. Người em cuối cùng cũng ngộ ra bài học và bắt đầu học làm ruộng từ đầu. Câu chuyện nhắc nhở rằng chỉ có lao động mới là hũ bạc thật sự.`
+    },
+    {
+        emoji: '👹', tag: 'Cổ tích', time: '11 phút',
+        title: 'Anh Trai và Mụ Quỷ Già',
+        text: `Trong một khu rừng rậm rạp ở vùng núi Chăm Pa, tương truyền có một mụ quỷ già sống trong hang đá. Mụ có mái tóc bạc như tuyết, móng tay dài như sừng trâu. Một chàng trai tên Inra phải vào rừng tìm thuốc cho mẹ đang bệnh nặng. Giữa rừng, mụ quỷ xuất hiện và giả vờ thân thiện, mời Inra nghỉ lại nhà mụ. Inra biết đây là bẫy, nhưng vẫn gật đầu vì đã có kế hoạch. Đêm đó, khi mụ quỷ ngủ say, Inra lấy muối rắc vào đôi mắt mụ. Mụ tỉnh giấc la hét, mù tạm thời. Inra nhân cơ hội tìm được tủ thuốc trong hang, lấy đúng loại lá thuốc cần thiết rồi lao ra ngoài. Mụ quỷ đuổi theo nhưng vấp phải rễ cây và ngã xuống vực. Từ đó khu rừng thanh bình trở lại. Câu chuyện về chàng Inra hiếu thảo được người dân Chăm truyền mãi đến ngày nay.`
+    },
+    {
+        emoji: '🐺', tag: 'Ngụ ngôn', time: '8 phút',
+        title: 'Bò và Chó Sói',
+        text: `Ngày xưa, trong một cánh đồng rộng lớn của người Chăm, có một con bò hiền lành chăm chỉ. Mỗi ngày nó cày bừa ruộng cho chủ, chiều tối lại được thả ra ăn cỏ trên đồng. Một hôm, con chó sói từ rừng xuống nhìn thấy bò đang ăn cỏ một mình. Sói giả vờ thân thiện và nói: Anh bò ơi, hãy để tôi giúp anh trốn đi, chúng ta cùng vào rừng sống tự do, không phải cày ruộng nữa. Bò nhìn sói một lúc rồi đáp: Tôi biết anh muốn gì. Nhà tôi gần đây, chủ tôi luôn cho tôi ăn no và che mưa che nắng. Thứ anh gọi là tự do thật ra là đói khổ. Sói im lặng, không ngờ bị bò nhìn thấu, và quay đầu bỏ đi. Câu chuyện dạy rằng: lời ngon tiếng ngọt từ kẻ xấu không bao giờ thiếu, nhưng người khôn ngoan biết nhìn thấu bên trong những lời đó.`
+    },
+    {
+        emoji: '🧒', tag: 'Dân gian', time: '9 phút',
+        title: 'Cậu Bé Ranh Mãnh',
+        text: `Ở làng Chăm có một cậu bé tên Tala, nhỏ con nhưng nhanh trí. Cha mẹ mất sớm, cậu sống nhờ vào sự thông minh. Một hôm, tên địa chủ tham lam muốn chiếm mảnh vườn nhỏ của Tala. Hắn gọi cậu đến và nói: Tao sẽ cho mày một câu đố. Hắn chìa ra bàn tay nắm chặt và hỏi: Con chim trong tay tao còn sống hay đã chết? Tala hiểu ngay: nếu nói còn sống, hắn sẽ bóp chết; nếu nói đã chết, hắn sẽ thả ra. Cậu bình tĩnh nói: Câu trả lời nằm trong tay ông. Nếu ông thả tay ra, chúng ta sẽ thấy sự thật. Nhưng nếu ông không dám thả, thì chính ông đang sợ câu trả lời. Dân làng bật cười. Địa chủ xấu hổ đành thả tay – con chim bay vút lên trời. Tala giữ được mảnh vườn. Câu chuyện dạy rằng dù nhỏ bé đến đâu, trí tuệ vẫn chiến thắng quyền lực.`
+    },
+    {
+        emoji: '🐸', tag: 'Cổ tích', time: '13 phút',
+        title: 'Chàng Ếch và Con Út Vua',
+        text: `Vua Chăm Pa có ba cô con gái xinh đẹp. Khi đến tuổi gả chồng, vua tổ chức lễ chọn phò mã: ai bắt được quả cầu vàng do công chúa ném ra sẽ được chọn làm con rể. Hai cô chị ném cầu cho những chàng trai khôi ngô. Nhưng cô út lại ném cầu xuống ao sen, nơi một con ếch xanh đang ngồi trên lá. Ếch há miệng đớp lấy quả cầu và biến thành một chàng trai đẹp như tiên. Chàng là hoàng tử của vương quốc dưới nước, bị phù thủy độc ác biến thành ếch. Lời nguyền chỉ có thể phá vỡ khi có người con gái chân thật đồng ý kết hôn với chàng trong hình hài ếch. Cô út là người duy nhất không nhìn vào ngoại hình mà cảm nhận được trái tim trong sáng của chàng. Đám cưới được tổ chức. Hoàng tử trở về vương quốc dưới nước và phá bỏ lời nguyền. Câu chuyện nhắc nhở rằng vẻ đẹp thật sự ẩn sâu trong trái tim.`
+    },
+    {
+        emoji: '⚔️', tag: 'Truyền thuyết', time: '14 phút',
+        title: 'Chàng Panrang và Chàng Parik',
+        text: `Vào thuở Chăm Pa còn hùng mạnh, có hai người bạn thân từ thuở nhỏ: Panrang và Parik. Panrang xuất thân từ dòng dõi tướng lĩnh, mạnh mẽ như hổ núi. Parik con nhà dân thường, nhưng mưu trí hơn người. Khi quân xâm lược tràn vào biên giới, vua triệu cả hai ra trận. Panrang xông thẳng vào trận địa đánh tan một đội quân địch. Parik ở hậu tuyến bày binh bố trận, cắt đứt đường lương thực của địch. Nhưng quân địch quá đông, hai người bị vây hãm. Panrang muốn đánh tới cùng, Parik đề nghị rút lui bảo toàn lực lượng. Cuối cùng họ cùng nhau bảo vệ đoàn quân rút lui, đổi lấy việc một mình cản hậu. Trong trận cuối ấy, Panrang ngã xuống trước. Parik cõng bạn, chiến đấu cho đến khi quân bạn thoát hết. Cả hai được người Chăm tôn thờ là anh hùng vệ quốc, và tên của họ được đặt cho hai vùng đất Panrang và Parik để đời đời ghi nhớ.`
+    },
+    {
+        emoji: '🏰', tag: 'Truyền thuyết', time: '16 phút',
+        title: 'Po Klong Garai – Vị Vua Huyền Thoại',
+        text: `Người Chăm kể rằng, ngàn năm trước, có một vị vua tên Po Klong Garai sinh ra trong cảnh nghèo khổ. Thuở nhỏ ông phải chăn trâu thuê cho địa chủ. Một hôm đang chăn trâu trên đồi, trời đổ mưa lớn, ông trú mưa và thiếp ngủ. Trong giấc mơ, thần Shiva hiện ra ban cho ông thanh kiếm vàng và nói: Ngươi được chọn để dẫn dắt dân Chăm. Tỉnh dậy, ông thấy bên cạnh mình thật sự có thanh kiếm tỏa ánh sáng vàng. Từ đó số phận ông thay đổi. Ông dẫn quân đánh dẹp giặc, thống nhất các vùng đất Chăm và trở thành vị vua được muôn dân kính yêu. Điều ông được nhớ đến nhất là công trình để lại: hệ thống tháp Chăm và kênh dẫn nước tưới tiêu cho đồng ruộng. Những tháp gạch hùng vĩ không cần vữa nhưng vẫn đứng vững ngàn năm. Khi ông mất, người Chăm khóc ròng ba ngày ba đêm và thờ ông trong những ngôi tháp ông đã xây.`
+    },
+    {
+        emoji: '🤚', tag: 'Cổ tích', time: '12 phút',
+        title: 'Nàng Bàn Tay',
+        text: `Ngày xưa, có một bà mẹ người Chăm sinh ra không phải một đứa trẻ, mà chỉ là một bàn tay. Bà kinh hoàng, nhưng bàn tay biết cử động, biết bò, biết cầm nắm. Bà đặt tên con là Nàng Bàn Tay. Dù không có thân xác, Nàng Bàn Tay làm được mọi việc: dệt vải, nấu ăn, chăm sóc mẹ. Các ngón tay của nàng khéo léo hơn bất kỳ người phụ nữ nào trong làng. Con trai của tù trưởng một lần đi qua thấy tấm vải do Nàng Bàn Tay dệt – đẹp đến mức chàng không rời mắt được. Khi biết sự thật, chàng ngồi một mình suy nghĩ suốt đêm. Sáng hôm sau, chàng đến nhà bà mẹ và nói: Con xin cưới Nàng Bàn Tay làm vợ. Vì con người được đánh giá bởi trái tim và đôi tay làm việc, không phải hình hài bên ngoài. Đêm tân hôn, thần linh ban phép – Nàng Bàn Tay hiện ra đầy đủ hình hài của một người phụ nữ xinh đẹp. Tình yêu chân thật đã phá vỡ lời nguyền.`
+    }
+];
+
+// ===== STATE =====
+let apiKey = localStorage.getItem('el_api_key') || '';
+let selectedVoice = '21m00Tcm4TlvDq8ikWAM';
+let currentIdx = -1;
+let audio = null;
+let isPlaying = false;
+let playbackSpeed = 1;
+
+// ===== API KEY =====
+function saveApiKey() {
+    const val = document.getElementById('apiKeyInput').value.trim();
+    if (!val) { setStatus('err', '❌ Vui lòng nhập API key'); return; }
+    if (!val.startsWith('sk_') && val.length < 20) {
+        setStatus('err', '❌ API key không đúng định dạng (phải bắt đầu bằng sk_...)');
+        return;
+    }
+    apiKey = val;
+    localStorage.setItem('el_api_key', val);
+    setStatus('ok', '✅ Đã lưu API key thành công! Sẵn sàng phát truyện.');
+    document.getElementById('apiKeyInput').value = '';
+}
+
+function setStatus(type, msg) {
+    const el = document.getElementById('apiStatus');
+    el.textContent = msg;
+    el.className = 'api-status ' + type;
+}
+
+// Load saved key indicator
+if (apiKey) {
+    document.getElementById('apiStatus').textContent = '✅ Đã có API key – Sẵn sàng phát truyện';
+    document.getElementById('apiStatus').className = 'api-status ok';
+}
+
+// ===== VOICE =====
+function selectVoice(btn) {
+    document.querySelectorAll('.voice-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedVoice = btn.dataset.voice;
+}
+
+// ===== BUILD LIST =====
+const listEl = document.getElementById('storyList');
+stories.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'story-item';
+    div.id = `si-${i}`;
+    div.innerHTML = `
+        <span class="si-emoji">${s.emoji}</span>
+        <div class="si-info">
+            <div class="si-title">${s.title}</div>
+            <div class="si-meta">
+                <span class="si-tag">${s.tag}</span>
+                <span>⏱ ${s.time}</span>
+            </div>
+        </div>
+        <div class="si-play" id="sip-${i}">▶</div>
+    `;
+    div.onclick = () => selectStory(i);
+    listEl.appendChild(div);
+});
+
+// ===== CHỌN TRUYỆN =====
+function selectStory(idx) {
+    if (audio) { audio.pause(); audio = null; }
+    document.querySelectorAll('.story-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.si-play').forEach(el => el.textContent = '▶');
+    currentIdx = idx;
+    const s = stories[idx];
+    document.getElementById(`si-${idx}`).classList.add('active');
+    document.getElementById(`sip-${idx}`).textContent = '▶';
+    document.getElementById('coverEmoji').textContent = s.emoji;
+    document.getElementById('playerTitle').textContent = s.title;
+    document.getElementById('playerSub').textContent = `${s.tag} • ${s.time}`;
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('timeElapsed').textContent = '0:00';
+    document.getElementById('timeDuration').textContent = '0:00';
+    document.getElementById('playBtn').textContent = '▶';
+    document.getElementById('playerPanel').classList.remove('playing');
+    isPlaying = false;
+    setPlayerStatus('', 'Nhấn ▶ để bắt đầu phát truyện');
+}
+
+// ===== PHÁT / DỪNG =====
+async function togglePlay() {
+    if (currentIdx < 0) {
+        setPlayerStatus('', '👆 Vui lòng chọn một truyện trước');
+        return;
+    }
+    if (audio && !audio.paused) {
+        audio.pause();
+        isPlaying = false;
+        document.getElementById('playBtn').textContent = '▶';
+        document.getElementById('playerPanel').classList.remove('playing');
+        document.getElementById(`sip-${currentIdx}`).textContent = '▶';
+        return;
+    }
+    if (audio && audio.paused && audio.src) {
+        audio.play();
+        isPlaying = true;
+        document.getElementById('playBtn').textContent = '⏸';
+        document.getElementById('playerPanel').classList.add('playing');
+        return;
+    }
+    await generateAndPlay(currentIdx);
+}
+
+async function generateAndPlay(idx) {
+    if (!apiKey) {
+        setPlayerStatus('error', '❌ Chưa có API key! Hãy nhập ElevenLabs API key ở phía trên.');
+        return;
+    }
+    const s = stories[idx];
+    setPlayerStatus('loading', '<span class="spinner"></span> Đang tạo giọng đọc AI...');
+    document.getElementById('playBtn').textContent = '⏳';
+    try {
+        const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice}`, {
+            method: 'POST',
+            headers: {
+                'xi-api-key': apiKey,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                text: s.text,
+                model_id: 'eleven_multilingual_v2',
+                voice_settings: { stability: 0.5, similarity_boost: 0.75 }
+            })
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail?.message || `Lỗi ${res.status}`);
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        audio = new Audio(url);
+        audio.playbackRate = playbackSpeed;
+        audio.volume = document.getElementById('volSlider').value / 100;
+        audio.ontimeupdate = updateProgress;
+        audio.onended = () => {
+            isPlaying = false;
+            document.getElementById('playBtn').textContent = '▶';
+            document.getElementById('playerPanel').classList.remove('playing');
+            document.getElementById(`sip-${currentIdx}`).textContent = '▶';
+            setPlayerStatus('ready', '✅ Phát xong! Nhấn ▶ để nghe lại.');
+            if (currentIdx < stories.length - 1) {
+                setTimeout(() => { currentIdx++; selectStory(currentIdx); }, 2000);
+            }
+        };
+        audio.play();
+        isPlaying = true;
+        document.getElementById('playBtn').textContent = '⏸';
+        document.getElementById('playerPanel').classList.add('playing');
+        document.getElementById(`sip-${currentIdx}`).textContent = '⏸';
+        setPlayerStatus('ready', `▶ Đang phát: ${s.title}`);
+    } catch (e) {
+        setPlayerStatus('error', `❌ Lỗi: ${e.message}`);
+        document.getElementById('playBtn').textContent = '▶';
+    }
+}
+
+function updateProgress() {
+    if (!audio || !audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('timeElapsed').textContent = fmt(audio.currentTime);
+    document.getElementById('timeDuration').textContent = fmt(audio.duration);
+}
+
+function fmt(s) {
+    const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+
+function seekAudio(e) {
+    if (!audio || !audio.duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    audio.currentTime = pct * audio.duration;
+}
+
+function setPlayerStatus(cls, msg) {
+    const el = document.getElementById('playerStatus');
+    el.className = 'player-status ' + cls;
+    el.innerHTML = msg;
+}
+
+function setVolume(val) {
+    document.getElementById('volPct').textContent = val + '%';
+    if (audio) audio.volume = val / 100;
+}
+
+function setSpeed(spd, btn) {
+    playbackSpeed = spd;
+    if (audio) audio.playbackRate = spd;
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function prevStory() {
+    if (currentIdx > 0) { selectStory(currentIdx - 1); }
+}
+function nextStory() {
+    if (currentIdx < stories.length - 1) { selectStory(currentIdx + 1); }
+}
+
+// Particles
+const container = document.getElementById('particles');
+for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (12 + Math.random() * 20) + 's';
+    p.style.animationDelay = (-Math.random() * 20) + 's';
+    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+    container.appendChild(p);
+}
+</script>
+</body>
+</html>

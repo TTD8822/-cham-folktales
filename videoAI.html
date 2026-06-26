@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video AI – Cham Folktales AI</title>
+<link rel="stylesheet" href="style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ===== PARTICLES ===== */
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.particle {
+    position: absolute; width: 3px; height: 3px;
+    background: rgba(244,200,107,0.3); border-radius: 50%;
+    animation: float linear infinite;
+}
+@keyframes float {
+    from { transform: translateY(100vh); opacity: 0; }
+    10% { opacity: 1; } 90% { opacity: 1; }
+    to { transform: translateY(-10vh); opacity: 0; }
+}
+
+.vid-wrap { position: relative; z-index: 1; padding: 40px 0 60px; }
+
+/* ===== BACK BTN ===== */
+.back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 32px; padding: 10px 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; color: #cbd5e1; text-decoration: none;
+    font-size: 14px; transition: 0.2s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.11); color: white; }
+
+/* ===== HERO ===== */
+.vid-hero { text-align: center; margin-bottom: 36px; }
+.vid-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(244,200,107,0.08), transparent 70%);
+    pointer-events: none;
+}
+.vid-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px; font-weight: 800; color: #f4c86b;
+    margin-bottom: 10px; letter-spacing: 1px;
+}
+.vid-hero p { color: #94a3b8; font-size: 16px; margin-bottom: 16px; }
+.vid-badge {
+    display: inline-block;
+    background: rgba(244,200,107,0.12);
+    border: 1px solid rgba(244,200,107,0.28);
+    color: #f4c86b; font-size: 13px; padding: 5px 16px;
+    border-radius: 20px;
+}
+
+/* ===== FILTER ===== */
+.vid-filters {
+    display: flex; gap: 10px; justify-content: center;
+    flex-wrap: wrap; margin: 24px 0 30px;
+}
+.vid-filter-btn {
+    padding: 8px 20px; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 50px;
+    color: #94a3b8; font-size: 13px; cursor: pointer;
+    transition: 0.2s; font-family: inherit;
+}
+.vid-filter-btn:hover, .vid-filter-btn.active {
+    background: rgba(244,200,107,0.15);
+    border-color: rgba(244,200,107,0.4);
+    color: #f4c86b;
+}
+
+/* ===== SEARCH ===== */
+.vid-search-wrap {
+    max-width: 480px; margin: 0 auto 32px; position: relative;
+}
+.vid-search-wrap input {
+    width: 100%; padding: 13px 20px 13px 46px;
+    background: #162949; border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 50px; color: white; font-size: 15px;
+    outline: none; transition: 0.2s; font-family: inherit;
+}
+.vid-search-wrap input::placeholder { color: #475569; }
+.vid-search-wrap input:focus {
+    border-color: rgba(244,200,107,0.4);
+    box-shadow: 0 0 0 3px rgba(244,200,107,0.07);
+}
+.vid-search-icon {
+    position: absolute; left: 16px; top: 50%;
+    transform: translateY(-50%); font-size: 16px;
+    opacity: 0.4; pointer-events: none;
+}
+
+/* ===== GRID ===== */
+.vid-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 22px; padding-bottom: 60px;
+}
+
+.vid-card {
+    background: #162949; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px; overflow: hidden; cursor: pointer;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    position: relative;
+}
+.vid-card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(244,200,107,0.45);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.45);
+}
+
+/* Màu nền thumb */
+.vid-card:nth-child(8n+1) .vid-thumb { background: linear-gradient(135deg,#1a2f5a,#2d1b4e); }
+.vid-card:nth-child(8n+2) .vid-thumb { background: linear-gradient(135deg,#1e3a2f,#2a4a1e); }
+.vid-card:nth-child(8n+3) .vid-thumb { background: linear-gradient(135deg,#3b1a1a,#4a2d1e); }
+.vid-card:nth-child(8n+4) .vid-thumb { background: linear-gradient(135deg,#1a2d3b,#1e3a3a); }
+.vid-card:nth-child(8n+5) .vid-thumb { background: linear-gradient(135deg,#2a1e3b,#3b2a1a); }
+.vid-card:nth-child(8n+6) .vid-thumb { background: linear-gradient(135deg,#1e2a1a,#3b3a1a); }
+.vid-card:nth-child(8n+7) .vid-thumb { background: linear-gradient(135deg,#2a2a1e,#1e1e3b); }
+.vid-card:nth-child(8n+0) .vid-thumb { background: linear-gradient(135deg,#1f2a3b,#3a1f2a); }
+
+.vid-thumb {
+    width: 100%; height: 200px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; font-size: 64px;
+}
+.vid-thumb::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 35% 35%, rgba(255,255,255,0.06), transparent 65%);
+}
+.play-icon {
+    position: absolute;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(244,200,107,0.9);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: #0f1b32; z-index: 1;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(244,200,107,0.4);
+}
+.vid-card:hover .play-icon {
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(244,200,107,0.5);
+}
+.thumb-emoji {
+    position: relative; z-index: 0;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+    transition: transform 0.3s;
+}
+.vid-card:hover .thumb-emoji { transform: scale(1.12); }
+
+.vid-tag {
+    position: absolute; top: 11px; left: 11px;
+    background: rgba(124,58,237,0.82); backdrop-filter: blur(5px);
+    color: white; font-size: 10px; padding: 3px 10px;
+    border-radius: 20px; z-index: 2; font-weight: 500;
+}
+.vid-duration {
+    position: absolute; bottom: 11px; right: 11px;
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+    color: #f4c86b; font-size: 11px; padding: 3px 9px;
+    border-radius: 20px; z-index: 2;
+}
+
+.vid-body { padding: 14px 16px 16px; }
+.vid-body h3 {
+    color: white; font-size: 15px; font-weight: 600;
+    line-height: 1.45; margin-bottom: 7px;
+}
+.vid-body p {
+    color: #64748b; font-size: 12.5px;
+    line-height: 1.55; margin-bottom: 12px;
+}
+.vid-footer {
+    display: flex; align-items: center; justify-content: space-between;
+}
+.vid-watch-btn {
+    font-size: 12px; color: #f4c86b;
+    display: flex; align-items: center; gap: 4px; font-weight: 500;
+}
+.vid-views { font-size: 12px; color: #64748b; }
+
+/* ===== MODAL ===== */
+.vid-modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92); z-index: 1000;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(5px); padding: 20px;
+}
+.vid-modal-overlay.open { display: flex; }
+
+.vid-modal {
+    background: #0f1b32; border: 1px solid rgba(244,200,107,0.2);
+    border-radius: 22px; width: 100%; max-width: 920px;
+    max-height: 88vh; display: flex; flex-direction: column;
+    overflow: hidden; box-shadow: 0 28px 70px rgba(0,0,0,0.8);
+    animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.vid-modal-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    padding: 20px 24px 16px; border-bottom: 1px solid rgba(255,255,255,0.07);
+    flex-shrink: 0;
+}
+.vid-modal-title {
+    font-family: 'Playfair Display', serif;
+    color: #f4c86b; font-size: 24px; font-weight: 700;
+    line-height: 1.3; margin-bottom: 6px;
+}
+.vid-modal-meta {
+    color: #64748b; font-size: 12px; display: flex; gap: 14px;
+}
+.vid-close-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(255,255,255,0.07); border: none;
+    color: white; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s; flex-shrink: 0; margin-left: 16px;
+}
+.vid-close-btn:hover { background: rgba(255,255,255,0.14); }
+
+.vid-modal-body {
+    flex: 1; overflow: hidden; padding: 20px;
+}
+.vid-iframe-wrap {
+    width: 100%; height: 100%; border-radius: 14px;
+    overflow: hidden; border: none;
+    background: black;
+}
+.vid-iframe-wrap iframe {
+    width: 100%; height: 100%; border: none;
+}
+
+.vid-modal-footer {
+    padding: 14px 24px; border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; flex-shrink: 0;
+}
+.vid-action-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 20px; background: rgba(244,200,107,0.1);
+    border: 1px solid rgba(244,200,107,0.28);
+    border-radius: 10px; color: #f4c86b; font-size: 13px;
+    cursor: pointer; transition: 0.2s; font-family: inherit;
+    text-decoration: none;
+}
+.vid-action-btn:hover { background: rgba(244,200,107,0.2); }
+
+/* ===== EMPTY ===== */
+.vid-empty {
+    display: none; text-align: center; padding: 60px 20px;
+    color: #475569; grid-column: 1/-1;
+}
+.vid-empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+/* ===== ANIMATIONS ===== */
+.vid-card {
+    opacity: 0; transform: translateY(24px);
+    animation: cardIn 0.5s forwards;
+}
+@keyframes cardIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+.vid-card:nth-child(1) { animation-delay: 0.05s; }
+.vid-card:nth-child(2) { animation-delay: 0.10s; }
+.vid-card:nth-child(3) { animation-delay: 0.15s; }
+.vid-card:nth-child(4) { animation-delay: 0.20s; }
+.vid-card:nth-child(5) { animation-delay: 0.25s; }
+.vid-card:nth-child(6) { animation-delay: 0.30s; }
+.vid-card:nth-child(7) { animation-delay: 0.35s; }
+.vid-card:nth-child(8) { animation-delay: 0.40s; }
+.vid-card:nth-child(9) { animation-delay: 0.45s; }
+.vid-card:nth-child(10) { animation-delay: 0.50s; }
+
+@media (max-width: 700px) {
+    .vid-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .vid-modal { max-width: 96vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="container" style="position:relative;z-index:1;">
+<div class="vid-wrap">
+
+    <a href="index.html" class="back-btn">← Trang chủ</a>
+
+    <div class="vid-hero">
+        <h1>🎥 Video AI</h1>
+        <p>Truyện dân gian Chăm được kể bằng video AI sáng tạo</p>
+        <div class="vid-badge">30 video</div>
+    </div>
+
+    <!-- Filters -->
+    <div class="vid-filters">
+        <button class="vid-filter-btn active" data-filter="all">Tất cả</button>
+        <button class="vid-filter-btn" data-filter="Cổ tích">Cổ tích</button>
+        <button class="vid-filter-btn" data-filter="Truyền thuyết">Truyền thuyết</button>
+        <button class="vid-filter-btn" data-filter="Ngụ ngôn">Ngụ ngôn</button>
+        <button class="vid-filter-btn" data-filter="Dân gian">Dân gian</button>
+    </div>
+
+    <!-- Search -->
+    <div class="vid-search-wrap">
+        <span class="vid-search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Tìm tên video...">
+    </div>
+
+    <!-- Grid videos -->
+    <div class="vid-grid" id="videoGrid"></div>
+
+    <div class="vid-empty" id="emptyMsg">
+        <div class="vid-empty-icon">📭</div>
+        <p>Không tìm thấy video nào phù hợp.</p>
+    </div>
+
+</div>
+</div>
+
+<!-- MODAL VIDEO -->
+<div class="vid-modal-overlay" id="vidOverlay" onclick="closeOnOverlay(event)">
+    <div class="vid-modal">
+        <div class="vid-modal-header">
+            <div>
+                <div class="vid-modal-title" id="modalTitle">Tên video</div>
+                <div class="vid-modal-meta">
+                    <span id="modalTag">Thể loại</span>
+                    <span id="modalDuration">⏱ 8 phút</span>
+                </div>
+            </div>
+            <button class="vid-close-btn" onclick="closeModal()">✕</button>
+        </div>
+        <div class="vid-modal-body">
+            <div class="vid-iframe-wrap" id="iframeWrap"></div>
+        </div>
+        <div class="vid-modal-footer">
+            <button class="vid-action-btn" onclick="closeModal()">✕ Đóng</button>
+            <a id="vidOpenNew" href="#" target="_blank" class="vid-action-btn">↗ Xem toàn màn hình</a>
+        </div>
+    </div>
+</div>
+
+<script>
+// ===== DỮ LIỆU VIDEO =====
+const videos = [
+    // VIDEO LOCAL - TỆP VIDEO CỦA BẠN
+    {
+        type: 'youtube', id: 'RXd1BtmSMco', emoji: '🏺', tag: 'Dân gian', duration: '10 phút',
+        title: 'Hũ Bạc và Người Cha',
+        desc: 'Bài học về lao động, chịu khó và giá trị thực sự của của cải.'
+    },
+    
+    // VIDEOS YOUTUBE - CÓ THỂ REPLACE BẰNG VIDEO THẬT
+    {
+        type: 'youtube', id: 'dQw4w9WgXcQ', emoji: '🌸', tag: 'Truyền thuyết', duration: '15 phút',
+        title: 'Truyền Thuyết Nữ Thiên Y A Na',
+        desc: 'Câu chuyện về vị nữ thần bảo hộ thiêng liêng của người Chăm.'
+    },
+    {
+        type: 'youtube', id: 'jNQXAC9IVRw', emoji: '💕', tag: 'Cổ tích', duration: '12 phút',
+        title: 'Nha Rúi và Tầm Đang',
+        desc: 'Tình yêu vượt qua mọi thử thách và lòng thủy chung bất diệu.'
+    },
+    {
+        type: 'youtube', id: '9bZkp7q19f0', emoji: '👹', tag: 'Cổ tích', duration: '11 phút',
+        title: 'Anh Trai và Mụ Quỷ Già',
+        desc: 'Chàng trai dũng cảm chiến thắng quỷ dữ bằng trí tuệ và lòng hiếu thảo.'
+    },
+    {
+        type: 'youtube', id: 'a-Z0r8kNgNg', emoji: '👹', tag: 'Cổ tích', duration: '11 phút',
+        title: 'Anh Trai và Mụ Quỷ Già',
+        desc: 'Chàng trai dũng cảm chiến thắng quỷ dữ bằng trí tuệ và lòng hiếu thảo.'
+    },
+    {
+        type: 'youtube', id: 'kJQP7kiw9Fk', emoji: '🐺', tag: 'Ngụ ngôn', duration: '8 phút',
+        title: 'Bò và Chó Sói',
+        desc: 'Người khôn ngoan biết nhìn thấu lời lừa dối của kẻ xấu.'
+    },
+    {
+        type: 'youtube', id: 'L18DV2ZsA88', emoji: '🧒', tag: 'Dân gian', duration: '9 phút',
+        title: 'Cậu Bé Ranh Mãnh',
+        desc: 'Trí tuệ chiến thắng quyền lực – bài học của cậu bé mồ côi.'
+    },
+    {
+        type: 'youtube', id: '9YffrCnqKEA', emoji: '🐸', tag: 'Cổ tích', duration: '13 phút',
+        title: 'Chàng Ếch và Con Út Vua',
+        desc: 'Tình yêu chân thật phá vỡ mọi lời nguyền và phép thuật tối ác.'
+    },
+    {
+        type: 'youtube', id: 'dE7N8sJWm3c', emoji: '⚔️', tag: 'Truyền thuyết', duration: '14 phút',
+        title: 'Chàng Panrang và Chàng Parik',
+        desc: 'Tình bạn thiêng liêng và lòng dũng cảm của hai anh hùng dân tộc.'
+    },
+    {
+        type: 'youtube', id: 'aqz-KE-bpKQ', emoji: '🏰', tag: 'Truyền thuyết', duration: '16 phút',
+        title: 'Po Klong Garai – Vị Vua Huyền Thoại',
+        desc: 'Anh hùng từ thân phận thấp hèn – di sản bất diệt của Chăm Pa.'
+    },
+    {
+        type: 'youtube', id: '2oVVAEv2WwY', emoji: '🤚', tag: 'Cổ tích', duration: '12 phút',
+        title: 'Nàng Bàn Tay',
+        desc: 'Tình yêu nhìn thấy vẻ đẹp nội tâm, không phải vẻ ngoài.'
+    },
+    {
+        type: 'youtube', id: 'OPf0YbXqDm0', emoji: '🐸', tag: 'Ngụ ngôn', duration: '7 phút',
+        title: 'Con Ếch Muốn Lớn Bằng Con Trâu',
+        desc: 'Bài học về sự tham lam và biết giới hạn của bản thân.'
+    },
+    {
+        type: 'youtube', id: 'kxiL5CLT3FY', emoji: '🦁', tag: 'Ngụ ngôn', duration: '10 phút',
+        title: 'Đàn Thú Đi Săn',
+        desc: 'Sức mạnh thật sự nằm ở sự đoàn kết và tin tưởng lẫn nhau.'
+    },
+    {
+        type: 'youtube', id: 'r6ecyKpjn88', emoji: '🌸', tag: 'Truyền thuyết', duration: '18 phút',
+        title: 'Thiên Y A Na và Vương Quốc Biển',
+        desc: 'Câu chuyện về tình yêu giữa nữ thần và hoàng tử dưới nước.'
+    },
+    {
+        type: 'youtube', id: 'DLzxrzFCyOs', emoji: '⚡', tag: 'Cổ tích', duration: '11 phút',
+        title: 'Thần Sấm Sét và Vua Mưa',
+        desc: 'Cuộc chiến giữa thần linh bầu trời để bảo vệ đất Chăm.'
+    },
+    {
+        type: 'youtube', id: 'VHFZa3xnv78', emoji: '🎭', tag: 'Dân gian', duration: '14 phút',
+        title: 'Lễ Katê – Tiệc Của Các Vị Thần',
+        desc: 'Lịch sử và ý nghĩa sâu xa của lễ hội lớn nhất của người Chăm.'
+    },
+    {
+        type: 'youtube', id: 'JlnaMT6SCYY', emoji: '👑', tag: 'Cổ tích', duration: '13 phút',
+        title: 'Thường Dân Yêu Con Vua',
+        desc: 'Tình yêu vượt qua sự chênh lệch giàu nghèo và địa vị.',
+    },
+    {
+        type: 'youtube', id: 'dQw4w9WgXcQ', emoji: '🏺', tag: 'Dân gian', duration: '9 phút',
+        title: 'Làng Gốm Bàu Trúc',
+        desc: 'Kỹ nghệ truyền thống của người Chăm qua hàng trăm năm.'
+    },
+    {
+        type: 'youtube', id: 'jNQXAC9IVRw', emoji: '🎵', tag: 'Dân gian', duration: '10 phút',
+        title: 'Âm Nhạc Dân Gian Chăm',
+        desc: 'Những giai điệu cổ xưa kể những câu chuyện về tổ tiên.'
+    },
+    {
+        type: 'youtube', id: '9bZkp7q19f0', emoji: '💍', tag: 'Cổ tích', duration: '12 phút',
+        title: 'Chiếc Nhẫn Vàng May Mắn',
+        desc: 'Một chiếc nhẫn mang theo hơn trăm năm lịch sử gia tộc.'
+    },
+    {
+        type: 'youtube', id: 'a-Z0r8kNgNg', emoji: '🌳', tag: 'Ngụ ngôn', duration: '8 phút',
+        title: 'Cây Cổ Thụ Bên Làng',
+        desc: 'Câu chuyện về sự bảo vệ và che chở của cây cổ thụ.'
+    },
+    {
+        type: 'youtube', id: 'kJQP7kiw9Fk', emoji: '🎪', tag: 'Dân gian', duration: '15 phút',
+        title: 'Trò Chơi Truyền Thống Chăm',
+        desc: 'Các trò chơi dân gian gắn kết cộng đồng người Chăm.'
+    },
+    {
+        type: 'youtube', id: 'L18DV2ZsA88', emoji: '🍚', tag: 'Dân gian', duration: '9 phút',
+        title: 'Cơm – Thứ Lương Khí',
+        desc: 'Câu chuyện về thứ lương khí nuôi sống người Chăm qua đời.'
+    },
+    {
+        type: 'youtube', id: '9YffrCnqKEA', emoji: '💫', tag: 'Truyền thuyết', duration: '13 phút',
+        title: 'Ngôi Sao Xuyên Đêm',
+        desc: 'Truyền thuyết về vị sao hướng dẫn tàu thuyền người Chăm.'
+    },
+    {
+        type: 'youtube', id: 'dE7N8sJWm3c', emoji: '🏛️', tag: 'Dân gian', duration: '14 phút',
+        title: 'Tháp Po Klong Garai – Kiến Trúc Vĩ Đại',
+        desc: 'Bí ẩn kỹ thuật xây dựng không dùng vữa của người Chăm cổ.'
+    },
+    {
+        type: 'youtube', id: 'aqz-KE-bpKQ', emoji: '🌊', tag: 'Cổ tích', duration: '12 phút',
+        title: 'Công Chúa Biển',
+        desc: 'Cô gái được sinh ra từ sóng biển và mưa giăng.'
+    },
+    {
+        type: 'youtube', id: '2oVVAEv2WwY', emoji: '🔥', tag: 'Ngụ ngôn', duration: '7 phút',
+        title: 'Lửa và Nước',
+        desc: 'Câu chuyện hai lực lượng đối lập nhưng cùng hòa hợp.'
+    },
+    {
+        type: 'youtube', id: 'OPf0YbXqDm0', emoji: '🌙', tag: 'Truyền thuyết', duration: '11 phút',
+        title: 'Mặt Trăng và Những Bí Ẩn Đêm',
+        desc: 'Lịch sử lịch Chăm gắn liền với chu kỳ mặt trăng.'
+    },
+    {
+        type: 'youtube', id: 'kxiL5CLT3FY', emoji: '🎨', tag: 'Dân gian', duration: '10 phút',
+        title: 'Thổ Cẩm – Nghệ Thuật Dệt Truyền Thống',
+        desc: 'Những hoa văn kỳ diệu trên vải dệt tay người Chăm.'
+    },
+    {
+        type: 'youtube', id: 'r6ecyKpjn88', emoji: '🗡️', tag: 'Cổ tích', duration: '13 phút',
+        title: 'Thanh Kiếm Thần Kỳ',
+        desc: 'Kiếm vàng của vua Po Klong Garai và những câu chuyện xung quanh.'
+    },
+    {
+        type: 'youtube', id: 'DLzxrzFCyOs', emoji: '🦅', tag: 'Ngụ ngôn', duration: '9 phút',
+        title: 'Con Đại Bàng Trắng',
+        desc: 'Chuyện về chú đại bàng dạy con cách vươn cao bay xa.'
+    }
+];
+
+// ===== BUILD GRID =====
+const gridEl = document.getElementById('videoGrid');
+videos.forEach((v, i) => {
+    const div = document.createElement('div');
+    div.className = 'vid-card';
+    div.dataset.genre = v.tag;
+    div.onclick = () => openVideo(v, i);
+    div.innerHTML = `
+        <div class="vid-thumb">
+            <span class="thumb-emoji">${v.emoji}</span>
+            <div class="play-icon">▶</div>
+            <span class="vid-tag">${v.tag}</span>
+            <span class="vid-duration">⏱ ${v.duration}</span>
+        </div>
+        <div class="vid-body">
+            <h3>${v.title}</h3>
+            <p>${v.desc}</p>
+            <div class="vid-footer">
+                <span class="vid-watch-btn">📺 Xem ngay →</span>
+                <span class="vid-views">👁 ${Math.floor(Math.random() * 50 + 5)}K</span>
+            </div>
+        </div>
+    `;
+    gridEl.appendChild(div);
+});
+
+// ===== FILTER =====
+document.querySelectorAll('.vid-filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.vid-filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const filter = this.dataset.filter;
+        let found = 0;
+        document.querySelectorAll('.vid-card').forEach(card => {
+            const genre = card.dataset.genre;
+            const show = filter === 'all' || genre === filter;
+            card.style.display = show ? '' : 'none';
+            if (show) found++;
+        });
+    });
+});
+
+// ===== SEARCH =====
+document.getElementById('searchInput').addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.vid-card');
+    let found = 0;
+    cards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const show = !q || title.includes(q);
+        card.style.display = show ? '' : 'none';
+        if (show) found++;
+    });
+    document.getElementById('emptyMsg').style.display = found === 0 ? 'block' : 'none';
+});
+
+// ===== MODAL =====
+function openVideo(v, idx) {
+    document.getElementById('modalTitle').textContent = v.title;
+    document.getElementById('modalTag').textContent = v.tag;
+    document.getElementById('modalDuration').textContent = '⏱ ' + v.duration;
+    
+    const wrap = document.getElementById('iframeWrap');
+    wrap.innerHTML = '';
+    
+    if (v.type === 'local') {
+        // Video local file
+        const video = document.createElement('video');
+        video.src = v.file;
+        video.controls = true;
+        video.autoplay = true;
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'contain';
+        wrap.appendChild(video);
+        document.getElementById('vidOpenNew').href = '#';
+        document.getElementById('vidOpenNew').style.display = 'none';
+    } else if (v.type === 'youtube') {
+        // YouTube embed
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${v.id}?autoplay=1&fs=1&rel=0`;
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        wrap.appendChild(iframe);
+        document.getElementById('vidOpenNew').href = `https://www.youtube.com/watch?v=${v.id}`;
+        document.getElementById('vidOpenNew').style.display = 'inline-flex';
+    }
+    
+    document.getElementById('vidOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('vidOverlay').classList.remove('open');
+    document.getElementById('iframeWrap').innerHTML = '';
+    document.body.style.overflow = '';
+}
+
+function closeOnOverlay(e) {
+    if (e.target === document.getElementById('vidOverlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+});
+
+// ===== PARTICLES =====
+const container = document.getElementById('particles');
+for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (12 + Math.random() * 20) + 's';
+    p.style.animationDelay = (-Math.random() * 20) + 's';
+    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+    container.appendChild(p);
+}
+</script>
+</body>
+</html>
