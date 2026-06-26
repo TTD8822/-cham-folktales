@@ -10,7 +10,6 @@ body{
     background-position:top center;
     background-repeat:no-repeat;
     background-attachment:fixed;
-
     color:white;
     font-family:Arial,sans-serif;
 }
@@ -26,20 +25,17 @@ body{
 .hero-content{
     text-align:center;
 }
-
 .hero-content h1{
     font-size:62px;
     color:#f4c86b;
     font-weight:bold;
     letter-spacing:2px;
 }
-
 .hero-content h2{
     font-size:42px;
     color:white;
     margin-top:8px;
 }
-
 .hero-content p{
     margin-top:15px;
     font-size:24px;
@@ -50,22 +46,18 @@ body{
     max-width:1800px;
     margin:auto;
 }
-
 .header{
     text-align:center;
     margin-bottom:30px;
 }
-
 .header h1{
     font-size:42px;
     color:#38bdf8;
 }
-
 .header p{
     color:#cbd5e1;
     margin-top:10px;
 }
-
 .section{
     background:#1e293b;
     padding:25px;
@@ -73,32 +65,25 @@ body{
     margin-bottom:25px;
     box-shadow:0 5px 15px rgba(0,0,0,.3);
 }
-
 .info{
     border-left:6px solid #38bdf8;
 }
-
 .chat{
     border-left:6px solid #22c55e;
 }
-
 .story{
     border-left:6px solid #f59e0b;
 }
-
 .video{
     border-left:6px solid #ef4444;
 }
-
 .section h2{
     margin-bottom:15px;
 }
-
 .chat-box{
     display:flex;
     gap:10px;
 }
-
 .chat-box input{
     flex:1;
     padding:12px;
@@ -106,7 +91,6 @@ body{
     border-radius:10px;
     outline:none;
 }
-
 .chat-box button{
     padding:12px 20px;
     border:none;
@@ -115,12 +99,9 @@ body{
     background:#22c55e;
     color:white;
 }
-
 .chat-box button:hover{
     background:#16a34a;
 }
-
-
 .card{
     background:#334155;
     border-radius:15px;
@@ -128,29 +109,23 @@ body{
     transition:.3s;
     height:100%;
 }
-
 .card:hover{
     transform:translateY(-8px);
 }
-
 .card img{
     width:100%;
     height:180px;
     object-fit:cover;
 }
-
 .card-content{
     padding:15px;
 }
-
 .card-content h3{
     text-align:center;
 }
-
 ::-webkit-scrollbar{
     width:8px;
 }
-
 ::-webkit-scrollbar-thumb{
     background:#38bdf8;
     border-radius:20px;
@@ -162,12 +137,10 @@ body{
     text-decoration:none;
     color:white;
 }
-
 .arrow{
     font-size:30px;
     color:#22c55e;
 }
-
 .feature-link:hover .arrow{
     transform:translateX(8px);
     transition:0.3s;
@@ -181,34 +154,31 @@ body{
     text-decoration:none;
     border-radius:10px;
 }
-
 .back-btn:hover{
     background:#475569;
 }
-
 .chat-page{
     background:#1e293b;
     padding:20px;
     border-radius:20px;
     text-align:center;
 }
-
 .chat-page h1{
     margin-bottom:10px;
     color:#fbbf24;
     font-size:42px;
     font-weight:700;
 }
-
 .chat-page p{
     text-align:center;
     color:#cbd5e1;
     margin-bottom:15px;
     font-size:18px;
 }
-
 .back-btn{
-    display:inline-block;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
     margin-bottom:20px;
     padding:10px 20px;
     background:#334155;
@@ -217,11 +187,9 @@ body{
     border-radius:10px;
     transition:0.3s;
 }
-
 .back-btn:hover{
     background:#475569;
 }
-
 .chat-page iframe{
     width:100%;
     height:650px;
@@ -236,7 +204,6 @@ body{
     gap:20px;
     margin-top:35px;
 }
-
 .stat-box{
     background:rgba(9,25,50,.75);
     padding:18px 28px;
@@ -244,12 +211,10 @@ body{
     border:1px solid rgba(255,255,255,.08);
     backdrop-filter:blur(6px);
 }
-
 .stat-box h3{
     color:#f4c86b;
     font-size:28px;
 }
-
 .stat-box span{
     color:white;
     font-size:14px;
@@ -260,7 +225,6 @@ body{
     gap:15px;
     margin-bottom:25px;
 }
-
 .menu-card{
     background:#162949;
     border:1px solid rgba(255,255,255,.08);
@@ -271,31 +235,23 @@ body{
     color:white;
     transition:.3s;
 }
-
 .menu-card:hover{
     transform:translateY(-8px);
     border-color:#f4c86b;
 }
-
 .menu-card .icon{
     font-size:36px;
     margin-bottom:10px;
 }
-
 .menu-card h3{
     font-size:18px;
     margin-bottom:8px;
     color:#f4c86b;
 }
-
 .menu-card p{
     font-size:13px;
     color:#cbd5e1;
 }
-/* ===========================
-   KHU VỰC 3 CỘT
-=========================== */
-
 .main-grid{
     display:grid;
     grid-template-columns:2.3fr 1.15fr;
@@ -303,24 +259,14 @@ body{
     align-items:start;
     margin-top:20px;
 }
-
 .left-side{
     display:flex;
     flex-direction:column;
     gap:20px;
 }
-
 .right-side{
     width:100%;
 }
-
-
-
-
-/* ===========================
-   KHUNG CHUNG
-=========================== */
-
 .story,
 .video,
 .chat-widget{
@@ -330,7 +276,6 @@ body{
     padding:15px;
     box-shadow:0 5px 15px rgba(0,0,0,.35);
 }
-
 .story h2,
 .video h2,
 .chat-widget h2{
@@ -338,12 +283,6 @@ body{
     font-size:24px;
     margin-bottom:15px;
 }
-
-
-/* ===========================
-   CHAT AI
-=========================== */
-
 .chat-widget{
     height:100%;
     background:linear-gradient(180deg,#1a2b4d 0%,#0f1b32 100%);
@@ -353,14 +292,12 @@ body{
     box-shadow:0 10px 30px rgba(0,0,0,.45),
                inset 0 0 0 1px rgba(244,200,107,.05);
 }
-
 .chat-widget-header{
     display:flex;
     align-items:flex-start;
     gap:12px;
     margin-bottom:16px;
 }
-
 .chat-icon-circle{
     flex-shrink:0;
     width:44px;
@@ -373,20 +310,17 @@ body{
     font-size:20px;
     box-shadow:0 4px 10px rgba(244,200,107,.35);
 }
-
 .chat-widget-header h2{
     color:#f4c86b;
     font-size:19px;
     margin-bottom:4px;
     font-weight:700;
 }
-
 .chat-widget-header p{
     color:#cbd5e1;
     font-size:13px;
     line-height:1.4;
 }
-
 .chat-iframe-wrap{
     border-radius:16px;
     overflow:hidden;
@@ -394,7 +328,6 @@ body{
     box-shadow:0 4px 14px rgba(0,0,0,.35);
     height:560px;
 }
-
 .chat-widget iframe{
     display:block;
     width:calc(100% + 34px);
@@ -403,15 +336,9 @@ body{
     border:none;
     background:white;
 }
-
 .chat-widget{
     height:auto;
 }
-
-/* ===========================
-   CARD TRUYỆN
-=========================== */
-
 .cards{
     display:grid;
     grid-template-columns:repeat(3,1fr);
@@ -423,21 +350,17 @@ body{
     overflow:hidden;
     transition:.3s;
 }
-
 .card:hover{
     transform:translateY(-5px);
 }
-
 .card img{
     width:100%;
     height:170px;
     object-fit:cover;
 }
-
 .card-content{
     padding:12px;
 }
-
 .tag{
     display:inline-block;
     background:#7c3aed;
@@ -446,20 +369,17 @@ body{
     font-size:11px;
     margin-bottom:10px;
 }
-
 .card-content h3{
     text-align:left;
     color:white;
     font-size:19px;
     margin-bottom:8px;
 }
-
 .card-content p{
     color:#cbd5e1;
     font-size:14px;
     line-height:1.5;
 }
-
 .card-info{
     display:flex;
     justify-content:space-between;
@@ -467,36 +387,21 @@ body{
     color:#f4c86b;
     font-size:13px;
 }
-
-
-/* ===========================
-   KHÁM PHÁ & TÌM HIỂU
-=========================== */
-
 .video .cards{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:18px;
 }
-
 .video .card img{
     height:150px;
 }
-
 .video .card-content{
     text-align:center;
 }
-
 .video .card-content h3{
     text-align:center;
     font-size:18px;
 }
-
-
-/* ===========================
-   MENU
-=========================== */
-
 .menu-grid{
     position:relative;
     z-index:2;
@@ -512,57 +417,431 @@ body{
     color:white;
     transition:.3s;
 }
-
 .menu-card:hover{
     transform:translateY(-5px);
     border-color:#f4c86b;
 }
-
 .menu-card .icon{
     font-size:30px;
     margin-bottom:8px;
 }
-
 .menu-card h3{
     color:#f4c86b;
     font-size:16px;
     margin-bottom:5px;
 }
-
 .menu-card p{
     color:#cbd5e1;
     font-size:12px;
 }
-
-
-
-/* ===========================
-   THỐNG KÊ
-=========================== */
-
 .stats{
     display:flex;
     justify-content:center;
     gap:15px;
     margin-top:25px;
 }
-
 .stat-box{
     background:rgba(9,25,50,.8);
     padding:15px 22px;
     border-radius:15px;
     border:1px solid rgba(255,255,255,.08);
 }
-
 .stat-box h3{
     color:#f4c86b;
     font-size:24px;
 }
-
 .stat-box span{
     color:white;
     font-size:12px;
 }
 .video{
     margin-top:20px;
+}
+
+/* extra-side (Khám phá & Tìm hiểu) */
+.extra-side{
+    background:#162949;
+    border-radius:18px;
+    padding:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.35);
+}
+.extra-side h2{
+    color:white;
+    font-size:24px;
+    margin-bottom:15px;
+}
+
+/* =============================================
+   CHATBOT PAGE
+   ============================================= */
+.chatbot-page{
+    padding:30px 0 60px;
+}
+.chatbot-header{
+    text-align:center;
+    margin-bottom:24px;
+}
+.chatbot-header h1{
+    font-size:42px;
+    color:#f4c86b;
+    font-weight:800;
+    margin-bottom:10px;
+}
+.chatbot-header p{
+    color:#cbd5e1;
+    font-size:16px;
+    max-width:560px;
+    margin:0 auto;
+    line-height:1.6;
+}
+.chatbot-wrap{
+    background:linear-gradient(180deg,#1a2b4d 0%,#0f1b32 100%);
+    border:1px solid rgba(244,200,107,0.22);
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.45);
+    max-width:900px;
+    margin:0 auto;
+}
+.chatbot-wrap iframe{
+    width:100%;
+    height:650px;
+    border:none;
+    border-radius:14px;
+    background:white;
+    display:block;
+}
+
+/* =============================================
+   RESPONSIVE – TABLET (max 1024px)
+   ============================================= */
+@media (max-width:1024px){
+
+    .menu-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+    .main-grid{
+        grid-template-columns:1fr;
+    }
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+    .hero-content h1{
+        font-size:48px;
+    }
+    .hero-content h2{
+        font-size:32px;
+    }
+    .hero-content p{
+        font-size:18px;
+    }
+    .stat-box h3{
+        font-size:22px;
+    }
+    .chat-iframe-wrap{
+        height:480px;
+    }
+}
+
+/* =============================================
+   RESPONSIVE – MOBILE (max 768px)
+   ============================================= */
+@media (max-width:768px){
+
+    .container{
+        width:96%;
+        padding:0 4px;
+    }
+
+    /* HERO */
+    .hero{
+        height:auto;
+        padding:30px 16px 20px;
+    }
+    .hero-content h1{
+        font-size:32px;
+        letter-spacing:0;
+    }
+    .hero-content h2{
+        font-size:22px;
+    }
+    .hero-content p{
+        font-size:15px;
+        margin-top:10px;
+    }
+
+    /* STATS */
+    .stats{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+        margin-top:20px;
+    }
+    .stat-box{
+        padding:12px 14px;
+    }
+    .stat-box h3{
+        font-size:22px;
+    }
+    .stat-box span{
+        font-size:12px;
+    }
+
+    /* MENU GRID */
+    .menu-grid{
+        grid-template-columns:repeat(3,1fr);
+        gap:8px;
+        margin-top:-10px;
+        margin-bottom:16px;
+    }
+    .menu-card{
+        padding:12px 6px;
+        border-radius:12px;
+    }
+    .menu-card .icon{
+        font-size:24px;
+        margin-bottom:6px;
+    }
+    .menu-card h3{
+        font-size:12px;
+        margin-bottom:0;
+    }
+    .menu-card p{
+        display:none;
+    }
+
+    /* MAIN GRID */
+    .main-grid{
+        grid-template-columns:1fr;
+        gap:16px;
+        margin-top:12px;
+    }
+
+    /* CARDS */
+    .cards{
+        grid-template-columns:1fr;
+        gap:14px;
+    }
+
+    /* SECTIONS */
+    .story,
+    .video,
+    .extra-side{
+        padding:14px 12px;
+        border-radius:14px;
+    }
+    .story h2,
+    .video h2,
+    .extra-side h2{
+        font-size:18px;
+        margin-bottom:12px;
+    }
+
+    /* CARD */
+    .card img{
+        height:160px;
+    }
+    .card-content h3{
+        font-size:16px;
+    }
+    .card-content p{
+        font-size:13px;
+    }
+
+    /* CHAT WIDGET (trang chủ) */
+    .chat-widget{
+        padding:14px;
+    }
+    .chat-widget-header h2{
+        font-size:16px;
+    }
+    .chat-iframe-wrap{
+        height:420px;
+    }
+    .chat-widget iframe{
+        width:calc(100% + 20px);
+        height:calc(100% + 20px);
+        margin:-10px;
+    }
+
+    /* BACK BTN */
+    .back-btn{
+        font-size:13px;
+        padding:8px 14px;
+    }
+
+    /* CHATBOT PAGE */
+    .chatbot-header h1{
+        font-size:28px;
+    }
+    .chatbot-header p{
+        font-size:14px;
+    }
+    .chatbot-wrap{
+        padding:12px;
+        border-radius:14px;
+    }
+    .chatbot-wrap iframe{
+        height:540px;
+        border-radius:10px;
+    }
+
+    /* TRUYENCO */
+    .tc-hero h1{
+        font-size:32px;
+    }
+    .tc-grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:14px;
+    }
+    .tc-modal{
+        border-radius:16px;
+    }
+    .tc-modal-title{
+        font-size:20px;
+    }
+    .tc-modal-body{
+        padding:16px 16px 14px;
+    }
+    .tc-story-text{
+        font-size:15px;
+    }
+
+    /* TRUYENTRANH */
+    .tt-grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:14px;
+    }
+    .pdf-modal{
+        width:96vw;
+        height:85vh;
+    }
+
+    /* VIDEO */
+    .vid-hero h1{
+        font-size:32px;
+    }
+    .vid-grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:14px;
+    }
+    .vid-modal{
+        width:96vw;
+        max-height:90vh;
+    }
+    .vid-modal-title{
+        font-size:18px;
+    }
+
+    /* GAME */
+    .game-hero h1{
+        font-size:32px;
+    }
+    .topic-grid{
+        grid-template-columns:1fr;
+        gap:12px;
+    }
+    .quiz-box{
+        padding:20px 16px;
+        border-radius:18px;
+    }
+    .q-text{
+        font-size:18px;
+    }
+    .result-box{
+        padding:28px 18px;
+    }
+    .result-score-big{
+        font-size:56px;
+    }
+    .result-stats{
+        gap:8px;
+    }
+    .r-stat{
+        padding:12px 14px;
+        min-width:80px;
+    }
+
+    /* NGHE TRUYEN */
+    .nt-hero h1{
+        font-size:32px;
+    }
+    .nt-layout{
+        grid-template-columns:1fr;
+    }
+    .player-panel{
+        position:static;
+    }
+    .player-cover{
+        aspect-ratio:2/1;
+    }
+    .api-input-row{
+        flex-direction:column;
+    }
+    .api-save-btn{
+        width:100%;
+    }
+    .voice-row{
+        gap:8px;
+    }
+    .voice-btn{
+        font-size:12px;
+        padding:7px 12px;
+    }
+}
+
+/* =============================================
+   RESPONSIVE – NHỎ HƠN (max 480px)
+   ============================================= */
+@media (max-width:480px){
+
+    .hero-content h1{
+        font-size:26px;
+    }
+    .hero-content h2{
+        font-size:18px;
+    }
+    .menu-grid{
+        grid-template-columns:repeat(3,1fr);
+        gap:6px;
+    }
+    .menu-card .icon{
+        font-size:20px;
+    }
+    .menu-card h3{
+        font-size:11px;
+    }
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+        gap:8px;
+    }
+    .stat-box h3{
+        font-size:20px;
+    }
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    /* CHATBOT PAGE */
+    .chatbot-header h1{
+        font-size:22px;
+    }
+    .chatbot-wrap iframe{
+        height:480px;
+    }
+
+    /* TRUYENCO */
+    .tc-grid{
+        grid-template-columns:1fr;
+    }
+
+    /* TRUYENTRANH */
+    .tt-grid{
+        grid-template-columns:1fr;
+    }
+
+    /* VIDEO */
+    .vid-grid{
+        grid-template-columns:1fr;
+    }
 }
