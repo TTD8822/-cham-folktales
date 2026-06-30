@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản Trị – Cham Folktales AI</title>
+<link rel="stylesheet" href="style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+body { font-family: 'Inter', Arial, sans-serif; }
+
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.particle {
+    position: absolute; width: 3px; height: 3px;
+    background: rgba(244,200,107,0.3); border-radius: 50%;
+    animation: float linear infinite;
+}
+@keyframes float {
+    from { transform: translateY(100vh); opacity: 0; }
+    10% { opacity: 1; } 90% { opacity: 1; }
+    to { transform: translateY(-10vh); opacity: 0; }
+}
+
+.qt-wrap { position: relative; z-index: 1; padding: 40px 0 60px; max-width: 1100px; margin: 0 auto; }
+
+.back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 24px; padding: 10px 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; color: #cbd5e1; text-decoration: none;
+    font-size: 14px; transition: 0.2s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.11); color: white; }
+
+/* ===== LOGIN SCREEN ===== */
+#loginScreen {
+    max-width: 420px; margin: 60px auto 0;
+}
+.login-card {
+    background: linear-gradient(180deg, #1a2b4d, #0f1b32);
+    border: 1px solid rgba(244,200,107,0.2);
+    border-radius: 22px; padding: 36px 32px;
+    text-align: center;
+}
+.login-card .li-icon {
+    width: 56px; height: 56px; border-radius: 16px;
+    background: linear-gradient(135deg, #f4c86b, #e8a33d);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; margin: 0 auto 18px;
+}
+.login-card h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; color: #f4c86b; margin-bottom: 8px;
+}
+.login-card p { color: #94a3b8; font-size: 13px; margin-bottom: 24px; }
+.login-field { margin-bottom: 14px; text-align: left; }
+.login-field label { display:block; color:#cbd5e1; font-size:12px; margin-bottom:6px; font-weight:600;}
+.login-field input {
+    width: 100%; padding: 12px 16px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; color: white; font-size: 14px;
+    outline: none; font-family: inherit;
+}
+.login-field input:focus { border-color: rgba(244,200,107,0.4); }
+.login-btn {
+    width: 100%; padding: 14px; margin-top: 8px;
+    background: linear-gradient(135deg, #f4c86b, #e8a33d);
+    border: none; border-radius: 12px; color: #0f1b32;
+    font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.login-btn:hover { transform: translateY(-1px); }
+.login-err { color: #fca5a5; font-size: 12px; margin-top: 12px; display: none; }
+.login-err.show { display: block; }
+
+/* ===== DASHBOARD ===== */
+#dashboard { display: none; }
+#dashboard.show { display: block; }
+
+.qt-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.qt-header h1 { font-family: 'Playfair Display', serif; font-size: 30px; color: #f4c86b; }
+.qt-header .who { color: #64748b; font-size: 13px; }
+.logout-btn {
+    padding: 8px 16px; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+    color: #cbd5e1; font-size: 13px; cursor: pointer; font-family: inherit;
+}
+.logout-btn:hover { background: rgba(255,255,255,0.12); }
+
+.qt-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.qt-tab-btn {
+    padding: 10px 18px; background: #162949;
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+    color: #94a3b8; font-size: 13px; cursor: pointer; font-family: inherit; transition: 0.2s;
+}
+.qt-tab-btn.active, .qt-tab-btn:hover { background: rgba(244,200,107,0.12); border-color: rgba(244,200,107,0.35); color: #f4c86b; }
+
+.qt-panel { display: none; }
+.qt-panel.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity:0; transform: translateY(10px);} to {opacity:1; transform: translateY(0);} }
+
+.qt-card {
+    background: linear-gradient(180deg, #1a2b4d, #0f1b32);
+    border: 1px solid rgba(244,200,107,0.18);
+    border-radius: 20px; padding: 24px; margin-bottom: 20px;
+}
+.qt-card h2 { color: #f4c86b; font-size: 18px; margin-bottom: 16px; font-family: 'Playfair Display', serif; }
+
+/* form truyện */
+.qt-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.qt-field label { display: block; color: #cbd5e1; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+.qt-field input, .qt-field select, .qt-field textarea {
+    width: 100%; padding: 10px 14px;
+    background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; color: white; font-size: 13px; outline: none; font-family: inherit;
+}
+.qt-field textarea { min-height: 160px; line-height: 1.6; resize: vertical; }
+.qt-field input:focus, .qt-field select:focus, .qt-field textarea:focus { border-color: rgba(244,200,107,0.4); }
+.qt-field-full { grid-column: 1 / -1; }
+.qt-hint { color: #475569; font-size: 11px; margin-top: 4px; }
+
+.qt-btn {
+    padding: 11px 22px; border: none; border-radius: 10px;
+    font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: 0.2s;
+}
+.qt-btn-primary { background: linear-gradient(135deg, #f4c86b, #e8a33d); color: #0f1b32; }
+.qt-btn-primary:hover { transform: translateY(-1px); }
+.qt-btn-sec { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; }
+.qt-btn-sec:hover { background: rgba(255,255,255,0.13); }
+.qt-btn-danger { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+.qt-btn-danger:hover { background: rgba(239,68,68,0.2); }
+.qt-btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.qt-status { margin-top: 12px; font-size: 13px; padding: 10px 14px; border-radius: 10px; display:none; }
+.qt-status.show { display: block; }
+.qt-status.ok { background: rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.3); color:#86efac; }
+.qt-status.err { background: rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); color:#fca5a5; }
+
+/* list truyện */
+.qt-story-list { display: flex; flex-direction: column; gap: 10px; }
+.qt-story-item {
+    background: #162949; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 14px 16px;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.qsi-emoji { font-size: 26px; }
+.qsi-info { flex: 1; min-width: 150px; }
+.qsi-title { color: white; font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.qsi-meta { color: #64748b; font-size: 12px; }
+.qsi-tag {
+    display: inline-block; background: rgba(124,58,237,0.6); color: white;
+    font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-right: 6px;
+}
+
+/* feedback list */
+.qt-fb-filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.qt-fb-filter-btn {
+    padding: 7px 14px; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
+    color: #94a3b8; font-size: 12px; cursor: pointer; font-family: inherit;
+}
+.qt-fb-filter-btn.active { background: rgba(244,200,107,0.13); border-color: rgba(244,200,107,0.35); color: #f4c86b; }
+.qt-fb-item {
+    background: #162949; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 16px 18px; margin-bottom: 12px;
+}
+.qt-fb-item.resolved { opacity: 0.55; }
+.qt-fb-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;}
+.qt-fb-type { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: rgba(124,58,237,0.6); color: white; }
+.qt-fb-name { color: #f4c86b; font-size: 13px; font-weight: 600; }
+.qt-fb-story { color: #64748b; font-size: 12px; margin-bottom: 6px; }
+.qt-fb-text { color: #cbd5e1; font-size: 14px; line-height: 1.6; margin-bottom: 8px; }
+.qt-fb-time { color: #475569; font-size: 11px; }
+.qt-fb-contact { color: #64748b; font-size: 12px; margin-bottom: 8px; }
+.qt-fb-actions { display: flex; gap: 8px; margin-top: 10px; }
+.qt-fb-actions button {
+    padding: 6px 14px; font-size: 12px; border-radius: 8px; cursor: pointer; font-family: inherit; border: none;
+}
+.qt-mark-btn { background: rgba(34,197,94,0.13); color: #86efac; border:1px solid rgba(34,197,94,0.3) !important; }
+.qt-del-btn { background: rgba(239,68,68,0.13); color: #fca5a5; border:1px solid rgba(239,68,68,0.3) !important; }
+
+/* stats */
+.qt-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+.qt-stat-box {
+    background: #162949; border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 18px; text-align: center;
+}
+.qt-stat-val { font-size: 30px; font-weight: 800; color: #f4c86b; font-family: 'Playfair Display', serif; }
+.qt-stat-label { color: #64748b; font-size: 12px; margin-top: 4px; }
+
+.qt-empty { text-align: center; color: #475569; padding: 30px 0; font-size: 14px; }
+.qt-loading { text-align: center; color: #64748b; padding: 20px 0; font-size: 13px; }
+
+@media (max-width: 700px) {
+    .qt-form-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="container" style="position:relative;z-index:1;">
+<div class="qt-wrap">
+
+    <a href="index.html" class="back-btn">← Trang chủ</a>
+
+    <!-- ===== LOGIN ===== -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="li-icon">🔐</div>
+            <h1>Đăng Nhập Quản Trị</h1>
+            <p>Khu vực dành riêng cho quản trị viên Cham Folktales AI</p>
+            <form id="loginForm">
+                <div class="login-field">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="admin@vidu.com" required>
+                </div>
+                <div class="login-field">
+                    <label>Mật khẩu</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="login-btn">Đăng nhập</button>
+                <div class="login-err" id="loginErr"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="dashboard">
+
+        <div class="qt-header">
+            <div>
+                <h1>🛠️ Quản Trị Hệ Thống</h1>
+                <div class="who" id="whoAmI"></div>
+            </div>
+            <button class="logout-btn" id="logoutBtn">Đăng xuất</button>
+        </div>
+
+        <div class="qt-tabs">
+            <button class="qt-tab-btn active" data-tab="stories">📖 Quản lý truyện</button>
+            <button class="qt-tab-btn" data-tab="feedback">💬 Phản hồi & người gửi</button>
+            <button class="qt-tab-btn" data-tab="stats">📊 Thống kê truy cập</button>
+            <button class="qt-tab-btn" data-tab="backup">💾 Sao lưu dữ liệu</button>
+        </div>
+
+        <!-- TAB: STORIES -->
+        <div class="qt-panel active" id="panel-stories">
+
+            <div class="qt-card">
+                <h2 id="formTitle">➕ Thêm truyện mới</h2>
+                <form id="storyForm">
+                    <input type="hidden" id="storyDocId">
+                    <div class="qt-form-grid">
+                        <div class="qt-field">
+                            <label>Tiêu đề truyện *</label>
+                            <input type="text" id="sTitle" required placeholder="VD: Nàng Bàn Tay">
+                        </div>
+                        <div class="qt-field">
+                            <label>Thể loại *</label>
+                            <select id="sTag" required>
+                                <option value="Cổ tích">Cổ tích</option>
+                                <option value="Truyền thuyết">Truyền thuyết</option>
+                                <option value="Ngụ ngôn">Ngụ ngôn</option>
+                                <option value="Dân gian">Dân gian</option>
+                            </select>
+                        </div>
+                        <div class="qt-field">
+                            <label>Emoji minh họa</label>
+                            <input type="text" id="sEmoji" placeholder="🐸" maxlength="4">
+                        </div>
+                        <div class="qt-field">
+                            <label>Thời gian đọc</label>
+                            <input type="text" id="sTime" placeholder="12 phút đọc">
+                        </div>
+                        <div class="qt-field">
+                            <label>Đánh giá (số sao, 0–5)</label>
+                            <input type="number" id="sRating" min="0" max="5" step="0.1" placeholder="4.8">
+                        </div>
+                        <div class="qt-field">
+                            <label>Thứ tự hiển thị</label>
+                            <input type="number" id="sOrder" placeholder="0">
+                            <div class="qt-hint">Số nhỏ hiện trước. Để trống = tự xếp cuối.</div>
+                        </div>
+                        <div class="qt-field qt-field-full">
+                            <label>Mô tả ngắn (hiện ở thẻ truyện)</label>
+                            <input type="text" id="sDesc" placeholder="Một câu mô tả ngắn gọn về truyện...">
+                        </div>
+                        <div class="qt-field qt-field-full">
+                            <label>Nội dung truyện * (mỗi đoạn cách nhau bằng 1 dòng trống)</label>
+                            <textarea id="sContent" required placeholder="Đoạn 1...
+
+Đoạn 2...
+
+Đoạn 3..."></textarea>
+                        </div>
+                    </div>
+                    <div class="qt-btn-row">
+                        <button type="submit" class="qt-btn qt-btn-primary" id="storySubmitBtn">Lưu truyện</button>
+                        <button type="button" class="qt-btn qt-btn-sec" id="storyCancelBtn" style="display:none;">Hủy sửa</button>
+                    </div>
+                    <div class="qt-status" id="storyStatus"></div>
+                </form>
+            </div>
+
+            <div class="qt-card">
+                <h2>📚 Danh sách truyện hiện có</h2>
+                <div class="qt-btn-row" style="margin-bottom:16px;">
+                    <button class="qt-btn qt-btn-sec" id="seedBtn">⬇️ Nhập 12 truyện mặc định vào hệ thống (chỉ chạy khi danh sách trống)</button>
+                </div>
+                <div class="qt-story-list" id="storyListEl"><div class="qt-loading">Đang tải...</div></div>
+            </div>
+        </div>
+
+        <!-- TAB: FEEDBACK -->
+        <div class="qt-panel" id="panel-feedback">
+            <div class="qt-card">
+                <h2>💬 Phản hồi từ người dùng</h2>
+                <div class="qt-fb-filters">
+                    <button class="qt-fb-filter-btn active" data-filter="all">Tất cả</button>
+                    <button class="qt-fb-filter-btn" data-filter="new">Chưa xử lý</button>
+                    <button class="qt-fb-filter-btn" data-filter="resolved">Đã xử lý</button>
+                    <button class="qt-fb-filter-btn" data-filter="danhgia">Đánh giá</button>
+                    <button class="qt-fb-filter-btn" data-filter="gopy">Góp ý</button>
+                    <button class="qt-fb-filter-btn" data-filter="dexuat">Đề xuất</button>
+                    <button class="qt-fb-filter-btn" data-filter="baoloi">Báo lỗi</button>
+                </div>
+                <div id="fbListEl"><div class="qt-loading">Đang tải...</div></div>
+            </div>
+        </div>
+
+        <!-- TAB: STATS -->
+        <div class="qt-panel" id="panel-stats">
+            <div class="qt-card">
+                <h2>📊 Thống kê lượt truy cập</h2>
+                <div class="qt-stats-grid" id="statsGrid"><div class="qt-loading">Đang tải...</div></div>
+                <div class="qt-hint" style="margin-top:14px;">Lượt truy cập được tính mỗi khi trang index.html, truyenco.html, nghetruyen.html được mở.</div>
+            </div>
+            <div class="qt-card">
+                <h2>📈 Tổng quan dữ liệu</h2>
+                <div class="qt-stats-grid" id="overviewGrid"><div class="qt-loading">Đang tải...</div></div>
+            </div>
+        </div>
+
+        <!-- TAB: BACKUP -->
+        <div class="qt-panel" id="panel-backup">
+            <div class="qt-card">
+                <h2>💾 Sao lưu dữ liệu</h2>
+                <p style="color:#94a3b8;font-size:13px;margin-bottom:18px;line-height:1.6;">
+                    Xuất toàn bộ dữ liệu (truyện, phản hồi, lượt truy cập) hiện có trên Firestore thành 1 file JSON để lưu trữ dự phòng trên máy bạn.
+                </p>
+                <div class="qt-btn-row">
+                    <button class="qt-btn qt-btn-primary" id="exportBtn">⬇️ Xuất file sao lưu (JSON)</button>
+                </div>
+                <div class="qt-status" id="backupStatus"></div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+<!-- ===== FIREBASE SDK ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ====================================================================
+// 🔧 FIREBASE CONFIG (giống file phanhoi.html)
+// ====================================================================
+const firebaseConfig = {
+    apiKey: "AIzaSyCb4DjQhZfWxTF5yWqSasserm4b4A7r4wc",
+    authDomain: "cham-folktales-3ec38.firebaseapp.com",
+    projectId: "cham-folktales-3ec38",
+    storageBucket: "cham-folktales-3ec38.firebasestorage.app",
+    messagingSenderId: "370479685553",
+    appId: "1:370479685553:web:335ad3764cb5865b0ae790"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// ===== 12 TRUYỆN MẶC ĐỊNH (dùng cho nút "Nhập truyện mặc định") =====
+const defaultStories = [
+    { title:"Truyền Thuyết Nữ Thiên Y A Na", tag:"Truyền thuyết", emoji:"🌸", time:"15 phút đọc", rating:4.8, order:0,
+      desc:"Câu chuyện về vị nữ thần bảo hộ, biểu tượng thiêng liêng của người Chăm.",
+      content:"Xưa kia tại núi Đại An, có hai vợ chồng ông tiều phu cất nhà và vỡ rẫy trồng dưa nơi triền núi. Dưa chín hay bị mất, ông rình thì bắt gặp một thiếu nữ trạc chín mười tuổi hái dưa rồi giỡn dưới trăng. Thấy cô dễ thương, ông đem về nuôi như con ruột.\n\nMột hôm trời mưa lụt lớn, cảnh vật buồn bã, thiếu nữ lấy đá chất thành ba hòn giả sơn, cắm hoa lá vào ngắm cho vui thì bị ông tiều la rầy. Ông không ngờ con gái mình chính là tiên nữ giáng trần, đang nhớ cảnh Bồng Lai. Nhân thấy khúc kỳ nam trôi theo dòng nước, tiên nữ biến thân vào khúc gỗ, để sóng đưa đẩy ra biển, trôi tới đất Trung Hoa.\n\nThái tử Bắc Hải nghe tin, đến xem thì nhấc khúc gỗ lên dễ như chơi, mang về cung làm bảo vật. Một đêm, chàng rình thấy một giai nhân tuyệt sắc từ trong khúc kỳ nam bước ra, vội ôm choàng. Giai nhân không kịp biến đi, theo chàng về cung và cho biết mình là Thiên Y A Na. Thái tử xin vua cha cưới nàng, sinh được hai con là Trí và Quý.\n\nSống êm ấm một thời gian, lòng nhớ quê thúc giục, Thiên Y A Na bồng hai con nhập vào khúc kỳ nam trở về núi Đại An, dạy dân địa phương cày cấy, kéo vải dệt sợi và đặt ra lễ nghi.\n\nĐến một ngày lành, một con chim hạc từ trên mây bay xuống. Bà cùng hai con lên lưng hạc bay về trời. Nhân dân nhớ ơn đức, xây tháp tạc tượng phụng thờ, và mỗi năm vào ngày Bà thăng thiên đều tổ chức lễ múa bóng dâng hoa long trọng." },
+
+    { title:"Nha Rúi và Tầm Đang", tag:"Cổ tích", emoji:"💕", time:"12 phút đọc", rating:4.9, order:1,
+      desc:"Câu chuyện về tình yêu, lòng thủy chung vượt qua mọi thử thách.",
+      content:"Nhà Nha Rúi và Tầm Dang ở chung một quả đồi, cha mẹ hai bên thân nhau như anh em ruột. Rồi cha mẹ hai em cùng nhuốm bệnh, qua đời cùng một ngày. Bọn chủ làng tranh cướp hết đất đai, nhà cửa. Tầm Dang phải đi ở đợ, Nha Rúi được hàng xóm thay nhau nuôi cho ăn từng bữa.\n\nLớn lên, hai người trao nhau mỗi người một nắm tóc, hẹn làm vợ chồng. Tầm Dang lên trời mua trâu thì gặp bão, cầu nối trời đất bị nước xô ngã, không về được. Nha Rúi phải đi ở đợ, rồi về sống một mình trong lều, trồng được một cây bông và ấp nở một con gà trắng biết nói.\n\nNha Rúi dệt một chiếc phái thêu hình chồng, nhờ cây bông vùn vụt mọc cao và con gà mang lên tận trời cho Tầm Dang. Ba hôm sau nàng cũng trèo lên trời tìm chồng, nhưng khi quay về thì cây bông đã biến mất. Tầm Dang phải cõng vợ chạy trốn sang một làng khác sinh sống.\n\nCon gà trắng ăn lớn gấp trăm lần rồi cõng cả gia đình bay về làng cũ, giúp họ đoàn tụ trên chính mảnh đất ông bà để lại." },
+
+    { title:"Hũ Bạc và Người Cha", tag:"Dân gian", emoji:"🏺", time:"10 phút đọc", rating:4.9, order:2,
+      desc:"Bài học về sự chăm chỉ, lòng trung thực và giá trị lao động.",
+      content:"Một ông già chăm chỉ để dành được một hũ bạc nhưng buồn vì con trai chỉ thích chơi bời. Lúc ốm nặng, ông bàn với vợ chỉ cho con hũ bạc khi nó tự tay kiếm được tiền. Người mẹ vì thương con vẫn lén đưa tiền của mình, con trai đem đi chơi hết rồi về đưa 'tiền tự kiếm' cho cha. Ông liền vứt luôn số tiền đó xuống ao, nói thẳng đây không phải tiền do con tự làm ra.\n\nLần sau được mẹ cho ít tiền hơn, hết tiền đói quá, anh phải đi tát nước đổi cơm ăn, rồi đi xay thóc giã gạo thuê suốt ba tháng mới để dành được tiền mang về. Lần này ông già ném tiền vào bếp lửa, người con không sợ bỏng, vội thò tay vào cào than lấy lại tiền.\n\nThấy vậy ông già cười mừng, biết chắc tiền này chính tay con làm ra, liền trao hũ bạc cho con và dặn: hũ bạc tiêu không hết chính là hai bàn tay biết lao động của con." },
+
+    { title:"Anh Trai và Mụ Quỷ Già", tag:"Cổ tích", emoji:"👹", time:"11 phút đọc", rating:4.7, order:3,
+      desc:"Chàng trai dũng cảm dùng trí khôn để thoát khỏi tay mụ quỷ xà-niên hung ác.",
+      content:"Hai anh em nghèo mồ côi vào núi làm rẫy, người em bị quỷ xà-niên bắt ăn thịt lúc người anh về nhà lấy gạo. Người anh nấu rượu độc, mang gà luộc vào rừng mời lũ quỷ ăn uống, khiến chúng say chết hết, chỉ sót một mụ quỷ già đang ngủ.\n\nMụ tỉnh dậy đuổi theo, người anh trèo lên cây xoài tránh, mụ hóa thành cô gái mang thai xin mượn dao rồi hiện nguyên hình đuổi bắt. Anh phải chui vào một quả xoài, được quạ rồi cá lóc mang đi, cuối cùng được một ông bà già nghèo bắt được cá, mổ ra cứu anh, nhận làm con.\n\nBiết mụ quỷ đã hóa thành vợ vua, anh xin vào cung chăn trâu, vượt qua nhiều lần mụ tìm cách nhận diện ăn nhầm người khác. Một đêm theo hộ tống mụ ra sông, anh giấu sẵn kiếm của vua, chờ mụ hiện nguyên hình thì chém chết. Vua ban đầu nổi giận nhưng khi biết sự thật, liền xin lỗi và ban thưởng hậu hĩnh cho anh." },
+
+    { title:"Bò và Chó Sói", tag:"Ngụ ngôn", emoji:"🐺", time:"8 phút đọc", rating:4.6, order:4,
+      desc:"Bài học về sự bội bạc và cái giá phải trả cho lòng tham, lươn lẹo.",
+      content:"Chó Sói đi kiếm ăn không may sa vào một hố sâu, kêu gào cầu cứu. Bò nghe tiếng chạy đến, được Sói hứa hẹn sẽ trả ơn bất cứ điều gì nếu cứu nó lên. Bò thả đuôi kéo Sói lên khỏi hố, nhưng Sói nuốt lời, không chịu trả ơn gì cả.\n\nĐúng lúc đó Thỏ đi ngang qua, được mời phân xử. Thỏ bảo Sói hãy nhảy lại xuống hố để Bò làm lại từ đầu cho Thỏ xem mới phân xử được. Sói tin lời nhảy ngay xuống hố như cũ.\n\nThỏ và Bò liền rủ nhau bỏ đi, để Sói một mình dưới hố không ai cứu nữa. Câu chuyện cho thấy kẻ bội ơn, gian dối rồi cũng phải tự gánh lấy hậu quả do chính mình gây ra." },
+
+    { title:"Trí Khôn Của Con Người", tag:"Dân gian", emoji:"🐯", time:"9 phút đọc", rating:4.8, order:5,
+      desc:"Vì sao Cọp to lớn vẫn phải sợ con người? Câu chuyện về trí khôn hơn sức mạnh.",
+      content:"Cọp thấy người nông dân bắt trâu to khỏe đi cày mà chịu để người đánh roi vào đầu mà không phản ứng, lấy làm lạ hỏi vì sao. Trâu bảo: con người có trí khôn, mình có sức mạnh thật nhưng không có trí khôn nên chẳng làm gì được người.\n\nCọp tìm gặp người nông dân, nằng nặc đòi xem trí khôn là cái gì. Anh nông dân khéo léo từ chối, sợ Cọp ăn thịt trâu mình, rồi bảo Cọp cho trói vào gốc cây để làm bằng chứng mình không có ý hại Cọp. Vì hiếu kỳ, Cọp đồng ý để bị trói thật chặt vào gốc cây.\n\nLúc đó anh nông dân mới lấy roi cày đánh túi bụi vào đầu vào cổ Cọp, vừa đánh vừa nói: 'Trí khôn của ta ở đây, trí khôn của ta ở đây!' Từ đó Cọp mới hiểu vì sao con người nhỏ con nhưng vẫn khiến muôn loài phải nể sợ." },
+
+    { title:"Chàng Ếch và Con Út Vua", tag:"Cổ tích", emoji:"🐸", time:"13 phút đọc", rating:4.8, order:6,
+      desc:"Chàng Ếch vượt qua thử thách của vua, được thần linh giúp đỡ để cưới công chúa.",
+      content:"Một bà sinh ra một con Ếch chỉ bằng bàn tay, nuôi đến mười lăm tuổi nó bỗng biết nói, đòi mẹ đi hỏi con gái út vua cho làm vợ. Vua ra điều kiện trong năm ngày phải kiếm đủ một trăm năm mươi lăm con gà cồ, không thì chém cả hai mẹ con.\n\nChàng Ếch lần lượt tìm gặp các vị thần, cuối cùng đến vua Diêm Vương xin được một quả bầu phép. Mẹ chàng đội bầu về triều, mở nắp ra thì gà, rồng, kỳ lân, cọp, voi tràn ra đầy sân khiến vua quan khiếp sợ. Vua hứa gả công chúa Út.\n\nBan ngày mang hình ếch, ban đêm chàng hóa thành trai đẹp tỏa hào quang. Một đêm nàng Út lén đốt mất vỏ ếch, từ đó chàng giữ luôn hình người đẹp trai nổi danh khắp xứ, được vua nhường ngôi, cùng nàng Út trị vì xứ sở bình an." },
+
+    { title:"Chàng Panrang và Chàng Parik", tag:"Truyền thuyết", emoji:"😄", time:"14 phút đọc", rating:4.9, order:7,
+      desc:"Hai chàng nói dóc nổi tiếng nhất vùng và những màn đấu trí dở khóc dở cười.",
+      content:"Ja Panrang ở Phan Rang và Ja Parik ở Phan Rí là hai chàng nói dóc nổi tiếng, tình cờ gặp nhau và thi nhau khoác lác. Đói bụng không tiền, Ja Panrang bày kế cho Ja Parik giả ngất xỉu như trúng độc sau khi ăn, rồi anh 'chữa bệnh' bằng nước mài rễ cây, dọa quán ăn gây ngộ độc, khiến bà chủ quán không đòi tiền mà còn mua thuốc, biếu thêm tiền.\n\nJa Parik phục tài, muốn thử trổ tài riêng khi hai người xuống sông tắm: ngậm sẵn tiền trong miệng, lặn lên bảo gặp Diêm Vương cho tiền. Ja Panrang giả vờ lặn xuống 'hỏi cho ra', rồi bảo Diêm Vương dặn chia đều, khiến Ja Parik tự nguyện đưa luôn nửa tiền của mình.\n\nĐi tiếp, nghe tin bà lý trưởng tham lam đang lâm bệnh, hai người đóng vai thầy cúng và lên đồng, 'phán' đúng tội tham lam của bà khiến bà sợ hãi xóa nợ cho dân, khỏi bệnh ngay. Được trọng thưởng, hai người chia tiền rồi từ bỏ nghề nói dóc, tu chí làm ăn lương thiện." },
+
+    { title:"Con Ếch Muốn Lớn Bằng Con Trâu", tag:"Ngụ ngôn", emoji:"🐸", time:"7 phút đọc", rating:4.5, order:8,
+      desc:"Bài học về sự tham lam và biết giới hạn của bản thân.",
+      content:"Một bầy Ếch sống ở một cái ao, tôn con to nhất làm vua Ếch. Một hôm vua Ếch đi giao du, về thấy ao bị phá tan hoang, hỏi ra mới biết có một con vật to lớn có sừng đến phá mà lũ ếch không dám làm gì.\n\nVua Ếch hỏi nó to cỡ nào, mỗi lần phùng mang phình bụng để so sánh thì lũ ếch đều bảo 'còn thua xa'. Tức quá, vua Ếch cố phình bụng thêm lần nữa cho bằng con vật ấy, không ngờ cố quá sức, vỡ bụng chết tức khắc.\n\nTừ câu chuyện này, người Chăm có câu 'con ếch muốn to bằng con trâu' để khuyên răn con người làm gì cũng phải biết lượng sức mình." },
+
+    { title:"Đàn Thú Đi Săn", tag:"Ngụ ngôn", emoji:"🐰", time:"10 phút đọc", rating:4.7, order:9,
+      desc:"Thỏ dùng mưu trí trị tội Chằn tinh chuyên ăn cắp thịt của cả đàn.",
+      content:"Thỏ, Chó, Cọp, Gà rủ nhau đi săn thịt, phân công nhau canh giữ phần thịt phơi ở chòi. Lần lượt Gà, Chó, Cọp canh đều bị một con Chằn tinh từ biển khơi bay đến ăn hết sạch vì quá sợ không dám chống cự.\n\nĐến lượt Thỏ canh, nó bình tĩnh khen Chằn tinh khỏe, gợi ý nó nhổ hết cây quanh chòi cho thịt phơi được nắng ngon hơn, rồi bày kế buộc dây mây từ cổ Chằn tinh vào gốc cây để nó 'bay lên nhổ cây'. Thỏ giả vờ buộc lỏng vài lần cho Chằn tinh tin tưởng, rồi buộc thật chặt khiến nó không thoát được.\n\nCả đàn trở về thấy Chằn tinh đã bị trói, tôn Thỏ làm quân sư, cùng nhau đánh cho Chằn tinh ói hết thịt ra và buộc nó thề từ nay không dám ăn cắp thịt của loài khác nữa." },
+
+    { title:"Nàng Cha-điêng", tag:"Cổ tích", emoji:"🍈", time:"16 phút đọc", rating:5.0, order:10,
+      desc:"Cô bé bé bằng bàn tay và mối duyên kỳ lạ với hoàng tử qua chiếc bánh dâng vua.",
+      content:"Hai vợ chồng hiếm con nhờ thầy thuốc mới sinh được một bé gái chỉ nhỏ bằng bàn tay, đặt tên Cha-điêng, nhưng mười năm sau vẫn không lớn thêm. Vì hổ thẹn, cha mẹ đem con bỏ vào rừng, dựng cho một túp lều và một rẫy dưa hấu.\n\nỞ một mình, đến ngày đẹp trời Cha-điêng hóa thành cô gái xinh đẹp. Một hoàng tử đi săn lạc vào rẫy ăn nửa quả dưa rồi bỏ lại nửa kia, nàng ăn nửa dưa còn lại liền mang thai, sinh một bé trai giống hoàng tử như đúc.\n\nHoàng tử tình cờ gặp lại nàng và con, đem lòng yêu thương. Vua cha muốn chọn người kế vị, ra lệnh vợ hoàng tử nào làm bánh ngon nhất dâng lên sẽ được truyền ngôi. Cha-điêng làm hai loại bánh Sa-ka-ya và Ta-pay nung mang ý nghĩa biết ơn công sinh thành như trời như đất, khiến vua hoàng hậu cảm động, truyền ngôi cho hoàng tử út." },
+
+    { title:"Nàng Bàn Tay", tag:"Cổ tích", emoji:"🤚", time:"12 phút đọc", rating:4.8, order:11,
+      desc:"Người con gái sinh ra chỉ là một bàn tay, nhưng tiếng hát nàng làm hoàng tử say đắm.",
+      content:"Hai ông bà hiếm con nhờ thầy bói chỉ cách mới có thai, nhưng sinh ra chỉ một bàn tay người. Sợ xấu hổ, ông bà bỏ bàn tay vào một cái chum, chôn sau hè.\n\nGần một năm sau, con vua là chàng Aia Harei nghe một tiếng hát buồn não nuột vọng lại liền tương tư bỏ ăn bỏ uống. Vua sai lính đi tìm, lần theo tiếng hát đến đúng cái chum sau hè, mở ra chỉ thấy một bàn tay, nhưng vẫn quyết định hỏi cưới cho con.\n\nĐúng ngày cưới, bàn tay đã hóa thành người thật, hào quang tỏa sáng khiến cả triều đình kinh ngạc vui mừng. Sau khi cưới, Aia Harei đi xa, vợ buồn ôm chim công ra múa thì bị nó cuốn bay lên trời, lạc vào tay một vị vua khác. Chàng đi tìm khắp nơi không được, nuôi một con công khác chờ lớn để bay lên tìm vợ, nhưng bị thiên đình hóa mây mù chặn lại, mắc kẹt luôn trên đó và trở thành thần Mặt Trời từ đó đến nay." }
+];
+
+// ===================== AUTH =====================
+auth.onAuthStateChanged(user => {
+    if (user) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').classList.add('show');
+        document.getElementById('whoAmI').textContent = 'Đăng nhập: ' + user.email;
+        loadStories();
+        loadFeedback();
+        loadStats();
+    } else {
+        document.getElementById('loginScreen').style.display = 'block';
+        document.getElementById('dashboard').classList.remove('show');
+    }
+});
+
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value;
+    const errEl = document.getElementById('loginErr');
+    errEl.classList.remove('show');
+    try {
+        await auth.signInWithEmailAndPassword(email, pass);
+    } catch (err) {
+        errEl.textContent = '❌ Đăng nhập thất bại: ' + (err.message || 'Sai email hoặc mật khẩu');
+        errEl.classList.add('show');
+    }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
+
+// ===================== TABS =====================
+document.querySelectorAll('.qt-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.qt-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.qt-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+});
+
+// ===================== QUẢN LÝ TRUYỆN =====================
+let editingId = null;
+
+function paragraphsToHTML(text) {
+    return text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean)
+        .map((p, i) => i === 0 ? `<p class="first-letter">${escapeHTML(p)}</p>` : `<p>${escapeHTML(p)}</p>`)
+        .join('\n');
+}
+function htmlToParagraphs(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return Array.from(div.querySelectorAll('p')).map(p => p.textContent).join('\n\n');
+}
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+document.getElementById('storyForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const statusEl = document.getElementById('storyStatus');
+    const data = {
+        title: document.getElementById('sTitle').value.trim(),
+        tag: document.getElementById('sTag').value,
+        emoji: document.getElementById('sEmoji').value.trim() || '📖',
+        time: document.getElementById('sTime').value.trim() || '10 phút đọc',
+        rating: parseFloat(document.getElementById('sRating').value) || 4.5,
+        order: document.getElementById('sOrder').value !== '' ? parseInt(document.getElementById('sOrder').value) : 999,
+        desc: document.getElementById('sDesc').value.trim(),
+        contentHTML: paragraphsToHTML(document.getElementById('sContent').value),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if (!data.title || !document.getElementById('sContent').value.trim()) {
+        statusEl.textContent = '⚠️ Vui lòng nhập đủ tiêu đề và nội dung.';
+        statusEl.className = 'qt-status show err';
+        return;
+    }
+    try {
+        if (editingId) {
+            await db.collection('stories').doc(editingId).update(data);
+            statusEl.textContent = '✅ Đã cập nhật truyện.';
+        } else {
+            data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            await db.collection('stories').add(data);
+            statusEl.textContent = '✅ Đã thêm truyện mới.';
+        }
+        statusEl.className = 'qt-status show ok';
+        resetStoryForm();
+        loadStories();
+    } catch (err) {
+        statusEl.textContent = '❌ Lỗi: ' + err.message;
+        statusEl.className = 'qt-status show err';
+    }
+});
+
+function resetStoryForm() {
+    editingId = null;
+    document.getElementById('storyForm').reset();
+    document.getElementById('formTitle').textContent = '➕ Thêm truyện mới';
+    document.getElementById('storySubmitBtn').textContent = 'Lưu truyện';
+    document.getElementById('storyCancelBtn').style.display = 'none';
+}
+document.getElementById('storyCancelBtn').addEventListener('click', resetStoryForm);
+
+async function loadStories() {
+    const listEl = document.getElementById('storyListEl');
+    listEl.innerHTML = '<div class="qt-loading">Đang tải...</div>';
+    try {
+        const snap = await db.collection('stories').orderBy('order').get();
+        if (snap.empty) {
+            listEl.innerHTML = '<div class="qt-empty">Chưa có truyện nào trong hệ thống. Bấm nút "Nhập 12 truyện mặc định" ở trên để bắt đầu.</div>';
+            return;
+        }
+        listEl.innerHTML = '';
+        snap.forEach(doc => {
+            const d = doc.data();
+            const item = document.createElement('div');
+            item.className = 'qt-story-item';
+            item.innerHTML = `
+                <span class="qsi-emoji">${d.emoji || '📖'}</span>
+                <div class="qsi-info">
+                    <div class="qsi-title">${escapeHTML(d.title)}</div>
+                    <div class="qsi-meta"><span class="qsi-tag">${escapeHTML(d.tag)}</span>${escapeHTML(d.time||'')} • ⭐ ${d.rating ?? ''}</div>
+                </div>
+                <div class="qt-btn-row">
+                    <button class="qt-btn qt-btn-sec" data-edit="${doc.id}">Sửa</button>
+                    <button class="qt-btn qt-btn-danger" data-del="${doc.id}">Xóa</button>
+                </div>
+            `;
+            listEl.appendChild(item);
+        });
+        listEl.querySelectorAll('[data-edit]').forEach(btn => {
+            btn.addEventListener('click', () => editStory(btn.dataset.edit));
+        });
+        listEl.querySelectorAll('[data-del]').forEach(btn => {
+            btn.addEventListener('click', () => deleteStory(btn.dataset.del));
+        });
+    } catch (err) {
+        listEl.innerHTML = `<div class="qt-empty">⚠️ Lỗi tải dữ liệu: ${escapeHTML(err.message)}</div>`;
+    }
+}
+
+async function editStory(id) {
+    const doc = await db.collection('stories').doc(id).get();
+    if (!doc.exists) return;
+    const d = doc.data();
+    editingId = id;
+    document.getElementById('sTitle').value = d.title || '';
+    document.getElementById('sTag').value = d.tag || 'Cổ tích';
+    document.getElementById('sEmoji').value = d.emoji || '';
+    document.getElementById('sTime').value = d.time || '';
+    document.getElementById('sRating').value = d.rating ?? '';
+    document.getElementById('sOrder').value = d.order ?? '';
+    document.getElementById('sDesc').value = d.desc || '';
+    document.getElementById('sContent').value = htmlToParagraphs(d.contentHTML || '');
+    document.getElementById('formTitle').textContent = '✏️ Đang sửa: ' + d.title;
+    document.getElementById('storySubmitBtn').textContent = 'Lưu thay đổi';
+    document.getElementById('storyCancelBtn').style.display = 'inline-block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function deleteStory(id) {
+    if (!confirm('Xóa truyện này khỏi hệ thống? Không thể hoàn tác.')) return;
+    await db.collection('stories').doc(id).delete();
+    loadStories();
+}
+
+document.getElementById('seedBtn').addEventListener('click', async () => {
+    const snap = await db.collection('stories').limit(1).get();
+    if (!snap.empty) {
+        alert('Hệ thống đã có truyện rồi, không cần nhập lại (để tránh trùng lặp).');
+        return;
+    }
+    if (!confirm('Nhập 12 truyện mặc định vào hệ thống?')) return;
+    const btn = document.getElementById('seedBtn');
+    btn.disabled = true;
+    btn.textContent = 'Đang nhập...';
+    try {
+        const batch = db.batch();
+        defaultStories.forEach(s => {
+            const ref = db.collection('stories').doc();
+            batch.set(ref, {
+                title: s.title, tag: s.tag, emoji: s.emoji, time: s.time,
+                rating: s.rating, order: s.order, desc: s.desc,
+                contentHTML: paragraphsToHTML(s.content),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        });
+        await batch.commit();
+        alert('✅ Đã nhập xong 12 truyện!');
+        loadStories();
+    } catch (err) {
+        alert('❌ Lỗi: ' + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '⬇️ Nhập 12 truyện mặc định vào hệ thống (chỉ chạy khi danh sách trống)';
+    }
+});
+
+// ===================== PHẢN HỒI =====================
+let allFeedback = [];
+let currentFbFilter = 'all';
+
+async function loadFeedback() {
+    const listEl = document.getElementById('fbListEl');
+    listEl.innerHTML = '<div class="qt-loading">Đang tải...</div>';
+    try {
+        const snap = await db.collection('feedback').orderBy('createdAt', 'desc').get();
+        allFeedback = [];
+        snap.forEach(doc => allFeedback.push({ id: doc.id, ...doc.data() }));
+        renderFeedback();
+    } catch (err) {
+        listEl.innerHTML = `<div class="qt-empty">⚠️ Lỗi tải dữ liệu: ${escapeHTML(err.message)}</div>`;
+    }
+}
+
+function renderFeedback() {
+    const listEl = document.getElementById('fbListEl');
+    let items = allFeedback;
+    if (currentFbFilter === 'new') items = items.filter(f => f.status !== 'resolved');
+    else if (currentFbFilter === 'resolved') items = items.filter(f => f.status === 'resolved');
+    else if (['danhgia','gopy','dexuat','baoloi'].includes(currentFbFilter)) items = items.filter(f => f.type === currentFbFilter);
+
+    if (items.length === 0) {
+        listEl.innerHTML = '<div class="qt-empty">Không có phản hồi nào trong mục này.</div>';
+        return;
+    }
+    listEl.innerHTML = '';
+    items.forEach(d => {
+        const time = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString('vi-VN') : '';
+        const starsHTML = d.stars ? `<div style="color:#f4c86b;font-size:13px;margin-bottom:6px;">${'★'.repeat(d.stars)}${'☆'.repeat(5-d.stars)}</div>` : '';
+        const el = document.createElement('div');
+        el.className = 'qt-fb-item' + (d.status === 'resolved' ? ' resolved' : '');
+        el.innerHTML = `
+            <div class="qt-fb-head">
+                <span class="qt-fb-type">${escapeHTML(d.typeLabel || d.type)}</span>
+                <span class="qt-fb-name">${escapeHTML(d.name || 'Ẩn danh')}</span>
+            </div>
+            ${d.story ? `<div class="qt-fb-story">📖 ${escapeHTML(d.story)}</div>` : ''}
+            ${starsHTML}
+            <div class="qt-fb-text">${escapeHTML(d.content)}</div>
+            ${d.email ? `<div class="qt-fb-contact">✉️ ${escapeHTML(d.email)}</div>` : ''}
+            <div class="qt-fb-time">${time} ${d.status === 'resolved' ? '• ✅ đã xử lý' : ''}</div>
+            <div class="qt-fb-actions">
+                ${d.status !== 'resolved' ? `<button class="qt-mark-btn" data-mark="${d.id}">✅ Đánh dấu đã xử lý</button>` : ''}
+                <button class="qt-del-btn" data-delfb="${d.id}">🗑️ Xóa</button>
+            </div>
+        `;
+        listEl.appendChild(el);
+    });
+    listEl.querySelectorAll('[data-mark]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            await db.collection('feedback').doc(btn.dataset.mark).update({ status: 'resolved' });
+            loadFeedback();
+        });
+    });
+    listEl.querySelectorAll('[data-delfb]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            if (!confirm('Xóa phản hồi này?')) return;
+            await db.collection('feedback').doc(btn.dataset.delfb).delete();
+            loadFeedback();
+        });
+    });
+}
+
+document.querySelectorAll('.qt-fb-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.qt-fb-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFbFilter = btn.dataset.filter;
+        renderFeedback();
+    });
+});
+
+// ===================== THỐNG KÊ =====================
+async function loadStats() {
+    const statsGrid = document.getElementById('statsGrid');
+    const overviewGrid = document.getElementById('overviewGrid');
+    try {
+        const countersSnap = await db.collection('counters').get();
+        if (countersSnap.empty) {
+            statsGrid.innerHTML = '<div class="qt-empty">Chưa có dữ liệu lượt truy cập. Hãy chắc chắn các trang đã được nhúng đoạn đếm lượt xem.</div>';
+        } else {
+            statsGrid.innerHTML = '';
+            const pageNames = { index: 'Trang chủ', truyenco: 'Truyện Cổ Chăm', nghetruyen: 'Nghe Truyện AI' };
+            countersSnap.forEach(doc => {
+                const v = doc.data().views || 0;
+                const box = document.createElement('div');
+                box.className = 'qt-stat-box';
+                box.innerHTML = `<div class="qt-stat-val">${v}</div><div class="qt-stat-label">${pageNames[doc.id] || doc.id}</div>`;
+                statsGrid.appendChild(box);
+            });
+        }
+
+        const storiesCount = (await db.collection('stories').get()).size;
+        const feedbackCount = (await db.collection('feedback').get()).size;
+        const unresolvedCount = allFeedback.filter(f => f.status !== 'resolved').length;
+        overviewGrid.innerHTML = `
+            <div class="qt-stat-box"><div class="qt-stat-val">${storiesCount}</div><div class="qt-stat-label">Truyện trong hệ thống</div></div>
+            <div class="qt-stat-box"><div class="qt-stat-val">${feedbackCount}</div><div class="qt-stat-label">Tổng phản hồi</div></div>
+            <div class="qt-stat-box"><div class="qt-stat-val">${unresolvedCount}</div><div class="qt-stat-label">Phản hồi chưa xử lý</div></div>
+        `;
+    } catch (err) {
+        statsGrid.innerHTML = `<div class="qt-empty">⚠️ Lỗi: ${escapeHTML(err.message)}</div>`;
+    }
+}
+
+// ===================== SAO LƯU =====================
+document.getElementById('exportBtn').addEventListener('click', async () => {
+    const statusEl = document.getElementById('backupStatus');
+    statusEl.textContent = 'Đang chuẩn bị file...';
+    statusEl.className = 'qt-status show ok';
+    try {
+        const [storiesSnap, feedbackSnap, countersSnap] = await Promise.all([
+            db.collection('stories').get(),
+            db.collection('feedback').get(),
+            db.collection('counters').get()
+        ]);
+        const data = {
+            exportedAt: new Date().toISOString(),
+            stories: storiesSnap.docs.map(d => ({ id: d.id, ...d.data() })),
+            feedback: feedbackSnap.docs.map(d => ({ id: d.id, ...d.data() })),
+            counters: countersSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `cham-folktales-backup-${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        statusEl.textContent = '✅ Đã xuất file sao lưu thành công.';
+    } catch (err) {
+        statusEl.textContent = '❌ Lỗi: ' + err.message;
+        statusEl.className = 'qt-status show err';
+    }
+});
+
+// ===== PARTICLES =====
+const container = document.getElementById('particles');
+for (let i = 0; i < 24; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (12 + Math.random() * 20) + 's';
+    p.style.animationDelay = (-Math.random() * 20) + 's';
+    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+    container.appendChild(p);
+}
+</script>
+</body>
+</html>

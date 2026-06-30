@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phản Hồi – Cham Folktales AI</title>
+<link rel="stylesheet" href="style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.particle {
+    position: absolute; width: 3px; height: 3px;
+    background: rgba(244,200,107,0.3); border-radius: 50%;
+    animation: float linear infinite;
+}
+@keyframes float {
+    from { transform: translateY(100vh); opacity: 0; }
+    10% { opacity: 1; } 90% { opacity: 1; }
+    to { transform: translateY(-10vh); opacity: 0; }
+}
+
+.fb-wrap { position: relative; z-index: 1; padding: 40px 0 60px; max-width: 760px; margin: 0 auto; }
+
+.back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 28px; padding: 10px 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; color: #cbd5e1; text-decoration: none;
+    font-size: 14px; transition: 0.2s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.11); color: white; }
+
+.fb-hero { text-align: center; margin-bottom: 32px; }
+.fb-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px; font-weight: 800; color: #f4c86b; margin-bottom: 10px;
+}
+.fb-hero p { color: #94a3b8; font-size: 15px; max-width: 480px; margin: 0 auto; line-height: 1.6; }
+
+/* ===== TYPE TABS ===== */
+.fb-types {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 26px;
+}
+.fb-type-btn {
+    padding: 14px 8px;
+    background: #162949;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+    font-family: inherit;
+}
+.fb-type-btn .ft-emoji { font-size: 22px; display: block; margin-bottom: 6px; }
+.fb-type-btn .ft-label { font-size: 12px; font-weight: 600; }
+.fb-type-btn:hover { border-color: rgba(244,200,107,0.3); }
+.fb-type-btn.active {
+    background: rgba(244,200,107,0.1);
+    border-color: #f4c86b;
+    color: #f4c86b;
+}
+
+/* ===== FORM CARD ===== */
+.fb-card {
+    background: linear-gradient(180deg, #1a2b4d, #0f1b32);
+    border: 1px solid rgba(244,200,107,0.18);
+    border-radius: 22px;
+    padding: 28px;
+    margin-bottom: 28px;
+}
+.fb-field { margin-bottom: 18px; }
+.fb-field label {
+    display: block;
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.fb-field select,
+.fb-field input,
+.fb-field textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+    font-family: inherit;
+}
+.fb-field select { cursor: pointer; }
+.fb-field textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+.fb-field input::placeholder, .fb-field textarea::placeholder { color: #475569; }
+.fb-field select:focus, .fb-field input:focus, .fb-field textarea:focus {
+    border-color: rgba(244,200,107,0.4);
+    box-shadow: 0 0 0 3px rgba(244,200,107,0.07);
+}
+.fb-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* sao đánh giá */
+.fb-stars-row { display: none; }
+.fb-stars-row.show { display: block; }
+.fb-stars { display: flex; gap: 8px; }
+.fb-star {
+    font-size: 32px; cursor: pointer; opacity: 0.25; transition: 0.15s;
+    -webkit-text-stroke: 1px #f4c86b;
+}
+.fb-star.lit { opacity: 1; }
+.fb-star:hover { transform: scale(1.1); }
+
+.fb-submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #f4c86b, #e8a33d);
+    border: none;
+    border-radius: 14px;
+    color: #0f1b32;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.2s;
+}
+.fb-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(244,200,107,0.35); }
+.fb-submit-btn:disabled { opacity: 0.6; cursor: default; transform: none; box-shadow: none; }
+
+.fb-status {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    text-align: center;
+    display: none;
+}
+.fb-status.show { display: block; }
+.fb-status.ok { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
+.fb-status.err { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+
+/* ===== RECENT FEEDBACK LIST ===== */
+.fb-recent h2 {
+    color: #f4c86b;
+    font-size: 19px;
+    margin-bottom: 16px;
+    font-family: 'Playfair Display', serif;
+}
+.fb-list { display: flex; flex-direction: column; gap: 12px; }
+.fb-item {
+    background: #162949;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 16px 18px;
+}
+.fb-item-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px; flex-wrap: wrap; gap: 6px;
+}
+.fb-item-type {
+    font-size: 11px; padding: 3px 10px; border-radius: 20px;
+    background: rgba(124,58,237,0.6); color: white; font-weight: 500;
+}
+.fb-item-name { color: #f4c86b; font-size: 13px; font-weight: 600; }
+.fb-item-story { color: #64748b; font-size: 12px; }
+.fb-item-text { color: #cbd5e1; font-size: 14px; line-height: 1.6; }
+.fb-item-stars { color: #f4c86b; font-size: 13px; margin-bottom: 6px; }
+.fb-item-time { color: #475569; font-size: 11px; margin-top: 8px; }
+
+.fb-empty { text-align: center; color: #475569; padding: 30px 0; font-size: 14px; }
+.fb-loading { text-align: center; color: #64748b; padding: 20px 0; font-size: 13px; }
+
+@media (max-width: 600px) {
+    .fb-types { grid-template-columns: repeat(2, 1fr); }
+    .fb-row2 { grid-template-columns: 1fr; }
+    .fb-hero h1 { font-size: 32px; }
+}
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="container" style="position:relative;z-index:1;">
+<div class="fb-wrap">
+
+    <a href="index.html" class="back-btn">← Trang chủ</a>
+
+    <div class="fb-hero">
+        <h1>💬 Phản Hồi</h1>
+        <p>Đóng góp của bạn giúp Cham Folktales AI ngày càng đầy đủ và chính xác hơn.</p>
+    </div>
+
+    <!-- Chọn loại phản hồi -->
+    <div class="fb-types" id="typeButtons">
+        <button class="fb-type-btn active" data-type="danhgia">
+            <span class="ft-emoji">⭐</span><span class="ft-label">Đánh giá truyện</span>
+        </button>
+        <button class="fb-type-btn" data-type="gopy">
+            <span class="ft-emoji">💡</span><span class="ft-label">Góp ý</span>
+        </button>
+        <button class="fb-type-btn" data-type="dexuat">
+            <span class="ft-emoji">✨</span><span class="ft-label">Đề xuất bổ sung</span>
+        </button>
+        <button class="fb-type-btn" data-type="baoloi">
+            <span class="ft-emoji">⚠️</span><span class="ft-label">Báo lỗi nội dung</span>
+        </button>
+    </div>
+
+    <!-- Form -->
+    <div class="fb-card">
+        <form id="fbForm">
+
+            <div class="fb-field" id="storyFieldWrap">
+                <label id="storyFieldLabel">Truyện liên quan</label>
+                <select id="storySelect">
+                    <option value="">— Chọn truyện (không bắt buộc) —</option>
+                </select>
+            </div>
+
+            <div class="fb-field fb-stars-row show" id="starsRow">
+                <label>Bạn đánh giá truyện này bao nhiêu sao?</label>
+                <div class="fb-stars" id="starsPicker">
+                    <span class="fb-star" data-val="1">★</span>
+                    <span class="fb-star" data-val="2">★</span>
+                    <span class="fb-star" data-val="3">★</span>
+                    <span class="fb-star" data-val="4">★</span>
+                    <span class="fb-star" data-val="5">★</span>
+                </div>
+            </div>
+
+            <div class="fb-field">
+                <label id="contentLabel">Nội dung đánh giá</label>
+                <textarea id="fbContent" placeholder="Chia sẻ cảm nhận của bạn..."></textarea>
+            </div>
+
+            <div class="fb-row2">
+                <div class="fb-field">
+                    <label>Tên của bạn (không bắt buộc)</label>
+                    <input type="text" id="fbName" placeholder="Ẩn danh">
+                </div>
+                <div class="fb-field">
+                    <label>Email (không bắt buộc)</label>
+                    <input type="email" id="fbEmail" placeholder="email@vidu.com">
+                </div>
+            </div>
+
+            <button type="submit" class="fb-submit-btn" id="submitBtn">Gửi phản hồi</button>
+            <div class="fb-status" id="fbStatus"></div>
+        </form>
+    </div>
+
+    <!-- Danh sách phản hồi gần đây -->
+    <div class="fb-recent">
+        <h2>🗣️ Phản hồi gần đây từ cộng đồng</h2>
+        <div class="fb-list" id="fbList">
+            <div class="fb-loading">Đang tải...</div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<!-- ===== FIREBASE SDK (compat) ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ====================================================================
+// 🔧 DÁN FIREBASE CONFIG CỦA BẠN VÀO ĐÂY (lấy từ Firebase Console)
+// ====================================================================
+const firebaseConfig = {
+    apiKey: "AIzaSyCb4DjQhZfWxTF5yWqSasserm4b4A7r4wc",
+    authDomain: "cham-folktales-3ec38.firebaseapp.com",
+    projectId: "cham-folktales-3ec38",
+    storageBucket: "cham-folktales-3ec38.firebasestorage.app",
+    messagingSenderId: "370479685553",
+    appId: "1:370479685553:web:335ad3764cb5865b0ae790"
+};
+// ====================================================================
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ===== DANH SÁCH TRUYỆN (đồng bộ với truyenco.html) =====
+const storyTitles = [
+    "Truyền Thuyết Nữ Thiên Y A Na",
+    "Nha Rúi và Tầm Đang",
+    "Hũ Bạc và Người Cha",
+    "Anh Trai và Mụ Quỷ Già",
+    "Bò và Chó Sói",
+    "Trí Khôn Của Con Người",
+    "Chàng Ếch và Con Út Vua",
+    "Chàng Panrang và Chàng Parik",
+    "Con Ếch Muốn Lớn Bằng Con Trâu",
+    "Đàn Thú Đi Săn",
+    "Nàng Cha-điêng",
+    "Nàng Bàn Tay"
+];
+const storySelect = document.getElementById('storySelect');
+storyTitles.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t;
+    opt.textContent = t;
+    storySelect.appendChild(opt);
+});
+
+// ===== CHỌN LOẠI PHẢN HỒI =====
+const typeMeta = {
+    danhgia:  { label: 'đánh giá',       contentLabel: 'Nội dung đánh giá',        placeholder: 'Chia sẻ cảm nhận của bạn...',                storyRequired: true,  showStars: true },
+    gopy:     { label: 'góp ý',          contentLabel: 'Nội dung góp ý',           placeholder: 'Bạn muốn website cải thiện điều gì?',         storyRequired: false, showStars: false },
+    dexuat:   { label: 'đề xuất bổ sung',contentLabel: 'Nội dung đề xuất',         placeholder: 'Bạn muốn đề xuất thêm truyện, tính năng gì?', storyRequired: false, showStars: false },
+    baoloi:   { label: 'báo lỗi',        contentLabel: 'Mô tả lỗi bạn gặp phải',   placeholder: 'Lỗi sai cốt truyện, sai chữ, hỏng giao diện...', storyRequired: true, showStars: false }
+};
+let currentType = 'danhgia';
+let currentStars = 0;
+
+document.querySelectorAll('.fb-type-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.fb-type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentType = btn.dataset.type;
+        applyTypeUI();
+    });
+});
+
+function applyTypeUI() {
+    const m = typeMeta[currentType];
+    document.getElementById('contentLabel').textContent = m.contentLabel;
+    document.getElementById('fbContent').placeholder = m.placeholder;
+    document.getElementById('storyFieldLabel').textContent = m.storyRequired ? 'Truyện liên quan *' : 'Truyện liên quan';
+    document.getElementById('starsRow').classList.toggle('show', m.showStars);
+    if (!m.showStars) { currentStars = 0; renderStars(); }
+}
+
+// ===== SAO ĐÁNH GIÁ =====
+document.querySelectorAll('.fb-star').forEach(star => {
+    star.addEventListener('click', () => {
+        currentStars = parseInt(star.dataset.val);
+        renderStars();
+    });
+});
+function renderStars() {
+    document.querySelectorAll('.fb-star').forEach(s => {
+        s.classList.toggle('lit', parseInt(s.dataset.val) <= currentStars);
+    });
+}
+
+// ===== GỬI FORM =====
+document.getElementById('fbForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const m = typeMeta[currentType];
+    const story = storySelect.value;
+    const content = document.getElementById('fbContent').value.trim();
+    const name = document.getElementById('fbName').value.trim() || 'Ẩn danh';
+    const email = document.getElementById('fbEmail').value.trim();
+
+    if (m.storyRequired && !story) {
+        showStatus('err', '⚠️ Vui lòng chọn truyện liên quan.');
+        return;
+    }
+    if (m.showStars && currentStars === 0) {
+        showStatus('err', '⚠️ Vui lòng chọn số sao đánh giá.');
+        return;
+    }
+    if (!content) {
+        showStatus('err', '⚠️ Vui lòng nhập nội dung.');
+        return;
+    }
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Đang gửi...';
+
+    try {
+        await db.collection('feedback').add({
+            type: currentType,
+            typeLabel: m.label,
+            story: story || null,
+            stars: m.showStars ? currentStars : null,
+            content: content,
+            name: name,
+            email: email || null,
+            status: 'new',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showStatus('ok', '✅ Cảm ơn bạn! Phản hồi đã được gửi thành công.');
+        document.getElementById('fbForm').reset();
+        currentStars = 0;
+        renderStars();
+        applyTypeUI();
+        loadRecentFeedback();
+    } catch (err) {
+        showStatus('err', '❌ Lỗi khi gửi: ' + err.message);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Gửi phản hồi';
+    }
+});
+
+function showStatus(type, msg) {
+    const el = document.getElementById('fbStatus');
+    el.textContent = msg;
+    el.className = 'fb-status show ' + type;
+    setTimeout(() => el.classList.remove('show'), 6000);
+}
+
+// ===== TẢI PHẢN HỒI GẦN ĐÂY =====
+async function loadRecentFeedback() {
+    const listEl = document.getElementById('fbList');
+    listEl.innerHTML = '<div class="fb-loading">Đang tải...</div>';
+    try {
+        const snap = await db.collection('feedback')
+            .orderBy('createdAt', 'desc')
+            .limit(15)
+            .get();
+
+        if (snap.empty) {
+            listEl.innerHTML = '<div class="fb-empty">Chưa có phản hồi nào. Hãy là người đầu tiên!</div>';
+            return;
+        }
+
+        listEl.innerHTML = '';
+        snap.forEach(doc => {
+            const d = doc.data();
+            const time = d.createdAt ? d.createdAt.toDate().toLocaleString('vi-VN') : '';
+            const starsHTML = d.stars ? `<div class="fb-item-stars">${'★'.repeat(d.stars)}${'☆'.repeat(5 - d.stars)}</div>` : '';
+            const item = document.createElement('div');
+            item.className = 'fb-item';
+            item.innerHTML = `
+                <div class="fb-item-head">
+                    <span class="fb-item-type">${escapeHTML(d.typeLabel || d.type)}</span>
+                    <span class="fb-item-name">${escapeHTML(d.name || 'Ẩn danh')}</span>
+                </div>
+                ${d.story ? `<div class="fb-item-story">📖 ${escapeHTML(d.story)}</div>` : ''}
+                ${starsHTML}
+                <div class="fb-item-text">${escapeHTML(d.content)}</div>
+                <div class="fb-item-time">${time}</div>
+            `;
+            listEl.appendChild(item);
+        });
+    } catch (err) {
+        listEl.innerHTML = `<div class="fb-empty">⚠️ Chưa kết nối được Firebase. Hãy dán firebaseConfig vào file phanhoi.html.<br><span style="color:#475569;font-size:11px">${escapeHTML(err.message)}</span></div>`;
+    }
+}
+
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str ?? '';
+    return div.innerHTML;
+}
+
+applyTypeUI();
+renderStars();
+loadRecentFeedback();
+
+// ===== PARTICLES =====
+const container = document.getElementById('particles');
+for (let i = 0; i < 24; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (12 + Math.random() * 20) + 's';
+    p.style.animationDelay = (-Math.random() * 20) + 's';
+    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+    container.appendChild(p);
+}
+</script>
+</body>
+</html>
