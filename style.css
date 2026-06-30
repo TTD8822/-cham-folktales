@@ -407,33 +407,6 @@ body{
     z-index:2;
     margin-top:-25px;
 }
-.menu-card{
-    background:#162949;
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:15px;
-    padding:15px;
-    text-align:center;
-    text-decoration:none;
-    color:white;
-    transition:.3s;
-}
-.menu-card:hover{
-    transform:translateY(-5px);
-    border-color:#f4c86b;
-}
-.menu-card .icon{
-    font-size:30px;
-    margin-bottom:8px;
-}
-.menu-card h3{
-    color:#f4c86b;
-    font-size:16px;
-    margin-bottom:5px;
-}
-.menu-card p{
-    color:#cbd5e1;
-    font-size:12px;
-}
 .stats{
     display:flex;
     justify-content:center;
@@ -787,6 +760,14 @@ body{
     .voice-btn{
         font-size:12px;
         padding:7px 12px;
+    }
+
+    /* PHAN HOI */
+    .fb-types{
+        grid-template-columns:repeat(2,1fr);
+    }
+    .fb-row2{
+        grid-template-columns:1fr;
     }
 }
 
