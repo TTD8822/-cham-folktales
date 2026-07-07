@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap');
+
 *{
     margin:0;
     padding:0;
@@ -11,7 +13,15 @@ body{
     background-repeat:no-repeat;
     background-attachment:fixed;
     color:white;
-    font-family:Arial,sans-serif;
+    font-family:'Be Vietnam Pro', Arial, sans-serif;
+    line-height:1.6;
+}
+h1,h2,h3,h4,h5,h6{
+    font-family:'Be Vietnam Pro', Arial, sans-serif;
+    line-height:1.35;
+}
+p{
+    line-height:1.65;
 }
 .hero{
     width:100%;
@@ -26,20 +36,29 @@ body{
     text-align:center;
 }
 .hero-content h1{
-    font-size:62px;
+    font-family:'Playfair Display', serif;
+    font-size:64px;
     color:#f4c86b;
-    font-weight:bold;
+    font-weight:900;
     letter-spacing:2px;
+    line-height:1.25;
+    padding-bottom:6px;
 }
 .hero-content h2{
-    font-size:42px;
+    font-family:'Playfair Display', serif;
+    font-size:38px;
     color:white;
+    font-weight:700;
     margin-top:8px;
+    line-height:1.35;
+    letter-spacing:0.3px;
 }
 .hero-content p{
     margin-top:15px;
-    font-size:24px;
+    font-size:22px;
     color:#ffe7a5;
+    font-weight:300;
+    line-height:1.6;
 }
 .container{
     width:98%;
@@ -51,8 +70,10 @@ body{
     margin-bottom:30px;
 }
 .header h1{
+    font-family:'Playfair Display', serif;
     font-size:42px;
     color:#38bdf8;
+    font-weight:800;
 }
 .header p{
     color:#cbd5e1;
@@ -90,6 +111,7 @@ body{
     border:none;
     border-radius:10px;
     outline:none;
+    font-family:inherit;
 }
 .chat-box button{
     padding:12px 20px;
@@ -98,6 +120,8 @@ body{
     cursor:pointer;
     background:#22c55e;
     color:white;
+    font-family:inherit;
+    font-weight:600;
 }
 .chat-box button:hover{
     background:#16a34a;
@@ -122,6 +146,7 @@ body{
 }
 .card-content h3{
     text-align:center;
+    line-height:1.4;
 }
 ::-webkit-scrollbar{
     width:8px;
@@ -153,6 +178,7 @@ body{
     color:white;
     text-decoration:none;
     border-radius:10px;
+    font-weight:500;
 }
 .back-btn:hover{
     background:#475569;
@@ -164,10 +190,12 @@ body{
     text-align:center;
 }
 .chat-page h1{
+    font-family:'Playfair Display', serif;
     margin-bottom:10px;
     color:#fbbf24;
     font-size:42px;
-    font-weight:700;
+    font-weight:800;
+    line-height:1.3;
 }
 .chat-page p{
     text-align:center;
@@ -214,6 +242,8 @@ body{
 .stat-box h3{
     color:#f4c86b;
     font-size:28px;
+    font-weight:700;
+    line-height:1.3;
 }
 .stat-box span{
     color:white;
@@ -247,10 +277,13 @@ body{
     font-size:18px;
     margin-bottom:8px;
     color:#f4c86b;
+    font-weight:700;
+    line-height:1.3;
 }
 .menu-card p{
     font-size:13px;
     color:#cbd5e1;
+    line-height:1.5;
 }
 .main-grid{
     display:grid;
@@ -279,9 +312,12 @@ body{
 .story h2,
 .video h2,
 .chat-widget h2{
+    font-family:'Playfair Display', serif;
     color:white;
-    font-size:24px;
+    font-size:25px;
+    font-weight:800;
     margin-bottom:15px;
+    line-height:1.35;
 }
 .chat-widget{
     height:100%;
@@ -311,15 +347,17 @@ body{
     box-shadow:0 4px 10px rgba(244,200,107,.35);
 }
 .chat-widget-header h2{
+    font-family:'Playfair Display', serif;
     color:#f4c86b;
-    font-size:19px;
+    font-size:20px;
     margin-bottom:4px;
-    font-weight:700;
+    font-weight:800;
+    line-height:1.35;
 }
 .chat-widget-header p{
     color:#cbd5e1;
     font-size:13px;
-    line-height:1.4;
+    line-height:1.5;
 }
 .chat-iframe-wrap{
     border-radius:16px;
@@ -368,17 +406,20 @@ body{
     border-radius:20px;
     font-size:11px;
     margin-bottom:10px;
+    font-weight:500;
 }
 .card-content h3{
     text-align:left;
     color:white;
     font-size:19px;
+    font-weight:700;
     margin-bottom:8px;
+    line-height:1.4;
 }
 .card-content p{
     color:#cbd5e1;
     font-size:14px;
-    line-height:1.5;
+    line-height:1.55;
 }
 .card-info{
     display:flex;
@@ -439,9 +480,12 @@ body{
     box-shadow:0 5px 15px rgba(0,0,0,.35);
 }
 .extra-side h2{
+    font-family:'Playfair Display', serif;
     color:white;
-    font-size:24px;
+    font-size:25px;
+    font-weight:800;
     margin-bottom:15px;
+    line-height:1.35;
 }
 
 /* =============================================
@@ -455,10 +499,12 @@ body{
     margin-bottom:24px;
 }
 .chatbot-header h1{
+    font-family:'Playfair Display', serif;
     font-size:42px;
     color:#f4c86b;
     font-weight:800;
     margin-bottom:10px;
+    line-height:1.3;
 }
 .chatbot-header p{
     color:#cbd5e1;
