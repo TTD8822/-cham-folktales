@@ -7,9 +7,158 @@
     <title>CHAM FOLKTALES AI</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="hieuung.css">
+    <style>
+    /* ===== KHÔNG GIAN VĂN HÓA CHĂM - GEN Z STYLE ===== */
+    .vhz-section{ margin-top:22px; }
+
+    .vhz-head{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        flex-wrap:wrap;
+        gap:8px;
+        margin-bottom:14px;
+    }
+    .vhz-head h2{
+        font-size:21px;
+        font-weight:800;
+        color:white;
+        display:flex;
+        align-items:center;
+        gap:8px;
+    }
+    .vhz-badge{
+        background:linear-gradient(90deg,#ff6ec4,#7873f5);
+        color:white;
+        font-size:11px;
+        font-weight:700;
+        letter-spacing:.4px;
+        padding:6px 14px;
+        border-radius:20px;
+        box-shadow:0 4px 14px rgba(120,115,245,.45);
+        animation:vhzPulse 2s ease-in-out infinite;
+        white-space:nowrap;
+    }
+    @keyframes vhzPulse{
+        0%,100%{ transform:scale(1); }
+        50%{ transform:scale(1.07); }
+    }
+
+    .vhz-scroll{
+        display:flex;
+        gap:14px;
+        overflow-x:auto;
+        padding:4px 2px 16px;
+        scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch;
+    }
+    .vhz-scroll::-webkit-scrollbar{ height:6px; }
+    .vhz-scroll::-webkit-scrollbar-thumb{
+        background:rgba(244,200,107,.4);
+        border-radius:10px;
+    }
+
+    .vhz-card{
+        flex:0 0 170px;
+        scroll-snap-align:start;
+        position:relative;
+        overflow:hidden;
+        border-radius:22px;
+        padding:18px 14px;
+        min-height:190px;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-end;
+        text-decoration:none;
+        color:white;
+        transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .vhz-card:hover{
+        transform:translateY(-8px) scale(1.035);
+        box-shadow:0 18px 34px rgba(0,0,0,.45);
+    }
+    .vhz-card::before{
+        content:'';
+        position:absolute;
+        inset:0;
+        background:radial-gradient(circle at 28% 18%, rgba(255,255,255,.55), transparent 60%);
+        opacity:.4;
+    }
+    .vhz-tag{
+        position:absolute;
+        top:10px;
+        right:10px;
+        background:rgba(0,0,0,.3);
+        backdrop-filter:blur(4px);
+        font-size:9px;
+        font-weight:700;
+        letter-spacing:.4px;
+        padding:3px 9px;
+        border-radius:20px;
+    }
+    .vhz-emoji{
+        font-size:38px;
+        margin-bottom:10px;
+        filter:drop-shadow(0 4px 8px rgba(0,0,0,.35));
+        position:relative;
+        z-index:1;
+    }
+    .vhz-card h3{
+        font-size:15px;
+        font-weight:800;
+        line-height:1.3;
+        margin-bottom:4px;
+        position:relative;
+        z-index:1;
+    }
+    .vhz-card span:not(.vhz-tag){
+        font-size:11px;
+        font-weight:600;
+        opacity:.9;
+        position:relative;
+        z-index:1;
+    }
+
+    .vhz-c1{ background:linear-gradient(150deg,#4f6ef7,#7b2ff7); }
+    .vhz-c2{ background:linear-gradient(150deg,#ff7a45,#ff3d81); }
+    .vhz-c3{ background:linear-gradient(150deg,#12c2a4,#2e8b57); }
+    .vhz-c4{ background:linear-gradient(150deg,#ffb703,#fb5607); }
+    .vhz-c5{ background:linear-gradient(150deg,#a955f7,#e94adf); }
+
+    .vhz-cta{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        padding:13px 20px;
+        border-radius:16px;
+        background:linear-gradient(90deg,#f4c86b,#e8a33d);
+        color:#1a2b4d;
+        font-weight:800;
+        font-size:14px;
+        text-decoration:none;
+        box-shadow:0 8px 20px rgba(244,200,107,.25);
+        transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .vhz-cta:hover{
+        transform:translateY(-3px);
+        box-shadow:0 14px 28px rgba(244,200,107,.4);
+    }
+
+    @media (max-width:768px){
+        .vhz-head h2{ font-size:17px; }
+        .vhz-card{ flex:0 0 138px; min-height:170px; padding:14px 12px; border-radius:18px; }
+        .vhz-emoji{ font-size:30px; }
+        .vhz-card h3{ font-size:13px; }
+        .vhz-card span:not(.vhz-tag){ font-size:10px; }
+    }
+    </style>
 </head>
 
 <body>
+
+<canvas id="particles-canvas"></canvas>
 
 <div class="container">
 
@@ -97,7 +246,7 @@
         <!-- CỘT TRÁI -->
         <div class="left-side">
 
-            <section class="story">
+            <section class="story reveal">
 
                 <h2>📚 Truyện Cổ Chăm Nổi Bật</h2>
 
@@ -177,7 +326,7 @@
             </section>
 
             <!-- KHÁM PHÁ & TÌM HIỂU -->
-            <div class="extra-side">
+            <div class="extra-side reveal">
 
                 <h2>🎥 Khám Phá & Tìm Hiểu</h2>
 
@@ -208,10 +357,63 @@
 
             </div>
 
+            <!-- KHÔNG GIAN VĂN HÓA CHĂM - GEN Z STYLE -->
+            <div class="vhz-section reveal">
+
+                <div class="vhz-head">
+                    <h2>🕌 Không Gian Văn Hóa Chăm</h2>
+                    <span class="vhz-badge">🔥 KHÁM PHÁ NGAY</span>
+                </div>
+
+                <div class="vhz-scroll">
+
+                    <a href="vanhoacham.html#ditich" class="vhz-card vhz-c1">
+                        <span class="vhz-tag">4 mục</span>
+                        <div class="vhz-emoji">🏛️</div>
+                        <h3>Di tích &amp; Kiến trúc</h3>
+                        <span>Tháp Chăm cổ, thánh địa</span>
+                    </a>
+
+                    <a href="vanhoacham.html#lehoi" class="vhz-card vhz-c2">
+                        <span class="vhz-tag">3 mục</span>
+                        <div class="vhz-emoji">🎉</div>
+                        <h3>Lễ Hội Truyền Thống</h3>
+                        <span>Katê, Rija Nagar...</span>
+                    </a>
+
+                    <a href="vanhoacham.html#langnghe" class="vhz-card vhz-c3">
+                        <span class="vhz-tag">2 mục</span>
+                        <div class="vhz-emoji">🏺</div>
+                        <h3>Làng Nghề</h3>
+                        <span>Gốm, dệt thổ cẩm</span>
+                    </a>
+
+                    <a href="vanhoacham.html#vanhoa" class="vhz-card vhz-c4">
+                        <span class="vhz-tag">5 mục</span>
+                        <div class="vhz-emoji">👘</div>
+                        <h3>Văn Hóa Chăm</h3>
+                        <span>Trang phục, ẩm thực...</span>
+                    </a>
+
+                    <a href="vanhoacham.html#nghethuat" class="vhz-card vhz-c5">
+                        <span class="vhz-tag">4 mục</span>
+                        <div class="vhz-emoji">🎼</div>
+                        <h3>Nghệ Thuật Dân Gian</h3>
+                        <span>Múa, trống, kèn Chăm</span>
+                    </a>
+
+                </div>
+
+                <a href="vanhoacham.html" class="vhz-cta">
+                    Khám phá tất cả không gian văn hóa <span style="font-size:16px;">→</span>
+                </a>
+
+            </div>
+
         </div>
 
         <!-- CỘT PHẢI -->
-        <div class="right-side">
+        <div class="right-side reveal">
 
             <div class="chat-widget">
 
@@ -501,6 +703,7 @@ document.addEventListener('keydown', function(e) {
 </script>
 
 <script src="script.js"></script>
+<script src="hieuung.js"></script>
 
 </body>
 </html>
