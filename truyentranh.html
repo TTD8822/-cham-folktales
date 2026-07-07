@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Truyện Tranh AI – Cham Folktales AI</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="hieuung.css">
     <style>
         .tt-header {
             text-align: center;
@@ -221,13 +222,14 @@
     </style>
 </head>
 <body>
+    <canvas id="particles-canvas"></canvas>
 <div class="container">
 
     <div class="tt-header">
         <a href="index.html" class="back-btn">← Trang chủ</a>
         <h1>🎨 Truyện Tranh AI</h1>
         <p>Truyện dân gian Chăm được tái hiện qua hình ảnh AI độc đáo</p>
-        <div class="tt-count">30 truyện tranh</div>
+        <div class="tt-count">50 truyện tranh</div>
     </div>
 
     <div class="tt-search-wrap">
@@ -534,5 +536,6 @@
         document.getElementById('emptyMsg').style.display = found === 0 ? 'block' : 'none';
     });
 </script>
+<script src="hieuung.js"></script>
 </body>
 </html>
