@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Không Gian Văn Hóa Chăm – Cham Folktales AI</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="hieuung.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+    --vh-gold:#f4c86b;
+    --vh-gold-soft:#e8a33d;
+    --vh-text:#cbd5e1;
+    --vh-muted:#8ea0bd;
+}
+
+/* Áp font toàn trang riêng cho khu vực này (không đụng style.css gốc) */
+.vh-scope{
+    font-family:'Be Vietnam Pro', system-ui, sans-serif;
+}
+.vh-scope h1,
+.vh-scope .vh-section-title{
+    font-family:'Baloo 2', 'Be Vietnam Pro', sans-serif;
+}
+
+.vh-header{
+    text-align:center;
+    padding:48px 16px 34px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+.vh-header h1{
+    font-size:44px;
+    color:var(--vh-gold);
+    font-weight:800;
+    letter-spacing:.3px;
+    margin-bottom:12px;
+    text-shadow:0 4px 22px rgba(244,200,107,0.25);
+}
+.vh-header p{
+    color:var(--vh-text);
+    font-size:16px;
+    font-weight:400;
+    max-width:600px;
+    margin:0 auto;
+    line-height:1.7;
+}
+.vh-header-rule{
+    width:64px;
+    height:3px;
+    border-radius:4px;
+    margin-top:18px;
+    background:linear-gradient(90deg, transparent, var(--vh-gold), transparent);
+}
+
+.vh-section{
+    margin-bottom:46px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+.vh-section-title{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-size:23px;
+    color:white;
+    font-weight:700;
+    letter-spacing:.2px;
+    margin-bottom:22px;
+    text-align:center;
+}
+.vh-section-title .vh-emoji{
+    font-size:22px;
+}
+
+.vh-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,220px));
+    justify-content:center;
+    gap:20px;
+    width:100%;
+    max-width:1100px;
+}
+.vh-card{
+    background:#162949;
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px;
+    overflow:hidden;
+    text-decoration:none;
+    color:white;
+    transition:.25s;
+    display:block;
+    text-align:center;
+}
+.vh-card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(244,200,107,0.4);
+    box-shadow:0 12px 28px rgba(0,0,0,0.4);
+}
+.vh-card-cover{
+    width:100%;
+    height:150px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:46px;
+    background:linear-gradient(135deg,#1a2f5a,#2d1b4e);
+    position:relative;
+    overflow:hidden;
+}
+.vh-card-cover img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.vh-card-body{
+    padding:16px 16px 18px;
+    text-align:center;
+}
+.vh-card-body h3{
+    font-size:16px;
+    font-weight:600;
+    color:white;
+    margin-bottom:6px;
+}
+.vh-card-body span{
+    font-size:12px;
+    font-weight:600;
+    color:var(--vh-gold);
+    letter-spacing:.2px;
+}
+.back-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:24px;
+    padding:10px 20px;
+    background:rgba(255,255,255,0.07);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:10px;
+    color:white;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:500;
+    transition:0.2s;
+}
+.back-btn:hover{ background:rgba(255,255,255,0.13); }
+
+@media (max-width:768px){
+    .vh-header h1{ font-size:28px; }
+    .vh-header p{ font-size:14px; }
+    .vh-section-title{ font-size:19px; }
+    .vh-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .vh-card-cover{ height:110px; font-size:34px; }
+}
+</style>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+<div class="container vh-scope">
+
+    <a href="index.html" class="back-btn">← Trang chủ</a>
+
+    <div class="vh-header">
+        <h1>🕌 Không Gian Văn Hóa Chăm</h1>
+        <p>Khám phá di tích, lễ hội, làng nghề, đời sống và nghệ thuật dân gian của người Chăm. Bấm vào từng mục để xem thông tin chi tiết cùng hình ảnh, video.</p>
+        <div class="vh-header-rule"></div>
+    </div>
+
+    <!-- 1. DI TÍCH VÀ KIẾN TRÚC -->
+    <div class="vh-section" id="ditich">
+        <div class="vh-section-title"><span class="vh-emoji">🏛️</span> Di tích và kiến trúc Chăm</div>
+        <div class="vh-grid">
+            <a class="vh-card" href="chitiet.html?id=po-klong-garai">
+                <div class="vh-card-cover"><img src="thap-po-klong-garai.jpg" alt="" onerror="this.parentElement.innerHTML='🏛️'"></div>
+                <div class="vh-card-body"><h3>Tháp Po Klong Garai</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=po-rome">
+                <div class="vh-card-cover"><img src="thap-po-rome.jpg" alt="" onerror="this.parentElement.innerHTML='🏛️'"></div>
+                <div class="vh-card-body"><h3>Tháp Po Rome</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=hoa-lai">
+                <div class="vh-card-cover"><img src="thap-hoa-lai.jpg" alt="" onerror="this.parentElement.innerHTML='🏛️'"></div>
+                <div class="vh-card-body"><h3>Tháp Hòa Lai</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=my-son">
+                <div class="vh-card-cover"><img src="thanh-dia-my-son.jpg" alt="" onerror="this.parentElement.innerHTML='🏛️'"></div>
+                <div class="vh-card-body"><h3>Thánh địa Mỹ Sơn</h3><span>Xem chi tiết →</span></div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 2. LỄ HỘI -->
+    <div class="vh-section" id="lehoi">
+        <div class="vh-section-title"><span class="vh-emoji">🎉</span> Lễ hội truyền thống</div>
+        <div class="vh-grid">
+            <a class="vh-card" href="chitiet.html?id=kate">
+                <div class="vh-card-cover"><img src="le-hoi-kate.jpg" alt="" onerror="this.parentElement.innerHTML='🎉'"></div>
+                <div class="vh-card-body"><h3>Katê</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=rija-nagar">
+                <div class="vh-card-cover"><img src="le-rija-nagar.jpg" alt="" onerror="this.parentElement.innerHTML='🎉'"></div>
+                <div class="vh-card-body"><h3>Rija Nagar</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=ramuwan">
+                <div class="vh-card-cover"><img src="le-ramuwan.jpg" alt="" onerror="this.parentElement.innerHTML='🎉'"></div>
+                <div class="vh-card-body"><h3>Ramưwan</h3><span>Xem chi tiết →</span></div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 3. LÀNG NGHỀ -->
+    <div class="vh-section" id="langnghe">
+        <div class="vh-section-title"><span class="vh-emoji">🏺</span> Làng nghề truyền thống</div>
+        <div class="vh-grid">
+            <a class="vh-card" href="chitiet.html?id=bau-truc">
+                <div class="vh-card-cover"><img src="lang-gom-bau-truc.jpg" alt="" onerror="this.parentElement.innerHTML='🏺'"></div>
+                <div class="vh-card-body"><h3>Làng gốm Bàu Trúc</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=my-nghiep">
+                <div class="vh-card-cover"><img src="lang-det-my-nghiep.jpg" alt="" onerror="this.parentElement.innerHTML='🧵'"></div>
+                <div class="vh-card-body"><h3>Làng dệt Mỹ Nghiệp</h3><span>Xem chi tiết →</span></div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 4. VĂN HÓA CHĂM -->
+    <div class="vh-section" id="vanhoa">
+        <div class="vh-section-title"><span class="vh-emoji">👘</span> Văn hóa Chăm</div>
+        <div class="vh-grid">
+            <a class="vh-card" href="chitiet.html?id=trang-phuc">
+                <div class="vh-card-cover"><img src="trang-phuc-cham.jpg" alt="" onerror="this.parentElement.innerHTML='👘'"></div>
+                <div class="vh-card-body"><h3>Trang phục</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=am-thuc">
+                <div class="vh-card-cover"><img src="am-thuc-cham.jpg" alt="" onerror="this.parentElement.innerHTML='🍲'"></div>
+                <div class="vh-card-body"><h3>Ẩm thực</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=nha-o">
+                <div class="vh-card-cover"><img src="nha-o-cham.jpg" alt="" onerror="this.parentElement.innerHTML='🏠'"></div>
+                <div class="vh-card-body"><h3>Nhà ở</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=tin-nguong">
+                <div class="vh-card-cover"><img src="tin-nguong-cham.jpg" alt="" onerror="this.parentElement.innerHTML='🙏'"></div>
+                <div class="vh-card-body"><h3>Tín ngưỡng</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=cuoi-hoi">
+                <div class="vh-card-cover"><img src="cuoi-hoi-cham.jpg" alt="" onerror="this.parentElement.innerHTML='💍'"></div>
+                <div class="vh-card-body"><h3>Phong tục cưới hỏi</h3><span>Xem chi tiết →</span></div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 5. NGHỆ THUẬT DÂN GIAN -->
+    <div class="vh-section" id="nghethuat">
+        <div class="vh-section-title"><span class="vh-emoji">🎼</span> Nghệ thuật dân gian</div>
+        <div class="vh-grid">
+            <a class="vh-card" href="chitiet.html?id=mua-cham">
+                <div class="vh-card-cover"><img src="mua-cham.jpg" alt="" onerror="this.parentElement.innerHTML='💃'"></div>
+                <div class="vh-card-body"><h3>Múa Chăm</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=trong-ghinang">
+                <div class="vh-card-cover"><img src="trong-ghinang.jpg" alt="" onerror="this.parentElement.innerHTML='🥁'"></div>
+                <div class="vh-card-body"><h3>Trống Ghi-năng</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=ken-saranai">
+                <div class="vh-card-cover"><img src="ken-saranai.jpg" alt="" onerror="this.parentElement.innerHTML='🎺'"></div>
+                <div class="vh-card-body"><h3>Kèn Saranai</h3><span>Xem chi tiết →</span></div>
+            </a>
+            <a class="vh-card" href="chitiet.html?id=paranung">
+                <div class="vh-card-cover"><img src="trong-paranung.jpg" alt="" onerror="this.parentElement.innerHTML='🪘'"></div>
+                <div class="vh-card-body"><h3>Paranưng</h3><span>Xem chi tiết →</span></div>
+            </a>
+        </div>
+    </div>
+
+</div>
+<script src="hieuung.js"></script>
+</body>
+</html>
