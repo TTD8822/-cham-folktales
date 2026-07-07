@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ChatAI Văn Hóa Chăm – Cham Folktales AI</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="hieuung.css">
 <style>
 .cb-page {
     padding: 20px 0 40px;
@@ -43,13 +44,12 @@
 }
 
 .cb-frame-wrap iframe {
-    /* Chatbase thêm sidebar ~260px bên trái,
-       kéo rộng hơn viewport rồi dịch trái để cắt sidebar đó đi */
-    width: calc(100% + 260px);
-    height: 100%;
-    margin-left: -260px;
+    width: calc(100% + 34px);
+    height: calc(100% + 34px);
+    margin: -17px -17px -17px 0;
     border: none;
     display: block;
+    background: white;
 }
 
 @media (max-width: 768px) {
@@ -60,16 +60,11 @@
         min-height: 460px;
         border-radius: 12px;
     }
-    /* sidebar Chatbase hẹp hơn trên mobile ~220px */
-    .cb-frame-wrap iframe {
-        width: calc(100% + 220px);
-        margin-left: -220px;
-    }
 }
 </style>
 </head>
 <body>
-
+<canvas id="particles-canvas"></canvas>
 <div class="container">
 <div class="cb-page">
 
@@ -90,6 +85,6 @@
 
 </div>
 </div>
-
+<script src="hieuung.js"></script>
 </body>
 </html>
