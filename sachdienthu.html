@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sách Truyện Điện Tử · CHAM FOLKTALES AI</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="hieuung.css">
+
+    <style>
+    /* ===== SÁCH ĐIỆN TỬ - THƯ VIỆN ===== */
+    .sach-page{
+        padding:30px 0 60px;
+    }
+
+    .sach-hero{
+        text-align:center;
+        max-width:640px;
+        margin:0 auto 40px;
+    }
+    .sach-eyebrow{
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        background:rgba(244,200,107,.1);
+        border:1px solid rgba(244,200,107,.3);
+        color:#f4c86b;
+        font-size:12px;
+        font-weight:700;
+        letter-spacing:1px;
+        padding:6px 16px;
+        border-radius:20px;
+        margin-bottom:18px;
+    }
+    .sach-hero h1{
+        font-family:'Playfair Display', serif;
+        font-size:42px;
+        font-weight:800;
+        color:#f4c86b;
+        line-height:1.3;
+        margin-bottom:12px;
+    }
+    .sach-hero p{
+        color:#cbd5e1;
+        font-size:16px;
+        line-height:1.7;
+    }
+
+    /* Kệ thư viện */
+    .sach-library{
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:28px;
+        max-width:1100px;
+        margin:0 auto;
+    }
+
+    .sach-book{
+        position:relative;
+        border-radius:6px 18px 18px 6px;
+        overflow:hidden;
+        cursor:pointer;
+        aspect-ratio:3/4.3;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-end;
+        padding:22px 20px;
+        color:white;
+        box-shadow:inset 10px 0 18px rgba(0,0,0,.3), 0 10px 24px rgba(0,0,0,.4);
+        transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+    }
+    .sach-book:hover{
+        transform:translateY(-10px) rotate(-1deg);
+        box-shadow:inset 10px 0 18px rgba(0,0,0,.3), 0 22px 36px rgba(0,0,0,.55);
+    }
+    .sach-book::before{
+        content:'';
+        position:absolute;
+        inset:0;
+        background:radial-gradient(circle at 75% 15%, rgba(255,255,255,.35), transparent 55%);
+    }
+    .sach-book-1{ background:linear-gradient(165deg,#7b2ff7,#4f6ef7); }
+    .sach-book-2{ background:linear-gradient(165deg,#ff3d81,#ff7a45); }
+    .sach-book-3{ background:linear-gradient(165deg,#e8a33d,#f4c86b); }
+
+    .sach-ribbon{
+        position:absolute;
+        top:0;
+        left:22px;
+        width:26px;
+        height:64px;
+        background:#f4c86b;
+        clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);
+        box-shadow:0 3px 8px rgba(0,0,0,.3);
+        z-index:1;
+    }
+    .sach-book-icon{
+        font-size:30px;
+        margin-bottom:14px;
+        position:relative;
+        z-index:1;
+        filter:drop-shadow(0 4px 8px rgba(0,0,0,.35));
+    }
+    .sach-book-tap{
+        font-family:'Playfair Display', serif;
+        font-size:22px;
+        font-weight:800;
+        position:relative;
+        z-index:1;
+        line-height:1.3;
+    }
+    .sach-book-sub{
+        font-size:13px;
+        font-weight:500;
+        opacity:.92;
+        margin-top:6px;
+        position:relative;
+        z-index:1;
+        line-height:1.5;
+    }
+    .sach-book-btn{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        margin-top:16px;
+        background:rgba(0,0,0,.28);
+        backdrop-filter:blur(4px);
+        padding:8px 14px;
+        border-radius:20px;
+        font-size:12px;
+        font-weight:700;
+        width:fit-content;
+        position:relative;
+        z-index:1;
+    }
+
+    /* Popup xem sách */
+    .sach-viewer-overlay{
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.9);
+        z-index:9999;
+        align-items:center;
+        justify-content:center;
+        backdrop-filter:blur(6px);
+        padding:16px;
+    }
+    .sach-viewer-box{
+        background:linear-gradient(180deg,#1a2b4d 0%,#0f1b32 100%);
+        border:1px solid rgba(244,200,107,.25);
+        border-radius:20px;
+        width:100%;
+        max-width:960px;
+        height:88vh;
+        display:flex;
+        flex-direction:column;
+        overflow:hidden;
+        box-shadow:0 28px 70px rgba(0,0,0,.8);
+        animation:sachIn .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes sachIn{
+        from{ opacity:0; transform:scale(.92) translateY(20px); }
+        to{ opacity:1; transform:scale(1) translateY(0); }
+    }
+    .sach-viewer-header{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:16px 22px;
+        border-bottom:1px solid rgba(255,255,255,.08);
+        flex-shrink:0;
+    }
+    .sach-viewer-header h3{
+        font-family:'Playfair Display', serif;
+        color:#f4c86b;
+        font-size:18px;
+        font-weight:800;
+    }
+    .sach-viewer-header button{
+        width:36px; height:36px;
+        border-radius:50%;
+        background:rgba(255,255,255,.08);
+        border:none;
+        color:white;
+        font-size:16px;
+        cursor:pointer;
+        transition:background .2s;
+    }
+    .sach-viewer-header button:hover{ background:rgba(255,255,255,.16); }
+    #sach-viewer-iframe{
+        flex:1;
+        width:100%;
+        border:none;
+        background:#fff;
+    }
+    .sach-viewer-empty{
+        flex:1;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#cbd5e1;
+        font-size:14px;
+        text-align:center;
+        padding:20px;
+    }
+
+    @media (max-width:1024px){
+        .sach-library{ grid-template-columns:repeat(2,1fr); }
+        .sach-hero h1{ font-size:34px; }
+    }
+    @media (max-width:768px){
+        .sach-library{ grid-template-columns:1fr; max-width:340px; }
+        .sach-hero h1{ font-size:28px; }
+        .sach-hero p{ font-size:14px; }
+        .sach-viewer-box{ height:82vh; }
+    }
+    </style>
+</head>
+
+<body>
+
+<canvas id="particles-canvas"></canvas>
+
+<div class="container sach-page">
+
+    <a href="index.html" class="back-btn">⬅ Quay lại trang chủ</a>
+
+    <div class="sach-hero">
+        <span class="sach-eyebrow">📚 THƯ VIỆN SỐ</span>
+        <h1>Sách Truyện Điện Tử</h1>
+        <p>Đọc trọn bộ kho tàng truyện dân gian Chăm dưới dạng sách lật trang trực tuyến, chọn tập bên dưới để bắt đầu.</p>
+    </div>
+
+    <div class="sach-library">
+
+        <div class="sach-book sach-book-1"
+             onclick="openBook('tap1')">
+            <div class="sach-ribbon"></div>
+            <span class="sach-book-icon">📖</span>
+            <span class="sach-book-tap">Tập 1</span>
+            <span class="sach-book-sub">Truyện dân gian dân tộc Chăm</span>
+            <span class="sach-book-btn">Đọc ngay →</span>
+        </div>
+
+        <div class="sach-book sach-book-2"
+             onclick="openBook('tap2')">
+            <div class="sach-ribbon"></div>
+            <span class="sach-book-icon">📖</span>
+            <span class="sach-book-tap">Tập 2</span>
+            <span class="sach-book-sub">Truyện dân gian dân tộc Chăm</span>
+            <span class="sach-book-btn">Đọc ngay →</span>
+        </div>
+
+        <div class="sach-book sach-book-3"
+             onclick="openBook('tap3')">
+            <div class="sach-ribbon"></div>
+            <span class="sach-book-icon">📖</span>
+            <span class="sach-book-tap">Tập 3</span>
+            <span class="sach-book-sub">Truyện dân gian dân tộc Chăm</span>
+            <span class="sach-book-btn">Đọc ngay →</span>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- POPUP XEM SÁCH -->
+<div class="sach-viewer-overlay" id="sach-viewer-overlay">
+    <div class="sach-viewer-box">
+        <div class="sach-viewer-header">
+            <h3 id="sach-viewer-title"></h3>
+            <button onclick="closeBook()">✕</button>
+        </div>
+        <div id="sach-viewer-body"></div>
+    </div>
+</div>
+
+<script>
+/* ========== DỮ LIỆU SÁCH ==========
+   🔗 Dán link Heyzine của Tập 2 và Tập 3 vào chỗ '' bên dưới */
+const sachData = {
+    tap1: {
+        title: 'Tập 1 · Truyện dân gian dân tộc Chăm',
+        link: 'https://heyzine.com/flip-book/ca7f33f4c0.html'
+    },
+    tap2: {
+        title: 'Tập 2 · Truyện dân gian dân tộc Chăm',
+        link: 'https://heyzine.com/flip-book/995cc53c0a.html'
+    },
+    tap3: {
+        title: 'Tập 3 · Truyện dân gian dân tộc Chăm',
+        link: 'https://heyzine.com/flip-book/beb1896337.html'
+    }
+};
+
+const overlay = document.getElementById('sach-viewer-overlay');
+const titleEl = document.getElementById('sach-viewer-title');
+const bodyEl  = document.getElementById('sach-viewer-body');
+
+function openBook(key){
+    const d = sachData[key];
+    if(!d) return;
+
+    titleEl.textContent = d.title;
+
+    // Hiện popup TRƯỚC để có kích thước thật, rồi mới chèn iframe vào
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    setTimeout(function(){
+        if(d.link){
+            bodyEl.innerHTML = '<iframe id="sach-viewer-iframe" src="' + d.link + '" allowfullscreen></iframe>';
+        }else{
+            bodyEl.innerHTML = '<div class="sach-viewer-empty">Tập này chưa có link, thêm link vào biến sachData trong code nhé!</div>';
+        }
+    }, 30);
+
+    // cập nhật URL để có thể chia sẻ link mở thẳng tập này
+    const url = new URL(window.location);
+    url.searchParams.set('tap', key.replace('tap',''));
+    window.history.replaceState({}, '', url);
+}
+
+function closeBook(){
+    overlay.style.display = 'none';
+    bodyEl.innerHTML = '';
+    document.body.style.overflow = '';
+}
+
+overlay.addEventListener('click', function(e){
+    if(e.target === overlay) closeBook();
+});
+document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeBook();
+});
+
+/* Nếu truy cập kèm ?tap=1 (từ trang chủ) thì tự mở popup luôn */
+window.addEventListener('DOMContentLoaded', function(){
+    const params = new URLSearchParams(window.location.search);
+    const tap = params.get('tap');
+    if(tap && sachData['tap' + tap]) openBook('tap' + tap);
+});
+</script>
+
+<script src="script.js"></script>
+<script src="hieuung.js"></script>
+
+</body>
+</html>
