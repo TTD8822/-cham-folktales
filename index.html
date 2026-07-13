@@ -153,6 +153,247 @@
         .vhz-card h3{ font-size:13px; }
         .vhz-card span:not(.vhz-tag){ font-size:10px; }
     }
+
+    /* ===== SÁCH TRUYỆN ĐIỆN TỬ - KỆ SÁCH ===== */
+    .sach-section{
+        margin-top:20px;
+        background:linear-gradient(180deg, rgba(26,43,77,.6), rgba(15,27,50,.6));
+        border:1px solid rgba(244,200,107,.15);
+        border-radius:22px;
+        padding:20px;
+    }
+    .sach-head{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        flex-wrap:wrap;
+        gap:8px;
+        margin-bottom:16px;
+    }
+    .sach-head h2{
+        font-size:18px;
+        font-weight:800;
+        color:white;
+        display:flex;
+        align-items:center;
+        gap:8px;
+    }
+    .sach-badge{
+        background:linear-gradient(90deg,#f4c86b,#e8a33d);
+        color:#1a2b4d;
+        font-size:10px;
+        font-weight:800;
+        letter-spacing:.4px;
+        padding:5px 12px;
+        border-radius:20px;
+        white-space:nowrap;
+    }
+
+    /* Kệ sách */
+    .sach-shelf{
+        display:flex;
+        align-items:flex-end;
+        gap:10px;
+        padding:10px 6px 16px;
+        border-bottom:4px solid;
+        border-image:linear-gradient(90deg,#f4c86b,#e8a33d) 1;
+        position:relative;
+    }
+    .sach-spine{
+        flex:1;
+        min-width:0;
+        height:170px;
+        border-radius:10px 10px 4px 4px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        padding:14px 8px;
+        cursor:pointer;
+        text-decoration:none;
+        color:white;
+        position:relative;
+        box-shadow:inset -6px 0 10px rgba(0,0,0,.25), 0 6px 14px rgba(0,0,0,.35);
+        transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease;
+    }
+    .sach-spine:hover{
+        transform:translateY(-16px) rotate(-1.5deg);
+        box-shadow:inset -6px 0 10px rgba(0,0,0,.25), 0 20px 28px rgba(0,0,0,.5);
+    }
+    .sach-spine-1{ background:linear-gradient(160deg,#7b2ff7,#4f6ef7); }
+    .sach-spine-2{ background:linear-gradient(160deg,#ff3d81,#ff7a45); }
+    .sach-spine-3{ background:linear-gradient(160deg,#e8a33d,#f4c86b); }
+
+    .sach-spine .sach-emoji{
+        font-size:24px;
+        margin-bottom:10px;
+        filter:drop-shadow(0 3px 6px rgba(0,0,0,.3));
+    }
+    .sach-spine .sach-num{
+        font-size:15px;
+        font-weight:800;
+        letter-spacing:.5px;
+    }
+    .sach-spine .sach-sub{
+        font-size:11px;
+        font-weight:600;
+        line-height:1.35;
+        opacity:.9;
+        margin-top:8px;
+    }
+
+    .sach-note{
+        text-align:center;
+        font-size:11px;
+        color:#8fa0b8;
+        margin-top:10px;
+    }
+
+    @media (max-width:768px){
+        .sach-spine{ height:150px; padding:10px 6px; }
+        .sach-spine .sach-num{ font-size:13px; }
+        .sach-spine .sach-sub{ font-size:10px; }
+    }
+
+    /* ===== FOOTER - CỔNG ĐÓNG VĂN HÓA CHĂM ===== */
+    .cham-footer{
+        margin-top:50px;
+        background:linear-gradient(180deg,#13233f 0%,#0a1526 100%);
+    }
+    .cham-footer-pattern{
+        height:14px;
+        width:100%;
+        background-image:
+            linear-gradient(135deg, rgba(244,200,107,.55) 25%, transparent 25%),
+            linear-gradient(225deg, rgba(244,200,107,.55) 25%, transparent 25%),
+            linear-gradient(45deg,  rgba(244,200,107,.55) 25%, transparent 25%),
+            linear-gradient(315deg, rgba(244,200,107,.55) 25%, transparent 25%);
+        background-position:7px 0,7px 0,0 0,0 0;
+        background-size:14px 14px;
+        background-repeat:repeat-x;
+    }
+    .cham-footer-inner{
+        max-width:1500px;
+        margin:0 auto;
+        padding:46px 24px 30px;
+        display:grid;
+        grid-template-columns:1.3fr 1fr 1fr;
+        gap:40px;
+    }
+    .cf-brand h3{
+        font-family:'Playfair Display', serif;
+        color:#f4c86b;
+        font-size:24px;
+        font-weight:900;
+        letter-spacing:1px;
+        margin-bottom:12px;
+    }
+    .cf-brand p{
+        color:#cbd5e1;
+        font-size:14px;
+        line-height:1.75;
+        max-width:340px;
+        margin-bottom:20px;
+    }
+    .cf-social{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        width:42px;
+        height:42px;
+        border-radius:50%;
+        border:1px solid rgba(244,200,107,.4);
+        color:#f4c86b;
+        text-decoration:none;
+        font-size:18px;
+        transition:.25s ease;
+    }
+    .cf-social:hover{
+        background:rgba(244,200,107,.15);
+        transform:translateY(-3px);
+    }
+    .cf-col h4{
+        font-family:'Playfair Display', serif;
+        color:white;
+        font-size:16px;
+        font-weight:800;
+        margin-bottom:18px;
+        position:relative;
+        padding-bottom:9px;
+        width:fit-content;
+    }
+    .cf-col h4::after{
+        content:'';
+        position:absolute;
+        left:0;
+        bottom:0;
+        width:28px;
+        height:3px;
+        border-radius:3px;
+        background:linear-gradient(90deg,#f4c86b,#e8a33d);
+    }
+    .cf-col a{
+        display:block;
+        color:#cbd5e1;
+        text-decoration:none;
+        font-size:14px;
+        margin-bottom:11px;
+        transition:.2s ease;
+    }
+    .cf-col a:hover{
+        color:#f4c86b;
+        padding-left:4px;
+    }
+    .cf-contact-card{
+        background:rgba(244,200,107,.06);
+        border:1px solid rgba(244,200,107,.2);
+        border-radius:16px;
+        padding:18px;
+    }
+    .cf-contact-row{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        margin-bottom:13px;
+        font-size:13.5px;
+        color:#e2e8f0;
+    }
+    .cf-contact-row:last-child{ margin-bottom:0; }
+    .cf-contact-row .ic{
+        flex-shrink:0;
+        width:30px;
+        height:30px;
+        border-radius:50%;
+        background:rgba(244,200,107,.15);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:14px;
+    }
+    .cf-contact-row a{
+        color:#f4c86b;
+        text-decoration:none;
+    }
+    .cf-contact-row a:hover{ text-decoration:underline; }
+    .cham-footer-bottom{
+        border-top:1px solid rgba(255,255,255,.08);
+        padding:18px 24px;
+        text-align:center;
+        color:#8fa0b8;
+        font-size:12.5px;
+        line-height:1.6;
+    }
+    @media (max-width:1024px){
+        .cham-footer-inner{ grid-template-columns:1fr 1fr; }
+        .cf-brand{ grid-column:1 / -1; }
+    }
+    @media (max-width:768px){
+        .cham-footer-inner{ grid-template-columns:1fr; gap:28px; text-align:center; padding:36px 20px 24px; }
+        .cf-brand p{ margin-left:auto; margin-right:auto; }
+        .cf-col h4{ margin:0 auto 16px; }
+        .cf-col h4::after{ left:50%; transform:translateX(-50%); }
+    }
     </style>
 </head>
 
@@ -177,7 +418,7 @@
             <div class="stats">
 
                 <div class="stat-box">
-                    <h3>100+</h3>
+                    <h3>50+</h3>
                     <span>Truyện dân gian</span>
                 </div>
 
@@ -260,7 +501,7 @@
 
                             <span class="tag">Truyện cổ tích</span>
 
-                            <h3>Nha Rúi và Tầm Dang</h3>
+                            <h3>Nha Rúi và Tầm Đang</h3>
 
                             <p>
                                 Câu chuyện về tình yêu, lòng thủy chung và niềm tin vượt qua mọi thử thách.
@@ -435,6 +676,44 @@
 
             </div>
 
+            <!-- SÁCH TRUYỆN ĐIỆN TỬ -->
+            <div class="sach-section">
+
+                <div class="sach-head">
+                    <h2>📕 Sách Truyện Điện Tử</h2>
+                    <span class="sach-badge">ĐỌC NGAY</span>
+                </div>
+
+                <div class="sach-shelf">
+
+                    <a class="sach-spine sach-spine-1"
+                       href="sachdienthu.html?tap=1" target="_blank" rel="noopener">
+                        <span class="sach-emoji">📖</span>
+                        <span class="sach-num">TẬP 1</span>
+                        <span class="sach-sub">Truyện dân gian dân tộc Chăm</span>
+                    </a>
+
+                    <a class="sach-spine sach-spine-2"
+                       href="sachdienthu.html?tap=2" target="_blank" rel="noopener">
+                        <span class="sach-emoji">📖</span>
+                        <span class="sach-num">TẬP 2</span>
+                        <span class="sach-sub">Truyện dân gian dân tộc Chăm</span>
+                    </a>
+
+                    <a class="sach-spine sach-spine-3"
+                       href="sachdienthu.html?tap=3" target="_blank" rel="noopener">
+                        <span class="sach-emoji">📖</span>
+                        <span class="sach-num">TẬP 3</span>
+                        <span class="sach-sub">Truyện dân gian dân tộc Chăm</span>
+                    </a>
+
+                </div>
+
+                <p class="sach-note">Nhấn vào từng tập để mở thư viện sách ở tab mới</p>
+
+            </div>
+
+            <!-- PHẢN HỒI - đẩy xuống dưới cùng -->
             <a href="phanhoi.html" class="menu-card" style="display:flex;align-items:center;gap:14px;text-align:left;margin-top:20px;">
                 <div class="icon" style="margin-bottom:0;">💬</div>
                 <div>
@@ -448,6 +727,56 @@
     </div>
 
 </div><!-- end .container -->
+
+<!-- ===== FOOTER ===== -->
+<footer class="cham-footer">
+
+    <div class="cham-footer-pattern"></div>
+
+    <div class="cham-footer-inner">
+
+        <div class="cf-brand">
+            <h3>CHĂM FOLKTALES AI</h3>
+            <p>Kho tàng truyện dân gian Chăm được kể lại bằng công nghệ AI — giữ gìn ký ức, lễ hội và tiếng nói của một nền văn hóa lâu đời cho các thế hệ mai sau.</p>
+            <a class="cf-social" href="https://www.facebook.com/profile.php?id=61589900680121" target="_blank" rel="noopener" aria-label="Facebook Văn Hóa Chăm">📘</a>
+        </div>
+
+        <div class="cf-col">
+            <h4>Khám phá</h4>
+            <a href="truyenco.html">Truyện cổ Chăm</a>
+            <a href="chatbot.html">Trợ lý AI</a>
+            <a href="videoAI.html">Video AI</a>
+            <a href="truyentranh.html">Truyện tranh AI</a>
+            <a href="trochoi.html">Trò chơi</a>
+            <a href="nghetruyen.html">Nghe truyện</a>
+        </div>
+
+        <div class="cf-col">
+            <h4>Liên hệ</h4>
+            <div class="cf-contact-card">
+                <div class="cf-contact-row">
+                    <span class="ic">☎️</span>
+                    <a href="tel:0383353039">0383 353 039</a>
+                </div>
+                <div class="cf-contact-row">
+                    <span class="ic">✉️</span>
+                    <a href="mailto:dthh3441@gmail.com">dthh3441@gmail.com</a>
+                </div>
+                <div class="cf-contact-row">
+                    <span class="ic">📘</span>
+                    <a href="https://www.facebook.com/profile.php?id=61589900680121" target="_blank" rel="noopener">Văn Hóa Chăm trên Facebook</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="cham-footer-bottom">
+        © 2026 Cham Folktales AI — Dự án bảo tồn văn hóa dân gian Chăm bằng công nghệ AI.
+    </div>
+
+</footer>
+
 
 
 <!-- =============================================
@@ -653,7 +982,7 @@ const kpData = {
 
 };
 
-/* ========== MỞ MODAL ========== */
+/* ========== MỞ MODAL KHÁM PHÁ ========== */
 function openKP(key) {
     const d = kpData[key];
 
@@ -687,7 +1016,7 @@ function openKP(key) {
     document.body.style.overflow = 'hidden';
 }
 
-/* ========== ĐÓNG MODAL ========== */
+/* ========== ĐÓNG MODAL KHÁM PHÁ ========== */
 function closeKP() {
     document.getElementById('kp-overlay').style.display = 'none';
     document.body.style.overflow = '';
@@ -698,7 +1027,7 @@ function closeKPOverlay(e) {
 }
 
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeKP();
+    if (e.key === 'Escape') { closeKP(); }
 });
 </script>
 
