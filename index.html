@@ -394,6 +394,105 @@
         .cf-col h4{ margin:0 auto 16px; }
         .cf-col h4::after{ left:50%; transform:translateX(-50%); }
     }
+
+    /* ===== NÚT NỔI HƯỚNG DẪN ===== */
+    .hd-float{
+        position:fixed;
+        right:22px;
+        bottom:22px;
+        z-index:9998;
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:12px 18px 12px 12px;
+        border-radius:50px;
+        background:linear-gradient(135deg,#ff0000,#ff5b5b);
+        color:white;
+        text-decoration:none;
+        font-weight:700;
+        font-size:13.5px;
+        box-shadow:0 10px 26px rgba(255,0,0,.4);
+        border:none;
+        cursor:pointer;
+        animation:hdFloatPulse 2.4s ease-in-out infinite;
+    }
+    .hd-float:hover{ transform:translateY(-3px); }
+    .hd-float-icon{
+        width:32px;
+        height:32px;
+        border-radius:50%;
+        background:rgba(255,255,255,.2);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:15px;
+    }
+    @keyframes hdFloatPulse{
+        0%,100%{ box-shadow:0 10px 26px rgba(255,0,0,.4); }
+        50%{ box-shadow:0 10px 34px rgba(255,0,0,.65); }
+    }
+    @media (max-width:768px){
+        .hd-float{ right:14px; bottom:14px; padding:11px 16px 11px 11px; font-size:12.5px; }
+        .hd-float-icon{ width:28px; height:28px; font-size:13px; }
+    }
+
+    /* ===== MODAL VIDEO HƯỚNG DẪN ===== */
+    #hd-video-overlay{
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.9);
+        z-index:9999;
+        align-items:center;
+        justify-content:center;
+        backdrop-filter:blur(6px);
+        padding:20px;
+    }
+    .hd-video-box{
+        width:100%;
+        max-width:860px;
+        background:#0f1b32;
+        border:1px solid rgba(244,200,107,.25);
+        border-radius:18px;
+        overflow:hidden;
+        box-shadow:0 28px 70px rgba(0,0,0,.8);
+        animation:kpIn .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .hd-video-head{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:14px 18px;
+        border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    .hd-video-head h3{
+        color:#f4c86b;
+        font-size:15px;
+        font-weight:800;
+    }
+    .hd-video-close{
+        width:34px;
+        height:34px;
+        border-radius:50%;
+        background:rgba(255,255,255,.08);
+        border:none;
+        color:white;
+        font-size:16px;
+        cursor:pointer;
+    }
+    .hd-video-frame-wrap{
+        position:relative;
+        width:100%;
+        padding-top:56.25%;
+        background:black;
+    }
+    .hd-video-frame-wrap iframe{
+        position:absolute;
+        inset:0;
+        width:100%;
+        height:100%;
+        border:0;
+    }
     </style>
 </head>
 
@@ -777,7 +876,58 @@
 
 </footer>
 
+<!-- ===== NÚT NỔI VIDEO HƯỚNG DẪN ===== -->
+<button class="hd-float" onclick="openVideoGuide()" aria-label="Xem video hướng dẫn sử dụng website">
+    <span class="hd-float-icon">▶️</span>
+    <span>Hướng dẫn sử dụng</span>
+</button>
 
+<!-- ===== MODAL VIDEO HƯỚNG DẪN ===== -->
+<div id="hd-video-overlay" onclick="closeVideoGuideOverlay(event)">
+    <div class="hd-video-box">
+        <div class="hd-video-head">
+            <h3>🎬 Hướng dẫn sử dụng website Cham Folktales AI</h3>
+            <button class="hd-video-close" onclick="closeVideoGuide()">✕</button>
+        </div>
+        <div class="hd-video-frame-wrap">
+            <iframe id="hd-video-iframe"
+                src=""
+                title="Video hướng dẫn sử dụng website"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ========== VIDEO HƯỚNG DẪN SỬ DỤNG ========== */
+const HD_VIDEO_ID = 'bb_sUds09ck';
+
+function openVideoGuide() {
+    const overlay = document.getElementById('hd-video-overlay');
+    const iframe = document.getElementById('hd-video-iframe');
+    iframe.src = 'https://www.youtube.com/embed/' + HD_VIDEO_ID + '?autoplay=1&rel=0';
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeVideoGuide() {
+    const overlay = document.getElementById('hd-video-overlay');
+    const iframe = document.getElementById('hd-video-iframe');
+    overlay.style.display = 'none';
+    iframe.src = ''; // dừng video khi đóng
+    document.body.style.overflow = '';
+}
+
+function closeVideoGuideOverlay(e) {
+    if (e.target === document.getElementById('hd-video-overlay')) closeVideoGuide();
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeVideoGuide();
+});
+</script>
 
 <!-- =============================================
      MODAL KHÁM PHÁ & TÌM HIỂU
