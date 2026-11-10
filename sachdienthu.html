@@ -51,7 +51,7 @@
     /* Kệ thư viện */
     .sach-library{
         display:grid;
-        grid-template-columns:repeat(3,1fr);
+        grid-template-columns:repeat(4,1fr);
         gap:28px;
         max-width:1100px;
         margin:0 auto;
@@ -84,6 +84,7 @@
     .sach-book-1{ background:linear-gradient(165deg,#7b2ff7,#4f6ef7); }
     .sach-book-2{ background:linear-gradient(165deg,#ff3d81,#ff7a45); }
     .sach-book-3{ background:linear-gradient(165deg,#e8a33d,#f4c86b); }
+    .sach-book-4{ background:linear-gradient(165deg,#0ba360,#3cba92); }
 
     .sach-ribbon{
         position:absolute;
@@ -273,6 +274,15 @@
             <span class="sach-book-btn">Đọc ngay →</span>
         </div>
 
+        <div class="sach-book sach-book-4"
+             onclick="openBook('tap4')">
+            <div class="sach-ribbon"></div>
+            <span class="sach-book-icon">📖</span>
+            <span class="sach-book-tap">Tập 4</span>
+            <span class="sach-book-sub">Truyện dân gian dân tộc Chăm</span>
+            <span class="sach-book-btn">Đọc ngay →</span>
+        </div>
+
     </div>
 
 </div>
@@ -289,8 +299,7 @@
 </div>
 
 <script>
-/* ========== DỮ LIỆU SÁCH ==========
-   🔗 Dán link Heyzine của Tập 2 và Tập 3 vào chỗ '' bên dưới */
+/* ========== DỮ LIỆU SÁCH ========== */
 const sachData = {
     tap1: {
         title: 'Tập 1 · Truyện dân gian dân tộc Chăm',
@@ -302,7 +311,11 @@ const sachData = {
     },
     tap3: {
         title: 'Tập 3 · Truyện dân gian dân tộc Chăm',
-        link: 'https://heyzine.com/flip-book/beb1896337.html'
+        link: 'https://heyzine.com/flip-book/fb1e9643c3.html'
+    },
+    tap4: {
+        title: 'Tập 4 · Truyện dân gian dân tộc Chăm',
+        link: 'https://heyzine.com/flip-book/5ddabc1232.html'
     }
 };
 
