@@ -5,46 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nghe Truyện AI – Cham Folktales AI</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="hieuung.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600&display=swap');
-
-.particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-.particle {
-    position: absolute; width: 3px; height: 3px;
-    background: rgba(244,200,107,0.3); border-radius: 50%;
-    animation: float linear infinite;
-}
-@keyframes float {
-    from { transform: translateY(100vh); opacity: 0; }
-    10% { opacity: 1; } 90% { opacity: 1; }
-    to { transform: translateY(-10vh); opacity: 0; }
-}
-
-.nt-wrap { position: relative; z-index: 1; padding: 40px 0 60px; }
-
-.back-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    margin-bottom: 32px; padding: 10px 20px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px; color: #cbd5e1; text-decoration: none;
-    font-size: 14px; transition: 0.2s;
-}
-.back-btn:hover { background: rgba(255,255,255,0.11); color: white; }
+.nt-wrap { position: relative; z-index: 1; padding: 36px 0 60px; }
 
 /* ===== HERO ===== */
-.nt-hero { text-align: center; margin-bottom: 36px; }
+.nt-hero { text-align: center; margin-bottom: 32px; }
 .nt-hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 52px; font-weight: 800; color: #f4c86b; margin-bottom: 10px;
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 50px); font-weight: 800; color: #f4c86b; margin-bottom: 10px;
 }
 .nt-hero p { color: #94a3b8; font-size: 16px; }
 
 /* ===== API KEY SETUP ===== */
 .api-setup {
     background: linear-gradient(135deg, #1a2b4d, #162949);
-    border: 1px solid rgba(244,200,107,0.2);
-    border-radius: 20px; padding: 28px; margin-bottom: 28px;
+    border: 1px solid rgba(244,200,107,0.22);
+    border-radius: 20px; padding: 24px 26px; margin-bottom: 26px;
     position: relative; overflow: hidden;
 }
 .api-setup::before {
@@ -54,95 +31,137 @@
     background: radial-gradient(circle, rgba(244,200,107,0.06), transparent 70%);
     pointer-events: none;
 }
-.api-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.api-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 .api-icon {
     width: 42px; height: 42px; border-radius: 12px;
     background: linear-gradient(135deg, #f4c86b, #e8a33d);
     display: flex; align-items: center; justify-content: center;
     font-size: 20px; flex-shrink: 0;
 }
-.api-header h3 { color: #f4c86b; font-size: 18px; margin-bottom: 2px; }
-.api-header p { color: #64748b; font-size: 12px; }
-.api-input-row { display: flex; gap: 10px; }
+.api-header h3 { color: #f4c86b; font-size: 17px; margin-bottom: 2px; }
+.api-header p { color: #94a3b8; font-size: 12.5px; }
+.api-input-row { display: flex; gap: 10px; flex-wrap: wrap; }
 .api-input {
-    flex: 1; padding: 12px 16px;
-    background: rgba(0,0,0,0.25);
-    border: 1px solid rgba(255,255,255,0.1);
+    flex: 1; min-width: 220px; padding: 12px 16px;
+    background: rgba(0,0,0,0.28);
+    border: 1px solid rgba(255,255,255,0.12);
     border-radius: 12px; color: white; font-size: 14px;
     outline: none; transition: 0.2s; font-family: inherit;
 }
-.api-input::placeholder { color: #475569; }
+.api-input::placeholder { color: #64748b; }
 .api-input:focus {
-    border-color: rgba(244,200,107,0.4);
-    box-shadow: 0 0 0 3px rgba(244,200,107,0.07);
+    border-color: rgba(244,200,107,0.45);
+    box-shadow: 0 0 0 3px rgba(244,200,107,0.08);
 }
 .api-save-btn {
-    padding: 12px 22px;
+    padding: 12px 20px;
     background: linear-gradient(135deg, #f4c86b, #e8a33d);
     border: none; border-radius: 12px; color: #0f1b32;
-    font-weight: 700; font-size: 14px; cursor: pointer;
+    font-weight: 800; font-size: 14px; cursor: pointer;
     transition: 0.2s; font-family: inherit; white-space: nowrap;
 }
 .api-save-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(244,200,107,0.3); }
-.api-status { margin-top: 10px; font-size: 13px; color: #64748b; }
+.api-status { margin-top: 10px; font-size: 13px; color: #94a3b8; }
 .api-status.ok { color: #22c55e; }
 .api-status.err { color: #ef4444; }
 .api-tip {
     margin-top: 12px; padding: 10px 14px;
     background: rgba(244,200,107,0.06);
-    border: 1px solid rgba(244,200,107,0.15);
-    border-radius: 10px; font-size: 12px; color: #94a3b8; line-height: 1.6;
+    border: 1px solid rgba(244,200,107,0.16);
+    border-radius: 10px; font-size: 12.5px; color: #cbd5e1; line-height: 1.6;
 }
-.api-tip a { color: #f4c86b; text-decoration: none; }
+.api-tip a { color: #f4c86b; text-decoration: none; font-weight: 600; }
 .api-tip a:hover { text-decoration: underline; }
 
-/* ===== VOICE SELECT ===== */
-.voice-section { margin-bottom: 24px; }
-.voice-section h3 { color: #f4c86b; font-size: 16px; margin-bottom: 12px; }
-.voice-row { display: flex; gap: 10px; flex-wrap: wrap; }
+/* ===== VOICE SELECT & CUSTOM VOICE ===== */
+.voice-section {
+    background: rgba(22, 41, 73, 0.7);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 20px 22px;
+    margin-bottom: 24px;
+}
+.voice-head {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px; margin-bottom: 14px;
+}
+.voice-head h3 { color: #f4c86b; font-size: 16px; margin: 0; }
+.model-select-wrap {
+    display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #cbd5e1;
+}
+.model-select {
+    padding: 6px 12px; border-radius: 10px;
+    background: rgba(0,0,0,0.35); border: 1px solid rgba(244,200,107,0.3);
+    color: #f4c86b; font-size: 12.5px; font-weight: 600; outline: none; cursor: pointer;
+}
+.voice-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
 .voice-btn {
-    padding: 9px 18px;
+    padding: 9px 16px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 50px; color: #94a3b8; font-size: 13px;
+    border-radius: 50px; color: #cbd5e1; font-size: 13px; font-weight: 500;
     cursor: pointer; transition: 0.2s; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 6px;
 }
 .voice-btn.active, .voice-btn:hover {
-    background: rgba(244,200,107,0.13);
-    border-color: rgba(244,200,107,0.4);
+    background: rgba(244,200,107,0.16);
+    border-color: #f4c86b;
     color: #f4c86b;
 }
+.voice-badge-vi {
+    background: rgba(34,197,94,0.2);
+    border: 1px solid rgba(34,197,94,0.4);
+    color: #86efac;
+    font-size: 10px; padding: 1px 7px; border-radius: 10px; font-weight: 700;
+}
+.voice-custom-bar {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.07);
+}
+.voice-custom-bar input {
+    padding: 9px 14px; background: rgba(0,0,0,0.28);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;
+    color: white; font-size: 13px; outline: none; font-family: inherit;
+}
+.voice-custom-bar input:focus { border-color: rgba(244,200,107,0.45); }
+.voice-add-btn {
+    padding: 9px 16px; background: rgba(244,200,107,0.14);
+    border: 1px solid rgba(244,200,107,0.35); border-radius: 10px;
+    color: #f4c86b; font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: 0.2s; font-family: inherit;
+}
+.voice-add-btn:hover { background: rgba(244,200,107,0.24); }
 
 /* ===== MAIN LAYOUT ===== */
-.nt-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 22px; align-items: start; }
+.nt-layout { display: grid; grid-template-columns: 1fr 1.35fr; gap: 22px; align-items: start; }
 
 /* ===== DANH SÁCH TRUYỆN ===== */
 .story-list { display: flex; flex-direction: column; gap: 10px; }
 .story-item {
     background: #162949;
-    border: 1px solid rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 14px; padding: 14px 16px;
     cursor: pointer; transition: 0.22s;
     display: flex; align-items: center; gap: 14px;
 }
 .story-item:hover, .story-item.active {
     border-color: rgba(244,200,107,0.45);
-    background: rgba(244,200,107,0.06);
+    background: rgba(244,200,107,0.07);
 }
 .story-item.active { border-color: #f4c86b; }
 .si-emoji { font-size: 28px; flex-shrink: 0; }
 .si-info { flex: 1; min-width: 0; }
-.si-title { color: white; font-size: 14px; font-weight: 600; line-height: 1.35; margin-bottom: 3px; }
-.si-meta { color: #64748b; font-size: 12px; display: flex; gap: 8px; }
+.si-title { color: white; font-size: 14.5px; font-weight: 700; line-height: 1.35; margin-bottom: 4px; }
+.si-meta { color: #94a3b8; font-size: 12px; display: flex; gap: 8px; align-items: center; }
 .si-tag {
     display: inline-block;
-    background: rgba(124,58,237,0.6);
+    background: rgba(124,58,237,0.65);
     color: white; font-size: 10px; padding: 2px 8px; border-radius: 20px;
 }
 .si-play {
-    width: 34px; height: 34px; border-radius: 50%;
-    background: rgba(244,200,107,0.1);
-    border: 1px solid rgba(244,200,107,0.25);
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(244,200,107,0.12);
+    border: 1px solid rgba(244,200,107,0.28);
     display: flex; align-items: center; justify-content: center;
     font-size: 14px; color: #f4c86b; flex-shrink: 0;
     transition: 0.2s;
@@ -155,34 +174,34 @@
 /* ===== PLAYER ===== */
 .player-panel {
     background: linear-gradient(180deg, #1a2b4d, #0f1b32);
-    border: 1px solid rgba(244,200,107,0.18);
+    border: 1px solid rgba(244,200,107,0.22);
     border-radius: 22px; padding: 28px;
     position: sticky; top: 20px;
+    box-shadow: 0 18px 44px rgba(0,0,0,0.45);
 }
 
 .player-cover {
-    width: 100%; aspect-ratio: 1;
-    border-radius: 18px; margin-bottom: 22px;
+    width: 100%; aspect-ratio: 16/10;
+    border-radius: 18px; margin-bottom: 20px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 80px; position: relative; overflow: hidden;
+    font-size: 76px; position: relative; overflow: hidden;
     background: linear-gradient(135deg, #1a2f5a, #2d1b4e);
 }
 .player-cover::after {
     content: '';
     position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 40% 40%, rgba(244,200,107,0.08), transparent 65%);
+    background: radial-gradient(ellipse at 40% 40%, rgba(244,200,107,0.1), transparent 65%);
 }
-.cover-emoji { position: relative; z-index: 1; transition: transform 0.5s ease;
-    filter: drop-shadow(0 6px 18px rgba(0,0,0,0.6)); }
-.player-panel.playing .cover-emoji {
-    animation: pulse 2s infinite;
+.cover-emoji {
+    position: relative; z-index: 1; transition: transform 0.5s ease;
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,0.6));
 }
+.player-panel.playing .cover-emoji { animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 
-/* Vinyl ring khi đang phát */
 .vinyl-ring {
-    position: absolute; inset: 10px; border-radius: 50%;
-    border: 2px solid rgba(244,200,107,0.2);
+    position: absolute; width: 160px; height: 160px; border-radius: 50%;
+    border: 2px dashed rgba(244,200,107,0.28);
     animation: spin 8s linear infinite;
     opacity: 0; transition: opacity 0.4s;
 }
@@ -192,25 +211,25 @@
 .now-playing-label {
     display: none; text-align: center; margin-bottom: 8px;
     color: #f4c86b; font-size: 11px; letter-spacing: 2px;
-    text-transform: uppercase; font-weight: 600;
+    text-transform: uppercase; font-weight: 700;
     animation: blink 1.5s infinite;
 }
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 .player-panel.playing .now-playing-label { display: block; }
 
 .player-title {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-display);
     font-size: 22px; color: white; text-align: center;
     margin-bottom: 6px; line-height: 1.35;
 }
 .player-sub {
-    color: #64748b; font-size: 13px; text-align: center; margin-bottom: 22px;
+    color: #94a3b8; font-size: 13px; text-align: center; margin-bottom: 20px;
 }
 
 /* Waveform visual */
 .waveform {
     display: flex; align-items: center; justify-content: center;
-    gap: 4px; height: 36px; margin-bottom: 22px; opacity: 0.4;
+    gap: 4px; height: 36px; margin-bottom: 20px; opacity: 0.4;
     transition: opacity 0.3s;
 }
 .player-panel.playing .waveform { opacity: 1; }
@@ -235,18 +254,18 @@
 .player-panel:not(.playing) .wave-bar { animation-play-state: paused; height: 12px; }
 
 /* Progress */
-.prog-wrap { margin-bottom: 20px; }
+.prog-wrap { margin-bottom: 18px; }
 .prog-bar-outer {
-    width: 100%; height: 5px; background: rgba(255,255,255,0.08);
+    width: 100%; height: 6px; background: rgba(255,255,255,0.09);
     border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 8px;
 }
 .prog-bar-inner { height: 100%; background: linear-gradient(90deg, #f4c86b, #e8a33d); border-radius: 10px; transition: width 0.3s linear; }
-.prog-times { display: flex; justify-content: space-between; font-size: 12px; color: #64748b; }
+.prog-times { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; }
 
 /* Controls */
-.controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 20px; }
+.controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 18px; }
 .ctrl-btn {
-    background: none; border: none; color: #64748b;
+    background: none; border: none; color: #94a3b8;
     font-size: 22px; cursor: pointer; transition: 0.2s;
     display: flex; align-items: center; justify-content: center;
     width: 44px; height: 44px; border-radius: 50%;
@@ -265,31 +284,30 @@
 
 /* Volume */
 .vol-row { display: flex; align-items: center; gap: 10px; }
-.vol-icon { color: #64748b; font-size: 16px; flex-shrink: 0; }
+.vol-icon { color: #94a3b8; font-size: 16px; flex-shrink: 0; }
 .vol-slider {
-    flex: 1; -webkit-appearance: none; height: 4px;
-    background: rgba(255,255,255,0.1); border-radius: 10px; outline: none;
+    flex: 1; -webkit-appearance: none; appearance: none; height: 4px;
+    background: rgba(255,255,255,0.12); border-radius: 10px; outline: none;
     cursor: pointer;
 }
 .vol-slider::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 14px; height: 14px;
+    -webkit-appearance: none; width: 15px; height: 15px;
     border-radius: 50%; background: #f4c86b; cursor: pointer;
 }
-.vol-pct { color: #64748b; font-size: 12px; width: 36px; text-align: right; }
+.vol-pct { color: #94a3b8; font-size: 12px; width: 38px; text-align: right; }
 
 /* Status bar */
 .player-status {
     margin-top: 16px; padding: 10px 14px;
-    background: rgba(0,0,0,0.2);
-    border-radius: 10px; font-size: 13px; color: #64748b;
+    background: rgba(0,0,0,0.24);
+    border-radius: 10px; font-size: 13px; color: #94a3b8;
     text-align: center; min-height: 40px;
     display: flex; align-items: center; justify-content: center;
 }
 .player-status.loading { color: #f4c86b; }
-.player-status.error { color: #ef4444; }
-.player-status.ready { color: #22c55e; }
+.player-status.error { color: #fca5a5; }
+.player-status.ready { color: #86efac; }
 
-/* Spinner */
 .spinner {
     display: inline-block; width: 14px; height: 14px;
     border: 2px solid rgba(244,200,107,0.3);
@@ -300,39 +318,39 @@
 }
 
 /* Speed */
-.speed-row { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
-.speed-label { color: #64748b; font-size: 12px; }
+.speed-row { display: flex; align-items: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.speed-label { color: #94a3b8; font-size: 12px; }
 .speed-btn {
-    padding: 4px 12px; font-size: 12px; border-radius: 20px;
+    padding: 5px 12px; font-size: 12px; border-radius: 20px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     color: #94a3b8; cursor: pointer; font-family: inherit; transition: 0.2s;
 }
 .speed-btn.active, .speed-btn:hover {
-    background: rgba(244,200,107,0.13);
-    border-color: rgba(244,200,107,0.3);
+    background: rgba(244,200,107,0.14);
+    border-color: rgba(244,200,107,0.35);
     color: #f4c86b;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .nt-layout { grid-template-columns: 1fr; }
-    .player-panel { position: static; }
-    .player-cover { aspect-ratio: 2/1; }
+    .player-panel { position: static; padding: 20px 18px; }
+    .player-cover { aspect-ratio: 2/1; font-size: 60px; }
 }
 </style>
 </head>
 <body>
 
-<div class="particles" id="particles"></div>
+<canvas id="particles-canvas"></canvas>
 
-<div class="container" style="position:relative;z-index:1;">
+<div class="container">
 <div class="nt-wrap">
 
     <a href="index.html" class="back-btn">← Trang chủ</a>
 
-    <div class="nt-hero">
-        <h1>🎧 Nghe Truyện AI</h1>
-        <p>Truyện dân gian Chăm được kể bằng giọng đọc AI chân thực</p>
+    <div class="nt-hero reveal">
+        <h1 class="shimmer-text">🎧 Nghe Truyện AI</h1>
+        <p>Truyện dân gian Chăm được kể bằng giọng đọc Tiếng Việt AI truyền cảm</p>
     </div>
 
     <!-- API KEY SETUP -->
@@ -340,29 +358,45 @@
         <div class="api-header">
             <div class="api-icon">🔑</div>
             <div>
-                <h3>Cài đặt ElevenLabs API Key</h3>
-                <p>Cần API key để tạo giọng đọc AI chất lượng cao</p>
+                <h3>Kết nối ElevenLabs AI (Tự động tải giọng Tiếng Việt của bạn)</h3>
+                <p>Nhập API Key để tự động đồng bộ toàn bộ giọng người Việt trong mục "My Voices" từ tài khoản ElevenLabs của bạn</p>
             </div>
         </div>
         <div class="api-input-row">
-            <input type="password" class="api-input" id="apiKeyInput" placeholder="sk_... (dán API key của bạn vào đây)">
-            <button class="api-save-btn" onclick="saveApiKey()">💾 Lưu Key</button>
+            <input type="password" class="api-input" id="apiKeyInput" placeholder="sk_... (dán ElevenLabs API key của bạn vào đây)">
+            <button class="api-save-btn ripple" onclick="saveApiKey()">💾 Lưu &amp; Tải Giọng Việt</button>
+            <button class="voice-add-btn" onclick="syncAccountVoices(true)" title="Tải lại danh sách giọng từ tài khoản ElevenLabs">🔄 Đồng bộ giọng</button>
         </div>
-        <div class="api-status" id="apiStatus">🔒 Chưa có API key – Key được lưu cục bộ, không gửi đi đâu</div>
+        <div class="api-status" id="apiStatus">🔊 Nhập ElevenLabs API Key để tải các giọng đọc Tiếng Việt từ tài khoản của bạn</div>
         <div class="api-tip">
-            💡 Lấy API key miễn phí tại <a href="https://elevenlabs.io" target="_blank">elevenlabs.io</a> → Đăng ký → Profile → API Keys.
-            Gói miễn phí có 10.000 ký tự/tháng. Key của bạn chỉ lưu trong trình duyệt, không chia sẻ với ai.
+            💡 <b>Mẹo để có giọng người Việt hay nhất trên ElevenLabs:</b> Vào <a href="https://elevenlabs.io/app/voice-library" target="_blank" rel="noopener">ElevenLabs Voice Library</a> → lọc ngôn ngữ <b>Vietnamese</b> → bấm <b>Add to My Voices</b> các giọng bạn thích. Khi bấm <b>Lưu &amp; Tải Giọng Việt</b> ở trên, web sẽ tự động lấy toàn bộ các giọng đó về đây!
         </div>
     </div>
 
     <!-- CHỌN GIỌNG -->
     <div class="voice-section">
-        <h3>🎙️ Chọn giọng đọc</h3>
-        <div class="voice-row">
-            <button class="voice-btn active" data-voice="21m00Tcm4TlvDq8ikWAM" onclick="selectVoice(this)">👩 Rachel (Nữ, nhẹ nhàng)</button>
-            <button class="voice-btn" data-voice="AZnzlk1XvdvUeBnXmlld" onclick="selectVoice(this)">👨 Domi (Nam, trầm)</button>
-            <button class="voice-btn" data-voice="EXAVITQu4vr4xnSDxMaL" onclick="selectVoice(this)">👩 Bella (Nữ, ấm)</button>
-            <button class="voice-btn" data-voice="ErXwobaYiN019PkySvjV" onclick="selectVoice(this)">👨 Antoni (Nam, rõ)</button>
+        <div class="voice-head">
+            <h3>🎙️ Chọn giọng đọc Tiếng Việt</h3>
+            <div class="model-select-wrap">
+                <label for="modelSelect">Bộ máy đọc Tiếng Việt:</label>
+                <select id="modelSelect" class="model-select" onchange="onModelChange(this.value)">
+                    <option value="eleven_flash_v2_5">⚡ Flash v2.5 (Chuẩn Tiếng Việt • Siêu nhanh • Rẻ 50%)</option>
+                    <option value="eleven_turbo_v2_5">🔥 Turbo v2.5 (Chuẩn Tiếng Việt • Giọng giàu cảm xúc)</option>
+                    <option value="eleven_v3">✨ Eleven v3 (Thế hệ mới nhất • Rất truyền cảm)</option>
+                    <option value="eleven_multilingual_v2">🌐 Multilingual v2 (Đa ngôn ngữ)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="voice-row" id="voiceRow"></div>
+
+        <!-- Thêm Voice ID giọng Việt tùy chỉnh -->
+        <div class="voice-custom-bar">
+            <span style="color:#94a3b8;font-size:12.5px;">➕ Thêm giọng Việt bằng Voice ID:</span>
+            <input type="text" id="customVoiceName" placeholder="Tên hiển thị (VD: Cô Mai kể chuyện)" style="min-width:190px;">
+            <input type="text" id="customVoiceId" placeholder="Voice ID (VD: pNInz6obpgDQGcFmaJgB)" style="min-width:210px;">
+            <button class="voice-add-btn" onclick="addCustomVoice()">+ Thêm vào danh sách</button>
+            <button class="voice-add-btn" onclick="previewSelectedVoice()" title="Nghe thử 1 câu bằng giọng đang chọn">🔊 Nghe thử giọng này</button>
         </div>
     </div>
 
@@ -373,14 +407,14 @@
         <div class="story-list" id="storyList"></div>
 
         <!-- PLAYER -->
-        <div class="player-panel" id="playerPanel">
+        <div class="player-panel glow-border" id="playerPanel">
             <div class="player-cover">
                 <div class="vinyl-ring"></div>
                 <span class="cover-emoji" id="coverEmoji">🎵</span>
             </div>
             <div class="now-playing-label">▶ ĐANG PHÁT</div>
             <div class="player-title" id="playerTitle">Chọn một truyện để nghe</div>
-            <div class="player-sub" id="playerSub">Bấm vào tên truyện bên trái</div>
+            <div class="player-sub" id="playerSub">Bấm vào tên truyện trong danh sách</div>
 
             <div class="waveform">
                 <div class="wave-bar" style="height:10px"></div>
@@ -405,27 +439,27 @@
             </div>
 
             <div class="controls">
-                <button class="ctrl-btn" onclick="prevStory()" title="Truyện trước">⏮</button>
-                <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
-                <button class="ctrl-btn" onclick="nextStory()" title="Truyện tiếp">⏭</button>
+                <button class="ctrl-btn" onclick="prevStory()" title="Truyện trước" aria-label="Truyện trước">⏮</button>
+                <button class="play-btn ripple" id="playBtn" onclick="togglePlay()" aria-label="Phát hoặc tạm dừng">▶</button>
+                <button class="ctrl-btn" onclick="nextStory()" title="Truyện tiếp" aria-label="Truyện tiếp">⏭</button>
             </div>
 
             <div class="vol-row">
                 <span class="vol-icon">🔈</span>
-                <input type="range" class="vol-slider" id="volSlider" min="0" max="100" value="80" oninput="setVolume(this.value)">
-                <span class="vol-pct" id="volPct">80%</span>
+                <input type="range" class="vol-slider" id="volSlider" min="0" max="100" value="85" oninput="setVolume(this.value)" aria-label="Âm lượng">
+                <span class="vol-pct" id="volPct">85%</span>
                 <span class="vol-icon">🔊</span>
             </div>
 
             <div class="speed-row">
                 <span class="speed-label">Tốc độ:</span>
-                <button class="speed-btn" onclick="setSpeed(0.75, this)">0.75×</button>
+                <button class="speed-btn" onclick="setSpeed(0.85, this)">0.85×</button>
                 <button class="speed-btn active" onclick="setSpeed(1, this)">1×</button>
-                <button class="speed-btn" onclick="setSpeed(1.25, this)">1.25×</button>
-                <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5×</button>
+                <button class="speed-btn" onclick="setSpeed(1.15, this)">1.15×</button>
+                <button class="speed-btn" onclick="setSpeed(1.3, this)">1.3×</button>
             </div>
 
-            <div class="player-status" id="playerStatus">Chọn truyện và nhấn phát để bắt đầu</div>
+            <div class="player-status" id="playerStatus">Chọn truyện và nhấn ▶ để bắt đầu</div>
         </div>
 
     </div>
@@ -433,91 +467,231 @@
 </div>
 </div>
 
+<script src="stories-data.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script src="hieuung.js"></script>
 <script>
-// ===== DỮ LIỆU TRUYỆN =====
-const stories = [
-    {
-        emoji: '🌸', tag: 'Truyền thuyết', time: '15 phút',
-        title: 'Truyền Thuyết Nữ Thiên Y A Na',
-        text: `Xưa kia tại núi Đại An, có hai vợ chồng ông tiều phu cất nhà và vỡ rẫy trồng dưa. Một hôm ông bắt gặp một thiếu nữ trạc chín mười tuổi hái dưa rồi giỡn dưới trăng, thấy dễ thương ông đem về nuôi như con. Cô gái thực ra là tiên nữ giáng trần, một hôm buồn nhớ cảnh Bồng Lai nên biến thân vào một khúc kỳ nam trôi theo dòng nước ra biển, dạt vào đất Trung Hoa. Thái Tử Bắc Hải tìm đến, nhấc được khúc gỗ nhẹ tênh mang về cung, rồi một đêm bắt gặp giai nhân từ trong gỗ bước ra, đó chính là Thiên Y A Na. Hai người nên vợ chồng, sinh được hai con. Về sau lòng nhớ quê thúc giục, nàng bồng con trở lại núi cũ, xây mộ phụng tự cha mẹ nuôi, dạy dân làng cày cấy, dệt vải, đặt ra lễ nghi. Đến ngày lành, một con chim hạc bay xuống đón mẹ con nàng về trời. Dân chúng nhớ ơn, xây tháp tạc tượng thờ Bà làm vị thần bảo hộ của người Chăm.`
-    },
-    {
-        emoji: '💕', tag: 'Cổ tích', time: '12 phút',
-        title: 'Nha Rúi và Tầm Đang',
-        text: `Nha Rúi và Tầm Dang là đôi trẻ mồ côi cùng lớn lên trên một quả đồi, hẹn ước làm vợ chồng bằng cách trao nhau mỗi người một nắm tóc. Tầm Dang lên trời mua trâu thì gặp bão, cầu nối trời đất bị nước cuốn, không về được. Nha Rúi phải đi ở đợ, rồi về sống một mình trong lều, trồng được một cây bông và ấp nở một con gà trắng biết nói. Nàng dệt một chiếc phái thêu hình chồng, nhờ cây bông vùn vụt mọc cao và con gà mang lên tận trời cho Tầm Dang. Ba hôm sau nàng cũng trèo lên trời tìm chồng, nhưng khi quay về thì cây bông đã biến mất. Tầm Dang phải cõng vợ chạy trốn sang một làng khác sinh sống, sinh con đầu lòng nhưng vẫn đau đáu nhớ quê. Con gà trắng ăn lớn gấp trăm lần rồi cõng cả gia đình bay về làng cũ, giúp họ đoàn tụ trên chính mảnh đất ông bà để lại.`
-    },
-    {
-        emoji: '🏺', tag: 'Dân gian', time: '10 phút',
-        title: 'Hũ Bạc và Người Cha',
-        text: `Một ông già chăm chỉ để dành được một hũ bạc nhưng buồn vì con trai chỉ thích chơi bời. Lúc ốm nặng, ông bàn với vợ chỉ cho con hũ bạc khi nó tự tay kiếm được tiền. Người mẹ vì thương con vẫn lén đưa tiền của mình, con trai đem đi chơi hết rồi về đưa "tiền tự kiếm" cho cha. Ông liền vứt luôn số tiền đó xuống ao, nói thẳng đây không phải tiền do con tự làm ra. Lần sau được mẹ cho ít tiền hơn, hết tiền đói quá, anh phải đi tát nước đổi cơm ăn, rồi đi xay thóc giã gạo thuê suốt ba tháng mới để dành được tiền mang về. Lần này ông già ném tiền vào bếp lửa, người con không sợ bỏng, vội thò tay vào cào than lấy lại tiền. Thấy vậy ông già cười mừng, biết chắc tiền này chính tay con làm ra, liền trao hũ bạc cho con và dặn: hũ bạc tiêu không hết chính là hai bàn tay biết lao động của con.`
-    },
-    {
-        emoji: '👹', tag: 'Cổ tích', time: '11 phút',
-        title: 'Anh Trai và Mụ Quỷ Già',
-        text: `Hai anh em nghèo mồ côi vào núi làm rẫy, người em bị quỷ xà-niên bắt ăn thịt lúc người anh về nhà lấy gạo. Người anh nấu rượu độc, mang gà luộc vào rừng mời lũ quỷ ăn uống, khiến chúng say chết hết, chỉ sót một mụ quỷ già đang ngủ. Mụ tỉnh dậy đuổi theo, người anh trèo lên cây xoài tránh, mụ hóa thành cô gái mang thai xin mượn dao rồi hiện nguyên hình đuổi bắt. Anh phải chui vào một quả xoài, được quạ rồi cá lóc mang đi, cuối cùng được một ông bà già nghèo bắt được cá, mổ ra cứu anh, nhận làm con. Biết mụ quỷ đã hóa thành vợ vua, anh xin vào cung chăn trâu, vượt qua nhiều lần mụ tìm cách nhận diện ăn nhầm người khác. Một đêm theo hộ tống mụ ra sông, anh giấu sẵn kiếm của vua, chờ mụ hiện nguyên hình thì chém chết. Vua ban đầu nổi giận nhưng khi biết sự thật dưới gầm giường có đầy đầu người bị mụ quỷ hại, liền xin lỗi và ban thưởng hậu hĩnh cho anh.`
-    },
-    {
-        emoji: '🐺', tag: 'Ngụ ngôn', time: '8 phút',
-        title: 'Bò và Chó Sói',
-        text: `Chó Sói đi kiếm ăn không may sa vào một hố sâu, kêu gào cầu cứu. Bò nghe tiếng chạy đến, được Sói hứa hẹn sẽ trả ơn bất cứ điều gì nếu cứu nó lên. Bò thả đuôi kéo Sói lên khỏi hố, nhưng Sói nuốt lời, không chịu trả ơn gì cả. Đúng lúc đó Thỏ đi ngang qua, được mời phân xử. Thỏ bảo Sói hãy nhảy lại xuống hố để Bò làm lại từ đầu cho Thỏ xem mới phân xử được. Sói tin lời nhảy ngay xuống hố như cũ. Thỏ và Bò liền rủ nhau bỏ đi, để Sói một mình dưới hố không ai cứu nữa, chỉ còn lại tiếng khóc than vang khắp núi rừng. Câu chuyện cho thấy kẻ bội ơn, gian dối rồi cũng phải tự gánh lấy hậu quả do chính mình gây ra.`
-    },
-    {
-        emoji: '🐯', tag: 'Dân gian', time: '9 phút',
-        title: 'Trí Khôn Của Con Người',
-        text: `Cọp thấy người nông dân bắt trâu to khỏe đi cày mà chịu để người đánh roi vào đầu mà không phản ứng, lấy làm lạ hỏi vì sao. Trâu bảo: con người có trí khôn, mình có sức mạnh thật nhưng không có trí khôn nên chẳng làm gì được người. Cọp tìm gặp người nông dân, nằng nặc đòi xem trí khôn là cái gì. Anh nông dân khéo léo từ chối, sợ Cọp ăn thịt trâu mình, rồi bảo Cọp cho trói vào gốc cây để làm bằng chứng mình không có ý hại Cọp. Vì hiếu kỳ, Cọp đồng ý để bị trói thật chặt vào gốc cây, cố vùng vẫy mà không thoát được. Lúc đó anh nông dân mới lấy roi cày đánh túi bụi vào đầu vào cổ Cọp, vừa đánh vừa nói: "Trí khôn của ta ở đây, trí khôn của ta ở đây!" Từ đó Cọp mới hiểu vì sao con người nhỏ con nhưng vẫn khiến muôn loài phải nể sợ.`
-    },
-    {
-        emoji: '🐸', tag: 'Cổ tích', time: '13 phút',
-        title: 'Chàng Ếch và Con Út Vua',
-        text: `Một bà sinh ra một con Ếch chỉ bằng bàn tay, nuôi đến mười lăm tuổi nó bỗng biết nói, đòi mẹ đi hỏi con gái út vua cho làm vợ. Vua ra điều kiện trong năm ngày phải kiếm đủ một trăm năm mươi lăm con gà cồ, không thì chém cả hai mẹ con. Chàng Ếch lần lượt tìm gặp các vị thần, cuối cùng đến vua Diêm Vương xin được một quả bầu phép. Mẹ chàng đội bầu về triều, mở nắp ra thì gà, rồng, kỳ lân, cọp, voi tràn ra đầy sân khiến vua quan khiếp sợ. Vua hứa gả công chúa Út, chàng Ếch liền thu hết muông thú trở lại vào bầu. Ban ngày mang hình ếch, ban đêm chàng hóa thành trai đẹp tỏa hào quang. Một đêm nàng Út lén đốt mất vỏ ếch, từ đó chàng giữ luôn hình người đẹp trai nổi danh khắp xứ, được vua nhường ngôi, cùng nàng Út trị vì xứ sở bình an.`
-    },
-    {
-        emoji: '😄', tag: 'Truyền thuyết', time: '14 phút',
-        title: 'Chàng Panrang và Chàng Parik',
-        text: `Ja Panrang ở Phan Rang và Ja Parik ở Phan Rí là hai chàng nói dóc nổi tiếng, tình cờ gặp nhau và thi nhau khoác lác. Đói bụng không tiền, Ja Panrang bày kế cho Ja Parik giả ngất xỉu như trúng độc sau khi ăn, rồi anh "chữa bệnh" bằng nước mài rễ cây, dọa quán ăn gây ngộ độc, khiến bà chủ quán không đòi tiền mà còn mua thuốc, biếu thêm tiền. Ja Parik phục tài, muốn thử trổ tài riêng khi hai người xuống sông tắm: ngậm sẵn tiền trong miệng, lặn lên bảo gặp Diêm Vương cho tiền. Ja Panrang giả vờ lặn xuống "hỏi cho ra", rồi bảo Diêm Vương dặn chia đều, khiến Ja Parik tự nguyện đưa luôn nửa tiền của mình. Đi tiếp, nghe tin bà lý trưởng tham lam đang lâm bệnh, hai người đóng vai thầy cúng và lên đồng, "phán" đúng tội tham lam của bà khiến bà sợ hãi xóa nợ cho dân, khỏi bệnh ngay. Được trọng thưởng, hai người chia tiền rồi từ bỏ nghề nói dóc, tu chí làm ăn lương thiện.`
-    },
-    {
-        emoji: '🐸', tag: 'Ngụ ngôn', time: '7 phút',
-        title: 'Con Ếch Muốn Lớn Bằng Con Trâu',
-        text: `Một bầy Ếch sống ở một cái ao, tôn con to nhất làm vua Ếch. Một hôm vua Ếch đi giao du, về thấy ao bị phá tan hoang, hỏi ra mới biết có một con vật to lớn có sừng đến phá mà lũ ếch không dám làm gì. Vua Ếch hỏi nó to cỡ nào, mỗi lần phùng mang phình bụng để so sánh thì lũ ếch đều bảo "còn thua xa". Tức quá, vua Ếch cố phình bụng thêm lần nữa cho bằng con vật ấy, không ngờ cố quá sức, vỡ bụng chết tức khắc. Từ câu chuyện này, người Chăm có câu "con ếch muốn to bằng con trâu" để khuyên răn con người làm gì cũng phải biết lượng sức mình.`
-    },
-    {
-        emoji: '🐰', tag: 'Ngụ ngôn', time: '10 phút',
-        title: 'Đàn Thú Đi Săn',
-        text: `Thỏ, Chó, Cọp, Gà rủ nhau đi săn thịt, phân công nhau canh giữ phần thịt phơi ở chòi. Lần lượt Gà, Chó, Cọp canh đều bị một con Chằn tinh từ biển khơi bay đến ăn hết sạch vì quá sợ không dám chống cự. Đến lượt Thỏ canh, nó bình tĩnh khen Chằn tinh khỏe, gợi ý nó nhổ hết cây quanh chòi cho thịt phơi được nắng ngon hơn, rồi bày kế buộc dây mây từ cổ Chằn tinh vào gốc cây để nó "bay lên nhổ cây". Thỏ giả vờ buộc lỏng vài lần cho Chằn tinh tin tưởng, rồi buộc thật chặt khiến nó không thoát được. Cả đàn trở về thấy Chằn tinh đã bị trói, tôn Thỏ làm quân sư, cùng nhau đánh cho Chằn tinh ói hết thịt ra và buộc nó thề từ nay không dám ăn cắp thịt của loài khác nữa.`
-    },
-    {
-        emoji: '🍈', tag: 'Cổ tích', time: '16 phút',
-        title: 'Nàng Cha-điêng',
-        text: `Hai vợ chồng hiếm con nhờ thầy thuốc mới sinh được một bé gái chỉ nhỏ bằng bàn tay, đặt tên Cha-điêng, nhưng mười năm sau vẫn không lớn thêm. Vì hổ thẹn, cha mẹ đem con bỏ vào rừng, dựng cho một túp lều và một rẫy dưa hấu. Ở một mình, đến ngày đẹp trời Cha-điêng hóa thành cô gái xinh đẹp. Một hoàng tử đi săn lạc vào rẫy ăn nửa quả dưa rồi bỏ lại nửa kia, nàng ăn nửa dưa còn lại liền mang thai, sinh một bé trai giống hoàng tử như đúc. Hoàng tử tình cờ gặp lại nàng và con, đem lòng yêu thương. Vua cha muốn chọn người kế vị, ra lệnh vợ hoàng tử nào làm bánh ngon nhất dâng lên sẽ được truyền ngôi. Cha-điêng làm hai loại bánh Sa-ka-ya và Ta-pay nung mang ý nghĩa biết ơn công sinh thành như trời như đất, khiến vua hoàng hậu cảm động, truyền ngôi cho hoàng tử út.`
-    },
-    {
-        emoji: '🤚', tag: 'Cổ tích', time: '12 phút',
-        title: 'Nàng Bàn Tay',
-        text: `Hai ông bà hiếm con nhờ thầy bói chỉ cách mới có thai, nhưng sinh ra chỉ một bàn tay người. Sợ xấu hổ, ông bà bỏ bàn tay vào một cái chum, chôn sau hè. Gần một năm sau, con vua là chàng Aia Harei nghe một tiếng hát buồn não nuột vọng lại liền tương tư bỏ ăn bỏ uống. Vua sai lính đi tìm, lần theo tiếng hát đến đúng cái chum sau hè, mở ra chỉ thấy một bàn tay, nhưng vẫn quyết định hỏi cưới cho con. Đúng ngày cưới, bàn tay đã hóa thành người thật, hào quang tỏa sáng khiến cả triều đình kinh ngạc vui mừng. Sau khi cưới, Aia Harei đi xa, vợ buồn ôm chim công ra múa thì bị nó cuốn bay lên trời, lạc vào tay một vị vua khác. Chàng đi tìm khắp nơi không được, nuôi một con công khác chờ lớn để bay lên tìm vợ, nhưng bị thiên đình hóa mây mù chặn lại, mắc kẹt luôn trên đó và trở thành thần Mặt Trời từ đó đến nay.`
-    }
+if (window.CF && CF.trackView) CF.trackView('nghetruyen');
+const esc = (window.CF && CF.escapeHTML) || (s => String(s ?? ''));
+
+// Lấy danh sách truyện từ stories-data.js dùng chung
+const stories = (window.CHAM_STORIES || []).map(s => ({
+    emoji: s.emoji || '📖',
+    tag: s.tag || 'Cổ tích',
+    time: String(s.time || '10 phút').replace(' đọc', ''),
+    title: s.title,
+    text: (s.paragraphs || []).join('\n\n')
+}));
+
+// ===== DANH SÁCH GIỌNG ĐỌC MẶC ĐỊNH CHUẨN ĐA NGÔN NGỮ / TIẾNG VIỆT =====
+// Thay thế hoàn toàn 4 giọng tiếng Anh đời cũ (Rachel/Domi/Bella/Antoni) bị đớt khi đọc tiếng Việt.
+// Khi người dùng nhập API key, hệ thống sẽ tự động lấy thêm các giọng người Việt trong tài khoản của họ!
+const DEFAULT_VOICES = [
+    { id: 'cgSgspJ2msm6clMCkdW9', name: '👩 Linh Đan (Nữ • Trẻ trung, tự nhiên)', isVi: true },
+    { id: 'FGY2WhTYpPnrIDTdsKH5', name: '👩 Ngọc Lan (Nữ • Dịu dàng kể chuyện)', isVi: true },
+    { id: 'nPczCjzI2devNBz1zQrb', name: '👨 Minh Quân (Nam • Trầm ấm, truyền cảm)', isVi: true },
+    { id: 'onwK4e9ZLuTAKqWW03F9', name: '👨 Hoàng Bách (Nam • Đĩnh đạc, kể sử thi)', isVi: true },
+    { id: 'XrExE9yKIg1WjnnlVkGX', name: '👵 Bà Kể Chuyện (Nữ • Sâu lắng, cổ tích)', isVi: true },
+    { id: 'browser_vi', name: '🇻🇳 Giọng Trình Duyệt (Miễn phí không cần Key)', isVi: false }
 ];
 
 // ===== STATE =====
 let apiKey = localStorage.getItem('el_api_key') || '';
-let selectedVoice = '21m00Tcm4TlvDq8ikWAM';
+let selectedModel = localStorage.getItem('el_model_id') || 'eleven_flash_v2_5';
+let customVoices = JSON.parse(localStorage.getItem('el_custom_voices') || '[]');
+let accountVoices = JSON.parse(localStorage.getItem('el_account_voices') || '[]');
+let selectedVoice = localStorage.getItem('el_selected_voice') || (apiKey ? DEFAULT_VOICES[0].id : 'browser_vi');
 let currentIdx = -1;
 let audio = null;
+let audioCache = new Map();
+let ttsTimer = null;
 let isPlaying = false;
 let playbackSpeed = 1;
 
+document.getElementById('modelSelect').value = selectedModel;
+
+function onModelChange(val) {
+    selectedModel = val;
+    localStorage.setItem('el_model_id', val);
+    audioCache.clear();
+    if (window.CF && CF.toast) CF.toast('Đã chuyển sang bộ máy ' + val, 'info');
+}
+
+function getAllVoices() {
+    const map = new Map();
+    // 1. Giọng từ tài khoản người dùng (My Voices / Cloned / Library Vietnamese) lên đầu tiên
+    accountVoices.forEach(v => map.set(v.id, v));
+    // 2. Giọng do người dùng tự thêm bằng ID
+    customVoices.forEach(v => map.set(v.id, v));
+    // 3. Giọng mặc định
+    DEFAULT_VOICES.forEach(v => {
+        if (!map.has(v.id)) map.set(v.id, v);
+    });
+    return Array.from(map.values());
+}
+
+function renderVoices() {
+    const row = document.getElementById('voiceRow');
+    const all = getAllVoices();
+    if (!all.some(v => v.id === selectedVoice)) {
+        selectedVoice = all[0]?.id || 'browser_vi';
+    }
+    row.innerHTML = all.map(v => `
+        <button class="voice-btn ${v.id === selectedVoice ? 'active' : ''}"
+                data-voice="${esc(v.id)}"
+                onclick="selectVoice('${esc(v.id)}')">
+            <span>${esc(v.name)}</span>
+            ${v.isAccountVi ? '<span class="voice-badge-vi">Giọng Việt của bạn</span>' : ''}
+        </button>
+    `).join('');
+}
+
+renderVoices();
+
+// ===== TỰ ĐỘNG TẢI GIỌNG NGƯỜI VIỆT TỪ TÀI KHOẢN ELEVENLABS =====
+async function syncAccountVoices(showToast = false) {
+    if (!apiKey) {
+        if (showToast) setStatus('err', '❌ Vui lòng nhập và lưu ElevenLabs API key trước.');
+        return;
+    }
+    try {
+        setStatus('', '⏳ Đang tải danh sách giọng đọc từ tài khoản ElevenLabs của bạn...');
+        const res = await fetch('https://api.elevenlabs.io/v1/voices', {
+            headers: { 'xi-api-key': apiKey }
+        });
+        if (!res.ok) throw new Error('Không thể kết nối API key (' + res.status + ')');
+        const data = await res.json();
+        const voices = data.voices || [];
+
+        // Lọc các giọng của người dùng (cloned, generated, professional, hoặc đã thêm từ Voice Library)
+        // Đặc biệt ưu tiên giọng có nhãn tiếng Việt (vi / vietnamese) hoặc giọng không phải premade tiếng Anh cũ
+        const myVoices = voices.filter(v => {
+            const cat = (v.category || '').toLowerCase();
+            const labelsStr = JSON.stringify(v.labels || {}).toLowerCase() + ' ' + (v.name || '').toLowerCase() + ' ' + (v.description || '').toLowerCase();
+            const isViLabel = labelsStr.includes('viet') || labelsStr.includes('việt') || labelsStr.includes('"vi"');
+            return isViLabel || cat !== 'premade';
+        });
+
+        accountVoices = myVoices.map(v => {
+            const gender = (v.labels?.gender || '').toLowerCase();
+            const icon = gender === 'female' ? '👩' : gender === 'male' ? '👨' : '🎙️';
+            return {
+                id: v.voice_id,
+                name: `${icon} ${v.name}`,
+                preview_url: v.preview_url || '',
+                isAccountVi: true
+            };
+        });
+
+        localStorage.setItem('el_account_voices', JSON.stringify(accountVoices));
+
+        if (accountVoices.length > 0) {
+            selectedVoice = accountVoices[0].id;
+            localStorage.setItem('el_selected_voice', selectedVoice);
+            setStatus('ok', `✅ Đã tải thành công ${accountVoices.length} giọng đọc từ tài khoản ElevenLabs của bạn!`);
+            if (showToast && window.CF && CF.toast) {
+                CF.toast(`Đã đồng bộ ${accountVoices.length} giọng đọc của bạn!`, 'ok');
+            }
+        } else {
+            setStatus('ok', '✅ Đã kết nối ElevenLabs! Bạn có thể chọn giọng bên dưới hoặc thêm giọng Việt từ Voice Library.');
+        }
+        renderVoices();
+    } catch (e) {
+        setStatus('err', '❌ Lỗi kiểm tra API key: ' + e.message);
+    }
+}
+
+// ===== THÊM GIỌNG VIỆT BẰNG VOICE ID =====
+function addCustomVoice() {
+    const nameInput = document.getElementById('customVoiceName');
+    const idInput = document.getElementById('customVoiceId');
+    const name = nameInput.value.trim() || 'Giọng Việt Tùy Chỉnh';
+    const id = idInput.value.trim();
+    if (!id || id.length < 10) {
+        if (window.CF && CF.toast) CF.toast('Vui lòng nhập đúng Voice ID từ ElevenLabs!', 'err');
+        return;
+    }
+    customVoices = customVoices.filter(v => v.id !== id);
+    customVoices.unshift({ id, name: '🇻🇳 ' + name, isAccountVi: true });
+    localStorage.setItem('el_custom_voices', JSON.stringify(customVoices));
+    selectedVoice = id;
+    localStorage.setItem('el_selected_voice', id);
+    nameInput.value = '';
+    idInput.value = '';
+    renderVoices();
+    if (window.CF && CF.toast) CF.toast('Đã thêm giọng: ' + name, 'ok');
+}
+
+// ===== NGHE THỬ GIỌNG ĐANG CHỌN =====
+async function previewSelectedVoice() {
+    const sampleText = 'Ngày xưa, tại vùng đất Panduranga đầy nắng và gió, có những câu chuyện cổ tích Chăm được lưu truyền qua bao thế hệ.';
+    if (selectedVoice === 'browser_vi' || !apiKey) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(sampleText);
+            u.lang = 'vi-VN';
+            window.speechSynthesis.speak(u);
+        }
+        return;
+    }
+    try {
+        setPlayerStatus('loading', '<span class="spinner"></span> Đang tạo câu nghe thử Tiếng Việt...');
+        const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice}`, {
+            method: 'POST',
+            headers: {
+                'xi-api-key': apiKey,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(buildTTSPayload(sampleText))
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail?.message || `Lỗi ${res.status}`);
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        stopAllPlayback();
+        audio = new Audio(url);
+        audio.volume = document.getElementById('volSlider').value / 100;
+        audio.play();
+        setPlayerStatus('ready', '🔊 Đang phát câu nghe thử Tiếng Việt...');
+    } catch (e) {
+        setPlayerStatus('error', '❌ Lỗi nghe thử: ' + esc(e.message));
+    }
+}
+
+function buildTTSPayload(text) {
+    const payload = {
+        text: text,
+        model_id: selectedModel,
+        voice_settings: {
+            stability: 0.65,
+            similarity_boost: 0.85,
+            style: 0.15,
+            use_speaker_boost: true
+        }
+    };
+    // Các model v2.5 hỗ trợ tham số language_code: 'vi' giúp phát âm chuẩn dấu tiếng Việt 100%
+    if (selectedModel.includes('v2_5')) {
+        payload.language_code = 'vi';
+    }
+    return payload;
+}
+
 // ===== API KEY =====
-function saveApiKey() {
+async function saveApiKey() {
     const val = document.getElementById('apiKeyInput').value.trim();
     if (!val) { setStatus('err', '❌ Vui lòng nhập API key'); return; }
     if (!val.startsWith('sk_') && val.length < 20) {
-        setStatus('err', '❌ API key không đúng định dạng (phải bắt đầu bằng sk_...)');
+        setStatus('err', '❌ API key không đúng định dạng (thường bắt đầu bằng sk_...)');
         return;
     }
     apiKey = val;
     localStorage.setItem('el_api_key', val);
-    setStatus('ok', '✅ Đã lưu API key thành công! Sẵn sàng phát truyện.');
     document.getElementById('apiKeyInput').value = '';
+    await syncAccountVoices(true);
 }
 
 function setStatus(type, msg) {
@@ -526,65 +700,81 @@ function setStatus(type, msg) {
     el.className = 'api-status ' + type;
 }
 
-// Load saved key indicator
 if (apiKey) {
-    document.getElementById('apiStatus').textContent = '✅ Đã có API key – Sẵn sàng phát truyện';
-    document.getElementById('apiStatus').className = 'api-status ok';
+    syncAccountVoices(false);
 }
 
 // ===== VOICE =====
-function selectVoice(btn) {
-    document.querySelectorAll('.voice-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedVoice = btn.dataset.voice;
+function selectVoice(voiceId) {
+    selectedVoice = voiceId;
+    localStorage.setItem('el_selected_voice', voiceId);
+    renderVoices();
+    stopAllPlayback();
+    if (currentIdx >= 0) {
+        setPlayerStatus('', 'Đã đổi giọng đọc. Nhấn ▶ để phát.');
+    }
 }
 
 // ===== BUILD LIST =====
 const listEl = document.getElementById('storyList');
-stories.forEach((s, i) => {
-    const div = document.createElement('div');
-    div.className = 'story-item';
-    div.id = `si-${i}`;
-    div.innerHTML = `
-        <span class="si-emoji">${s.emoji}</span>
-        <div class="si-info">
-            <div class="si-title">${s.title}</div>
-            <div class="si-meta">
-                <span class="si-tag">${s.tag}</span>
-                <span>⏱ ${s.time}</span>
+function renderStoryList() {
+    listEl.innerHTML = '';
+    stories.forEach((s, i) => {
+        const div = document.createElement('div');
+        div.className = 'story-item glow-card' + (i === currentIdx ? ' active' : '');
+        div.id = `si-${i}`;
+        div.innerHTML = `
+            <span class="si-emoji">${esc(s.emoji)}</span>
+            <div class="si-info">
+                <div class="si-title">${esc(s.title)}</div>
+                <div class="si-meta">
+                    <span class="si-tag">${esc(s.tag)}</span>
+                    <span>⏱ ${esc(s.time)}</span>
+                </div>
             </div>
-        </div>
-        <div class="si-play" id="sip-${i}">▶</div>
-    `;
-    div.onclick = () => selectStory(i);
-    listEl.appendChild(div);
-});
+            <div class="si-play" id="sip-${i}">▶</div>
+        `;
+        div.onclick = () => selectStory(i);
+        listEl.appendChild(div);
+    });
+}
+renderStoryList();
+
+function stopAllPlayback() {
+    if (audio) { audio.pause(); audio = null; }
+    if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); }
+    clearInterval(ttsTimer);
+    isPlaying = false;
+    document.getElementById('playBtn').textContent = '▶';
+    document.getElementById('playerPanel').classList.remove('playing');
+    document.querySelectorAll('.si-play').forEach(el => el.textContent = '▶');
+}
 
 // ===== CHỌN TRUYỆN =====
 function selectStory(idx) {
-    if (audio) { audio.pause(); audio = null; }
+    if (idx < 0 || idx >= stories.length) return;
+    stopAllPlayback();
     document.querySelectorAll('.story-item').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.si-play').forEach(el => el.textContent = '▶');
     currentIdx = idx;
     const s = stories[idx];
-    document.getElementById(`si-${idx}`).classList.add('active');
-    document.getElementById(`sip-${idx}`).textContent = '▶';
+    const itemEl = document.getElementById(`si-${idx}`);
+    if (itemEl) itemEl.classList.add('active');
     document.getElementById('coverEmoji').textContent = s.emoji;
     document.getElementById('playerTitle').textContent = s.title;
     document.getElementById('playerSub').textContent = `${s.tag} • ${s.time}`;
     document.getElementById('progressBar').style.width = '0%';
     document.getElementById('timeElapsed').textContent = '0:00';
     document.getElementById('timeDuration').textContent = '0:00';
-    document.getElementById('playBtn').textContent = '▶';
-    document.getElementById('playerPanel').classList.remove('playing');
-    isPlaying = false;
     setPlayerStatus('', 'Nhấn ▶ để bắt đầu phát truyện');
 }
 
 // ===== PHÁT / DỪNG =====
 async function togglePlay() {
     if (currentIdx < 0) {
-        setPlayerStatus('', '👆 Vui lòng chọn một truyện trước');
+        selectStory(0);
+    }
+    if (selectedVoice === 'browser_vi' || !apiKey) {
+        toggleBrowserSpeech(currentIdx);
         return;
     }
     if (audio && !audio.paused) {
@@ -600,38 +790,114 @@ async function togglePlay() {
         isPlaying = true;
         document.getElementById('playBtn').textContent = '⏸';
         document.getElementById('playerPanel').classList.add('playing');
+        document.getElementById(`sip-${currentIdx}`).textContent = '⏸';
         return;
     }
     await generateAndPlay(currentIdx);
 }
 
+// Giọng đọc Tiếng Việt miễn phí tích hợp sẵn trên trình duyệt
+function toggleBrowserSpeech(idx) {
+    if (!('speechSynthesis' in window)) {
+        setPlayerStatus('error', '❌ Trình duyệt không hỗ trợ đọc tự động. Vui lòng nhập ElevenLabs API Key.');
+        return;
+    }
+    const synth = window.speechSynthesis;
+    if (isPlaying) {
+        synth.pause();
+        clearInterval(ttsTimer);
+        isPlaying = false;
+        document.getElementById('playBtn').textContent = '▶';
+        document.getElementById('playerPanel').classList.remove('playing');
+        document.getElementById(`sip-${idx}`).textContent = '▶';
+        setPlayerStatus('', 'Đã tạm dừng. Nhấn ▶ để nghe tiếp.');
+        return;
+    }
+    if (synth.paused && synth.speaking) {
+        synth.resume();
+        isPlaying = true;
+        document.getElementById('playBtn').textContent = '⏸';
+        document.getElementById('playerPanel').classList.add('playing');
+        document.getElementById(`sip-${idx}`).textContent = '⏸';
+        return;
+    }
+    synth.cancel();
+    const s = stories[idx];
+    const utter = new SpeechSynthesisUtterance(s.title + '. ' + s.text);
+    utter.lang = 'vi-VN';
+    utter.rate = playbackSpeed;
+    utter.volume = document.getElementById('volSlider').value / 100;
+    const voices = synth.getVoices();
+    const viVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('vi'));
+    if (viVoice) utter.voice = viVoice;
+
+    const estSeconds = Math.max(20, Math.round(s.text.length / (14 * playbackSpeed)));
+    let elapsed = 0;
+    document.getElementById('timeDuration').textContent = fmt(estSeconds);
+
+    utter.onstart = () => {
+        isPlaying = true;
+        document.getElementById('playBtn').textContent = '⏸';
+        document.getElementById('playerPanel').classList.add('playing');
+        document.getElementById(`sip-${idx}`).textContent = '⏸';
+        setPlayerStatus('ready', `▶ Đang đọc: ${esc(s.title)}`);
+        clearInterval(ttsTimer);
+        ttsTimer = setInterval(() => {
+            if (!isPlaying) return;
+            elapsed = Math.min(estSeconds, elapsed + 1);
+            document.getElementById('progressBar').style.width = ((elapsed / estSeconds) * 100) + '%';
+            document.getElementById('timeElapsed').textContent = fmt(elapsed);
+        }, 1000);
+    };
+    utter.onend = () => {
+        clearInterval(ttsTimer);
+        isPlaying = false;
+        document.getElementById('progressBar').style.width = '100%';
+        document.getElementById('playBtn').textContent = '▶';
+        document.getElementById('playerPanel').classList.remove('playing');
+        document.getElementById(`sip-${idx}`).textContent = '▶';
+        setPlayerStatus('ready', '✅ Đã đọc xong! Nhấn ▶ để nghe lại.');
+    };
+    utter.onerror = () => {
+        clearInterval(ttsTimer);
+        isPlaying = false;
+        document.getElementById('playBtn').textContent = '▶';
+        document.getElementById('playerPanel').classList.remove('playing');
+    };
+    synth.speak(utter);
+}
+
 async function generateAndPlay(idx) {
     if (!apiKey) {
-        setPlayerStatus('error', '❌ Chưa có API key! Hãy nhập ElevenLabs API key ở phía trên.');
+        setPlayerStatus('error', '❌ Chưa có ElevenLabs API key! Đang chuyển sang giọng Tiếng Việt miễn phí...');
+        selectedVoice = 'browser_vi';
+        renderVoices();
+        toggleBrowserSpeech(idx);
         return;
     }
     const s = stories[idx];
-    setPlayerStatus('loading', '<span class="spinner"></span> Đang tạo giọng đọc AI...');
+    const cacheKey = `${idx}_${selectedVoice}_${selectedModel}`;
+    setPlayerStatus('loading', '<span class="spinner"></span> Đang tạo giọng đọc Tiếng Việt AI...');
     document.getElementById('playBtn').textContent = '⏳';
     try {
-        const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice}`, {
-            method: 'POST',
-            headers: {
-                'xi-api-key': apiKey,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                text: s.text,
-                model_id: 'eleven_multilingual_v2',
-                voice_settings: { stability: 0.5, similarity_boost: 0.75 }
-            })
-        });
-        if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            throw new Error(err.detail?.message || `Lỗi ${res.status}`);
+        let url = audioCache.get(cacheKey);
+        if (!url) {
+            const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice}`, {
+                method: 'POST',
+                headers: {
+                    'xi-api-key': apiKey,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(buildTTSPayload(s.title + '.\n\n' + s.text))
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.detail?.message || `Lỗi ${res.status}`);
+            }
+            const blob = await res.blob();
+            url = URL.createObjectURL(blob);
+            audioCache.set(cacheKey, url);
         }
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
         audio = new Audio(url);
         audio.playbackRate = playbackSpeed;
         audio.volume = document.getElementById('volSlider').value / 100;
@@ -643,17 +909,17 @@ async function generateAndPlay(idx) {
             document.getElementById(`sip-${currentIdx}`).textContent = '▶';
             setPlayerStatus('ready', '✅ Phát xong! Nhấn ▶ để nghe lại.');
             if (currentIdx < stories.length - 1) {
-                setTimeout(() => { currentIdx++; selectStory(currentIdx); }, 2000);
+                setTimeout(() => { selectStory(currentIdx + 1); }, 2000);
             }
         };
-        audio.play();
+        await audio.play();
         isPlaying = true;
         document.getElementById('playBtn').textContent = '⏸';
         document.getElementById('playerPanel').classList.add('playing');
         document.getElementById(`sip-${currentIdx}`).textContent = '⏸';
-        setPlayerStatus('ready', `▶ Đang phát: ${s.title}`);
+        setPlayerStatus('ready', `▶ Đang phát: ${esc(s.title)}`);
     } catch (e) {
-        setPlayerStatus('error', `❌ Lỗi: ${e.message}`);
+        setPlayerStatus('error', `❌ Lỗi: ${esc(e.message)}`);
         document.getElementById('playBtn').textContent = '▶';
     }
 }
@@ -697,22 +963,16 @@ function setSpeed(spd, btn) {
 }
 
 function prevStory() {
-    if (currentIdx > 0) { selectStory(currentIdx - 1); }
+    if (currentIdx > 0) selectStory(currentIdx - 1);
 }
 function nextStory() {
-    if (currentIdx < stories.length - 1) { selectStory(currentIdx + 1); }
+    if (currentIdx < stories.length - 1) selectStory(currentIdx + 1);
 }
 
-// Particles
-const container = document.getElementById('particles');
-for (let i = 0; i < 28; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random() * 100 + 'vw';
-    p.style.animationDuration = (12 + Math.random() * 20) + 's';
-    p.style.animationDelay = (-Math.random() * 20) + 's';
-    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
-    container.appendChild(p);
+// Nếu chuyển từ truyenco.html?story=INDEX sang thì chọn sẵn truyện đó
+const storyParam = new URLSearchParams(window.location.search).get('story');
+if (storyParam !== null && !isNaN(parseInt(storyParam, 10))) {
+    selectStory(parseInt(storyParam, 10));
 }
 </script>
 </body>
